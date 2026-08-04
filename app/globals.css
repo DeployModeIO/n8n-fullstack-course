@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ff6d5a;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ff8a7a;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #ff6d5a transparent;
+}
+
+pre {
+  background: #1e1e2e;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+code {
+  font-family: 'Fira Code', 'JetBrains Mono', monospace;
+}
+
+:not(pre) > code {
+  background: rgba(255, 109, 90, 0.1);
+  color: #ff6d5a;
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+}
+
+.token.keyword {
+  color: #c678dd;
+}
+
+.token.string {
+  color: #98c379;
+}
+
+.token.comment {
+  color: #5c6370;
+  font-style: italic;
+}
+
+.token.function {
+  color: #61afef;
+}
+
+.token.number {
+  color: #d19a66;
+}
+
+.token.operator {
+  color: #56b6c2;
+}
+
+.token.punctuation {
+  color: #abb2bf;
+}
+
+@layer utilities {
+  .glass-dark {
+    background: rgba(15, 15, 25, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .glass-light {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .animated-gradient {
+    background: linear-gradient(-45deg, #ff6d5a, #7c3aed, #06b6d4, #ff6d5a);
+    background-size: 400% 400%;
+    animation: gradient-shift 8s ease infinite;
+  }
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
