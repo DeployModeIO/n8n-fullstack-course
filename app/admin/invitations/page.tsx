@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Mail, Plus, X, Copy, Check } from 'lucide-react';
+import { Mail, Plus, X, Copy, Check, Eye, EyeOff } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 interface Invitation {
@@ -20,11 +20,13 @@ export default function InvitationsPage() {
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
+    password: '',
     role: 'student',
   });
   const [submitting, setSubmitting] = useState(false);
-  const [createdLink, setCreatedLink] = useState('');
+  const [createdCredentials, setCreatedCredentials] = useState<{ email: string; password: string } | null>(null);
   const [copied, setCopied] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     fetchInvitations();
@@ -44,30 +46,46 @@ export default function InvitationsPage() {
     e.preventDefault();
     setSubmitting(true);
 
-    const supabase = createClient();
-    const token = crypto.randomUUID();
-    const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 7);
+    try {
+      const response = await fetch('/api/admin/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          role: formData.role,
+        }),
+      });
 
-    const { error } = await supabase.from('invitations').insert({
-      email: formData.email,
-      role: formData.role,
-      status: 'pending',
-      token,
-      expires_at: expiresAt.toISOString(),
-    });
+      const result = await response.json();
 
-    if (error) {
-      alert(error.message);
+      if (!response.ok) {
+        alert(result.error || 'Error al crear usuario');
+        setSubmitting(false);
+        return;
+      }
+
+      const supabase = createClient();
+      const token = crypto.randomUUID();
+      const expiresAt = new Date();
+      expiresAt.setDate(expiresAt.getDate() + 7);
+
+      await supabase.from('invitations').insert({
+        email: formData.email,
+        role: formData.role,
+        status: 'accepted',
+        token,
+        expires_at: expiresAt.toISOString(),
+      });
+
+      setCreatedCredentials({ email: formData.email, password: formData.password });
+      setFormData({ email: '', password: '', role: 'student' });
       setSubmitting(false);
-      return;
+      fetchInvitations();
+    } catch (error) {
+      alert('Error al crear usuario');
+      setSubmitting(false);
     }
-
-    const link = `${window.location.origin}/invite/${token}`;
-    setCreatedLink(link);
-    setFormData({ email: '', role: 'student' });
-    setSubmitting(false);
-    fetchInvitations();
   }
 
   async function handleRevoke(invitationId: string) {
@@ -82,15 +100,18 @@ export default function InvitationsPage() {
   }
 
   function handleCopy() {
-    navigator.clipboard.writeText(createdLink);
+    if (!createdCredentials) return;
+    const text = `Email: ${createdCredentials.email}\nContraseña: ${createdCredentials.password}`;
+    navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }
 
   function handleCloseModal() {
     setShowModal(false);
-    setCreatedLink('');
+    setCreatedCredentials(null);
     setCopied(false);
+    setShowPassword(false);
   }
 
   if (loading) {
@@ -107,7 +128,7 @@ export default function InvitationsPage() {
         <div className="flex items-center gap-3">
           <Mail size={24} className="text-[#FF6D5A]" />
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Invitaciones
+            Usuarios e Invitaciones
           </h1>
         </div>
         <button
@@ -115,7 +136,7 @@ export default function InvitationsPage() {
           className="flex items-center gap-2 rounded-xl bg-[#FF6D5A] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#FF6D5A]/90"
         >
           <Plus size={18} />
-          Nueva Invitación
+          Crear Usuario
         </button>
       </div>
 
@@ -192,7 +213,7 @@ export default function InvitationsPage() {
                     colSpan={6}
                     className="py-6 text-center text-sm text-gray-500 dark:text-gray-400"
                   >
-                    No hay invitaciones
+                    No hay usuarios creados
                   </td>
                 </tr>
               )}
@@ -206,7 +227,7 @@ export default function InvitationsPage() {
           <div className="w-full max-w-md rounded-2xl p-6 backdrop-blur-xl bg-white/90 border border-gray-200/50 shadow-2xl dark:bg-gray-900/90 dark:border-white/10">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Nueva Invitación
+                Crear Usuario
               </h2>
               <button
                 onClick={handleCloseModal}
@@ -215,7 +236,7 @@ export default function InvitationsPage() {
                 <X size={18} />
               </button>
             </div>
-            {!createdLink ? (
+            {!createdCredentials ? (
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -230,6 +251,29 @@ export default function InvitationsPage() {
                     }
                     className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 outline-none transition focus:border-[#FF6D5A] dark:border-white/20 dark:bg-white/5 dark:text-white"
                   />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Contraseña
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      required
+                      value={formData.password}
+                      onChange={(e) =>
+                        setFormData({ ...formData, password: e.target.value })
+                      }
+                      className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 pr-10 text-sm text-gray-900 outline-none transition focus:border-[#FF6D5A] dark:border-white/20 dark:bg-white/5 dark:text-white"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    >
+                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
                 </div>
                 <div>
                   <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -252,38 +296,62 @@ export default function InvitationsPage() {
                   disabled={submitting}
                   className="w-full rounded-xl bg-[#FF6D5A] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-[#FF6D5A]/90 disabled:opacity-50"
                 >
-                  {submitting ? 'Creando...' : 'Crear Invitación'}
+                  {submitting ? 'Creando...' : 'Crear Usuario'}
                 </button>
               </form>
             ) : (
               <div className="space-y-4">
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Invitación creada. Comparte este enlace:
-                </p>
-                <div className="flex items-center gap-2 rounded-xl border border-gray-300 bg-white p-3 dark:border-white/20 dark:bg-white/5">
-                  <input
-                    type="text"
-                    readOnly
-                    value={createdLink}
-                    className="flex-1 bg-transparent text-sm text-gray-900 outline-none dark:text-white"
-                  />
+                <div className="rounded-xl bg-green-50 p-4 dark:bg-green-900/20">
+                  <p className="text-sm font-medium text-green-800 dark:text-green-300">
+                    Usuario creado exitosamente
+                  </p>
+                </div>
+                <div className="space-y-3">
+                  <div>
+                    <label className="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">
+                      Email
+                    </label>
+                    <div className="rounded-xl border border-gray-300 bg-white p-3 dark:border-white/20 dark:bg-white/5">
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">
+                        {createdCredentials.email}
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">
+                      Contraseña
+                    </label>
+                    <div className="rounded-xl border border-gray-300 bg-white p-3 dark:border-white/20 dark:bg-white/5">
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">
+                        {createdCredentials.password}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-2">
                   <button
                     onClick={handleCopy}
-                    className="rounded-lg p-2 text-gray-500 transition hover:bg-gray-100 dark:hover:bg-white/5"
+                    className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-gray-200 px-4 py-2.5 text-sm font-medium text-gray-900 transition hover:bg-gray-300 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
                   >
                     {copied ? (
-                      <Check size={16} className="text-green-500" />
+                      <>
+                        <Check size={16} className="text-green-500" />
+                        Copiado
+                      </>
                     ) : (
-                      <Copy size={16} />
+                      <>
+                        <Copy size={16} />
+                        Copiar Credenciales
+                      </>
                     )}
                   </button>
+                  <button
+                    onClick={handleCloseModal}
+                    className="flex-1 rounded-xl bg-[#FF6D5A] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-[#FF6D5A]/90"
+                  >
+                    Cerrar
+                  </button>
                 </div>
-                <button
-                  onClick={handleCloseModal}
-                  className="w-full rounded-xl bg-gray-200 px-4 py-2.5 text-sm font-medium text-gray-900 transition hover:bg-gray-300 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
-                >
-                  Cerrar
-                </button>
               </div>
             )}
           </div>

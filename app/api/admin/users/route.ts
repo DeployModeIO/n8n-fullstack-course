@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json();
-  const { email, password } = body;
+  const { email, password, role } = body;
 
   if (!email || !password) {
     return NextResponse.json(
@@ -41,6 +41,13 @@ export async function POST(request: NextRequest) {
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  if (role && data.user) {
+    await supabase
+      .from('users')
+      .update({ role })
+      .eq('id', data.user.id);
   }
 
   return NextResponse.json({ data: data.user });

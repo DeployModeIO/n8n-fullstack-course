@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils/cn";
-import { Chrome, LogOut } from "lucide-react";
+import { LogIn, LogOut } from "lucide-react";
 
 type User = {
   id: string;
@@ -42,15 +42,6 @@ export default function AuthButton() {
     return () => subscription.unsubscribe();
   }, [supabase]);
 
-  const handleLogin = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}/api/auth/callback`,
-      },
-    });
-  };
-
   const handleLogout = async () => {
     await supabase.auth.signOut();
     router.refresh();
@@ -66,17 +57,8 @@ export default function AuthButton() {
     return (
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2 rounded-xl border px-3 py-2 backdrop-blur-xl bg-white/70 border-gray-200/50 dark:bg-white/5 dark:border-white/10">
-          {user.user_metadata?.avatar_url && (
-            <Image
-              src={user.user_metadata.avatar_url}
-              alt={user.user_metadata.full_name || "User"}
-              width={28}
-              height={28}
-              className="rounded-full"
-            />
-          )}
           <span className="text-sm font-medium text-gray-900 dark:text-white/90">
-            {user.user_metadata?.full_name || user.email}
+            {user.email}
           </span>
         </div>
         <button
@@ -99,8 +81,8 @@ export default function AuthButton() {
   }
 
   return (
-    <button
-      onClick={handleLogin}
+    <Link
+      href="/login"
       className={cn(
         "flex items-center gap-2 rounded-xl border px-4 py-2",
         "backdrop-blur-xl text-sm font-medium",
@@ -111,8 +93,8 @@ export default function AuthButton() {
         "transition-all duration-300"
       )}
     >
-      <Chrome size={18} className="text-[#FF6D5A]" />
-      Iniciar Sesión con Google
-    </button>
+      <LogIn size={18} className="text-[#FF6D5A]" />
+      Iniciar Sesión
+    </Link>
   );
 }
