@@ -23,7 +23,7 @@ export default function Navbar() {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       
-      if (user) {
+      if (user && user.email === 'luisriverosu@gmail.com') {
         const { data } = await supabase
           .from('users')
           .select('role')
@@ -31,6 +31,8 @@ export default function Navbar() {
           .single();
         
         setIsAdmin(data?.role === 'admin');
+      } else {
+        setIsAdmin(false);
       }
     }
     

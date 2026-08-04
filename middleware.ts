@@ -37,6 +37,12 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(url);
     }
 
+    if (user.email !== 'luisriverosu@gmail.com') {
+      const url = request.nextUrl.clone();
+      url.pathname = '/dashboard';
+      return NextResponse.redirect(url);
+    }
+
     const { data: profile } = await supabase
       .from('users')
       .select('role')
