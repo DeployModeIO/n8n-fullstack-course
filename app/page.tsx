@@ -79,7 +79,7 @@ export default function HomePage() {
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <Link
-              href="/course/fundamentos-infraestructura"
+              href="/course/fundamentos-infraestructura/introduccion-n8n"
               className="rounded-xl bg-gradient-to-r from-orange-500 to-red-500 px-8 py-3.5 text-lg font-semibold text-white shadow-lg shadow-orange-500/25 transition hover:shadow-orange-500/40"
             >
               Comenzar Curso
@@ -139,7 +139,7 @@ export default function HomePage() {
             la automatización.
           </p>
           <Link
-            href="/course/fundamentos-infraestructura"
+            href="/course/fundamentos-infraestructura/introduccion-n8n"
             className="inline-block rounded-xl bg-gradient-to-r from-orange-500 to-red-500 px-10 py-4 text-lg font-semibold text-white shadow-lg shadow-orange-500/25 transition hover:shadow-orange-500/40"
           >
             Comenzar Curso
