@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { isAdmin } from '@/lib/utils/admin-check';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -7,14 +8,30 @@ export async function GET() {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.admin.listUsers();
+  const adminClient = createAdminClient();
+  const { data, error } = await adminClient.auth.admin.listUsers();
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json({ data: data.users });
+  const usersWithRoles = await Promise.all(
+    (data.users || []).map(async (u) => {
+      const { data: profile } = await adminClient
+        .from('users')
+        .select('role')
+        .eq('id', u.id)
+        .single();
+      return {
+        id: u.id,
+        email: u.email,
+        role: profile?.role || 'student',
+        created_at: u.created_at,
+      };
+    })
+  );
+
+  return NextResponse.json({ data: usersWithRoles });
 }
 
 export async function POST(request: NextRequest) {
@@ -32,8 +49,15 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.admin.createUser({
+  if (password.length < 6) {
+    return NextResponse.json(
+      { error: 'La contraseña debe tener al menos 6 caracteres' },
+      { status: 400 }
+    );
+  }
+
+  const adminClient = createAdminClient();
+  const { data, error } = await adminClient.auth.admin.createUser({
     email,
     password,
     email_confirm: true,
@@ -43,11 +67,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  if (role && data.user) {
-    await supabase
+  if (data.user) {
+    await adminClient
       .from('users')
-      .update({ role })
-      .eq('id', data.user.id);
+      .upsert(
+        { id: data.user.id, email, role: role || 'student' },
+        { onConflict: 'id' }
+      );
   }
 
   return NextResponse.json({ data: data.user });
@@ -68,12 +94,14 @@ export async function DELETE(request: NextRequest) {
     );
   }
 
-  const supabase = await createClient();
-  const { error } = await supabase.auth.admin.deleteUser(userId);
+  const adminClient = createAdminClient();
+  const { error } = await adminClient.auth.admin.deleteUser(userId);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
+
+  await adminClient.from('users').delete().eq('id', userId);
 
   return NextResponse.json({ success: true });
 }

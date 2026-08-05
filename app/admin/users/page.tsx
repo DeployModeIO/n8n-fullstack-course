@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Users, Plus, Trash2, X } from 'lucide-react';
+import { Users, Plus, Trash2, X, KeyRound, Copy, Check, Eye, EyeOff } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { generatePassword } from '@/lib/utils/password';
 
 interface User {
   id: string;
@@ -21,6 +22,9 @@ export default function UsersPage() {
     role: 'student',
   });
   const [submitting, setSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [createdCredentials, setCreatedCredentials] = useState<{ email: string; password: string } | null>(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -36,42 +40,79 @@ export default function UsersPage() {
     setLoading(false);
   }
 
+  function handleGeneratePassword() {
+    const pw = generatePassword(16);
+    setFormData((prev) => ({ ...prev, password: pw }));
+    setShowPassword(true);
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSubmitting(true);
 
-    const supabase = createClient();
-    const { data, error } = await supabase.auth.signUp({
-      email: formData.email,
-      password: formData.password,
-    });
-
-    if (error) {
-      alert(error.message);
-      setSubmitting(false);
-      return;
-    }
-
-    if (data.user) {
-      await supabase.from('users').insert({
-        id: data.user.id,
-        email: formData.email,
-        role: formData.role,
+    try {
+      const response = await fetch('/api/admin/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          role: formData.role,
+        }),
       });
-    }
 
-    setFormData({ email: '', password: '', role: 'student' });
-    setShowModal(false);
-    setSubmitting(false);
-    fetchUsers();
+      const result = await response.json();
+
+      if (!response.ok) {
+        alert(result.error || 'Error al crear usuario');
+        setSubmitting(false);
+        return;
+      }
+
+      setCreatedCredentials({ email: formData.email, password: formData.password });
+      setFormData({ email: '', password: '', role: 'student' });
+      fetchUsers();
+    } catch {
+      alert('Error de conexion al crear usuario');
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   async function handleDelete(userId: string) {
-    if (!confirm('¿Estás seguro de eliminar este usuario?')) return;
+    if (!confirm('¿Estas seguro de eliminar este usuario?')) return;
 
-    const supabase = createClient();
-    await supabase.from('users').delete().eq('id', userId);
-    fetchUsers();
+    try {
+      const response = await fetch(`/api/admin/users?id=${userId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const result = await response.json();
+        alert(result.error || 'Error al eliminar usuario');
+        return;
+      }
+
+      fetchUsers();
+    } catch {
+      alert('Error de conexion al eliminar usuario');
+    }
+  }
+
+  function handleCopy() {
+    if (!createdCredentials) return;
+    const text = `Email: ${createdCredentials.email}\nContrasena: ${createdCredentials.password}`;
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  function handleCloseModal() {
+    setShowModal(false);
+    setCreatedCredentials(null);
+    setCopied(false);
+    setShowPassword(false);
+    setFormData({ email: '', password: '', role: 'student' });
   }
 
   if (loading) {
@@ -166,69 +207,177 @@ export default function UsersPage() {
                 Nuevo Usuario
               </h2>
               <button
-                onClick={() => setShowModal(false)}
+                onClick={handleCloseModal}
                 className="rounded-lg p-2 text-gray-500 transition hover:bg-gray-100 dark:hover:bg-white/5"
               >
                 <X size={18} />
               </button>
             </div>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  required
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                  className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 outline-none transition focus:border-[#FF6D5A] dark:border-white/20 dark:bg-white/5 dark:text-white"
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Contraseña
-                </label>
-                <input
-                  type="password"
-                  required
-                  minLength={6}
-                  value={formData.password}
-                  onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
-                  }
-                  className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 outline-none transition focus:border-[#FF6D5A] dark:border-white/20 dark:bg-white/5 dark:text-white"
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Rol
-                </label>
-                <select
-                  value={formData.role}
-                  onChange={(e) =>
-                    setFormData({ ...formData, role: e.target.value })
-                  }
-                  className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 outline-none transition focus:border-[#FF6D5A] dark:border-white/20 dark:bg-white/5 dark:text-white"
+            {!createdCredentials ? (
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={formData.email}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
+                    className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 outline-none transition focus:border-[#FF6D5A] dark:border-white/20 dark:bg-white/5 dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Contrasena
+                  </label>
+                  <div className="flex gap-2">
+                    <div className="relative flex-1">
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        required
+                        minLength={6}
+                        value={formData.password}
+                        onChange={(e) =>
+                          setFormData({ ...formData, password: e.target.value })
+                        }
+                        className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 pr-10 text-sm text-gray-900 outline-none transition focus:border-[#FF6D5A] dark:border-white/20 dark:bg-white/5 dark:text-white"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                      >
+                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleGeneratePassword}
+                      title="Generar contrasena segura"
+                      className="flex shrink-0 items-center gap-1.5 rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-xs font-medium text-gray-700 transition hover:border-[#FF6D5A] hover:text-[#FF6D5A] dark:border-white/20 dark:bg-white/5 dark:text-gray-300 dark:hover:border-[#FF6D5A]"
+                    >
+                      <KeyRound size={14} />
+                      Generar
+                    </button>
+                  </div>
+                  {formData.password && (
+                    <PasswordStrength password={formData.password} />
+                  )}
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Rol
+                  </label>
+                  <select
+                    value={formData.role}
+                    onChange={(e) =>
+                      setFormData({ ...formData, role: e.target.value })
+                    }
+                    className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 outline-none transition focus:border-[#FF6D5A] dark:border-white/20 dark:bg-white/5 dark:text-white"
+                  >
+                    <option value="student">Estudiante</option>
+                    <option value="instructor">Instructor</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </div>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="w-full rounded-xl bg-[#FF6D5A] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-[#FF6D5A]/90 disabled:opacity-50"
                 >
-                  <option value="student">Estudiante</option>
-                  <option value="instructor">Instructor</option>
-                  <option value="admin">Admin</option>
-                </select>
+                  {submitting ? 'Creando...' : 'Crear Usuario'}
+                </button>
+              </form>
+            ) : (
+              <div className="space-y-4">
+                <div className="rounded-xl bg-green-50 p-4 dark:bg-green-900/20">
+                  <p className="text-sm font-medium text-green-800 dark:text-green-300">
+                    Usuario creado exitosamente. Comparte estas credenciales con el usuario.
+                  </p>
+                </div>
+                <div className="space-y-3">
+                  <div>
+                    <label className="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">
+                      Email
+                    </label>
+                    <div className="rounded-xl border border-gray-300 bg-white p-3 dark:border-white/20 dark:bg-white/5">
+                      <p className="break-all text-sm font-medium text-gray-900 dark:text-white">
+                        {createdCredentials.email}
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">
+                      Contrasena
+                    </label>
+                    <div className="rounded-xl border border-gray-300 bg-white p-3 dark:border-white/20 dark:bg-white/5">
+                      <p className="break-all font-mono text-sm font-medium text-gray-900 dark:text-white">
+                        {createdCredentials.password}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleCopy}
+                    className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-gray-200 px-4 py-2.5 text-sm font-medium text-gray-900 transition hover:bg-gray-300 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
+                  >
+                    {copied ? (
+                      <>
+                        <Check size={16} className="text-green-500" />
+                        Copiado
+                      </>
+                    ) : (
+                      <>
+                        <Copy size={16} />
+                        Copiar Credenciales
+                      </>
+                    )}
+                  </button>
+                  <button
+                    onClick={handleCloseModal}
+                    className="flex-1 rounded-xl bg-[#FF6D5A] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-[#FF6D5A]/90"
+                  >
+                    Cerrar
+                  </button>
+                </div>
               </div>
-              <button
-                type="submit"
-                disabled={submitting}
-                className="w-full rounded-xl bg-[#FF6D5A] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-[#FF6D5A]/90 disabled:opacity-50"
-              >
-                {submitting ? 'Creando...' : 'Crear Usuario'}
-              </button>
-            </form>
+            )}
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function PasswordStrength({ password }: { password: string }) {
+  const checks = [
+    { label: '8+ caracteres', ok: password.length >= 8 },
+    { label: 'Mayuscula', ok: /[A-Z]/.test(password) },
+    { label: 'Minuscula', ok: /[a-z]/.test(password) },
+    { label: 'Numero', ok: /\d/.test(password) },
+    { label: 'Simbolo', ok: /[^A-Za-z0-9]/.test(password) },
+  ];
+  const score = checks.filter((c) => c.ok).length;
+
+  return (
+    <div className="mt-2 flex flex-wrap gap-1.5">
+      {checks.map((c) => (
+        <span
+          key={c.label}
+          className={`inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] font-medium ${
+            c.ok
+              ? 'bg-green-500/10 text-green-600 dark:text-green-400'
+              : 'bg-gray-500/10 text-gray-400'
+          }`}
+        >
+          {c.ok ? <Check size={10} /> : <X size={10} />}
+          {c.label}
+        </span>
+      ))}
     </div>
   );
 }

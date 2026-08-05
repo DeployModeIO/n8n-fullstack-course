@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Mail, Plus, X, Copy, Check, Eye, EyeOff } from 'lucide-react';
+import { Mail, Plus, X, Copy, Check, Eye, EyeOff, KeyRound } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { generatePassword } from '@/lib/utils/password';
 
 interface Invitation {
   id: string;
@@ -40,6 +41,12 @@ export default function InvitationsPage() {
       .order('created_at', { ascending: false });
     setInvitations(data || []);
     setLoading(false);
+  }
+
+  function handleGeneratePassword() {
+    const pw = generatePassword(16);
+    setFormData((prev) => ({ ...prev, password: pw }));
+    setShowPassword(true);
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -256,22 +263,33 @@ export default function InvitationsPage() {
                   <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Contraseña
                   </label>
-                  <div className="relative">
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      required
-                      value={formData.password}
-                      onChange={(e) =>
-                        setFormData({ ...formData, password: e.target.value })
-                      }
-                      className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 pr-10 text-sm text-gray-900 outline-none transition focus:border-[#FF6D5A] dark:border-white/20 dark:bg-white/5 dark:text-white"
-                    />
+                  <div className="flex gap-2">
+                    <div className="relative flex-1">
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        required
+                        value={formData.password}
+                        onChange={(e) =>
+                          setFormData({ ...formData, password: e.target.value })
+                        }
+                        className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 pr-10 text-sm text-gray-900 outline-none transition focus:border-[#FF6D5A] dark:border-white/20 dark:bg-white/5 dark:text-white"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                      >
+                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
+                    </div>
                     <button
                       type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                      onClick={handleGeneratePassword}
+                      title="Generar contraseña segura"
+                      className="flex shrink-0 items-center gap-1.5 rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-xs font-medium text-gray-700 transition hover:border-[#FF6D5A] hover:text-[#FF6D5A] dark:border-white/20 dark:bg-white/5 dark:text-gray-300 dark:hover:border-[#FF6D5A]"
                     >
-                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      <KeyRound size={14} />
+                      Generar
                     </button>
                   </div>
                 </div>
