@@ -127,3 +127,17 @@ code {
     background-position: 0% 50%;
   }
 }
+
+/* Anti-piratería: deshabilita selección y resaltado de texto en el contenido */
+.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.no-select :where(p, li, h1, h2, h3, h4, blockquote, code, pre) {
+  -webkit-user-select: none;
+  user-select: none;
+}

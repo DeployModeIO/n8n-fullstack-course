@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase/server';
 import { getSession } from '@/lib/auth/server';
 import CourseSidebar from '@/components/CourseSidebar';
 import LessonContent from '@/components/course/LessonContent';
+import ContentProtection from '@/components/ContentProtection';
+import { getEnrollmentStatus } from '@/lib/enrollment';
 import { modules } from '@/content/modules';
 
 export const dynamic = 'force-dynamic';
@@ -21,6 +23,11 @@ export default async function LessonPage({ params }: LessonPageProps) {
   }
 
   const supabase = createClient();
+
+  const enrollment = await getEnrollmentStatus(session.userId);
+  if (enrollment.blocked) {
+    redirect('/bloqueado');
+  }
 
   const currentModule = modules.find((m) => m.slug === moduleSlug);
   if (!currentModule) {
@@ -68,25 +75,35 @@ export default async function LessonPage({ params }: LessonPageProps) {
       />
 
       <div className="min-w-0 flex-1">
-        <LessonContent
-          lessonId={lesson.id}
-          title={lesson.title}
-          markdownContent={lesson.content}
-          n8nWorkflowJson={lesson.n8nWorkflowJson}
-          n8nWorkflowTitle={`Workflow: ${lesson.title}`}
-          quiz={lesson.quiz?.map((q) => ({
-            id: q.id,
-            question: q.question,
-            options: q.options.map((opt, idx) => ({
-              id: `${q.id}-opt-${idx}`,
-              text: opt,
-            })),
-            correctIndex: q.correctIndex,
-          }))}
-          completed={isCompleted}
-          previousLessonId={previousLesson ? `${moduleSlug}/${previousLesson.slug}` : undefined}
-          nextLessonId={nextLesson ? `${moduleSlug}/${nextLesson.slug}` : undefined}
-        />
+        <ContentProtection>
+          <LessonContent
+            lessonId={lesson.id}
+            title={lesson.title}
+            markdownContent={lesson.content}
+            n8nWorkflowJson={lesson.n8nWorkflowJson}
+            n8nWorkflowTitle={`Workflow: ${lesson.title}`}
+            quiz={lesson.quiz?.map((q) => ({
+              id: q.id,
+              question: q.question,
+              options: q.options.map((opt, idx) => ({
+                id: `${q.id}-opt-${idx}`,
+                text: opt,
+              })),
+              correctIndex: q.correctIndex,
+            }))}
+            labs={lesson.labs?.map((lab) => ({
+              id: lab.id,
+              title: lab.title,
+              objective: lab.objective,
+              instructions: lab.instructions,
+              deliverable: lab.deliverable,
+              difficulty: lab.difficulty,
+            }))}
+            completed={isCompleted}
+            previousLessonId={previousLesson ? `${moduleSlug}/${previousLesson.slug}` : undefined}
+            nextLessonId={nextLesson ? `${moduleSlug}/${nextLesson.slug}` : undefined}
+          />
+        </ContentProtection>
       </div>
     </div>
   );

@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils/cn";
 import GlassCard from "@/components/ui/GlassCard";
 import WorkflowCopier from "@/components/course/WorkflowCopier";
 import QuizViewer from "@/components/course/QuizViewer";
+import LabViewer, { LabData } from "@/components/course/LabViewer";
 import {
   CheckCircle2,
   ChevronLeft,
@@ -35,6 +36,7 @@ interface LessonContentProps {
   n8nWorkflowJson?: string | object;
   n8nWorkflowTitle?: string;
   quiz?: QuizQuestion[];
+  labs?: LabData[];
   completed: boolean;
   previousLessonId?: string;
   nextLessonId?: string;
@@ -92,6 +94,7 @@ export default function LessonContent({
   n8nWorkflowJson,
   n8nWorkflowTitle,
   quiz,
+  labs,
   completed,
   previousLessonId,
   nextLessonId,
@@ -173,6 +176,8 @@ export default function LessonContent({
       {quiz && quiz.length > 0 && (
         <QuizViewer questions={quiz} lessonId={lessonId} />
       )}
+
+      {labs && labs.length > 0 && <LabViewer labs={labs} />}
 
       <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <button

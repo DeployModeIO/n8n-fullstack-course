@@ -65,6 +65,30 @@ En la próxima lección, aprenderás a instalar N8N y crear tu primer workflow a
 - [Comunidad de N8N](https://community.n8n.io)
 - [GitHub de N8N](https://github.com/n8n-io/n8n)
 `,
+      labs: [
+        {
+          id: "lab-01-01",
+          title: "Mapa de valor de N8N para tu empresa",
+          objective:
+            "Identificar 3 procesos repetitivos en tu día a día que podrían automatizarse con N8N.",
+          instructions:
+            "1. Lista 5 tareas manuales que realizas cada semana.\n2. Clasifícalas por volumen y dolor (impacto).\n3. Elige las 3 mejor candidatas y describe la entrada, el paso y la salida de cada una.\n4. Señala qué integración nativa de N8N usarías.",
+          deliverable:
+            "Documento de una página con el mapa de automatizaciones priorizado.",
+          difficulty: "easy",
+        },
+        {
+          id: "lab-01-02",
+          title: "Instala N8N y exponlo de forma segura",
+          objective:
+            "Levantar una instancia local de N8N y documentar la configuración de seguridad básica.",
+          instructions:
+            "1. Ejecuta N8N con Docker o npm.\n2. Configura una variable de entorno para el modo de ejecución (OWN).\n3. Habilita HTTPS con un proxy inverso (ej. Caddy).\n4. Documenta los puertos expuestos y justifica por qué no deben quedar abiertos.",
+          deliverable:
+            "Captura de la instancia corriendo + diagrama de la capa de proxy.",
+          difficulty: "medium",
+        },
+      ],
     },
     {
       id: "les-01-02",

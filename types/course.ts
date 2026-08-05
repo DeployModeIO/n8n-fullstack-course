@@ -6,6 +6,16 @@ export interface QuizQuestion {
   explanation: string;
 }
 
+export interface Lab {
+  id: string;
+  title: string;
+  objective: string;
+  instructions: string;
+  starterWorkflowJson?: object;
+  deliverable: string;
+  difficulty: 'easy' | 'medium' | 'hard';
+}
+
 export interface Lesson {
   id: string;
   moduleSlug: string;
@@ -17,6 +27,7 @@ export interface Lesson {
   videoUrl?: string;
   n8nWorkflowJson?: object;
   quiz?: QuizQuestion[];
+  labs?: Lab[];
 }
 
 export interface Module {

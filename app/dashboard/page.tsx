@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { getSession } from '@/lib/auth/server';
 import { modules } from '@/content/modules';
-import { Clock, BookOpen, Trophy } from 'lucide-react';
+import { Clock, BookOpen, Trophy, Award } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -52,6 +52,27 @@ export default async function DashboardPage() {
   });
 
   const userName = session.email?.split('@')[0] || 'Estudiante';
+
+  let certificate: {
+    certificateNo: string;
+    verificationUrl: string;
+    issuedAt: string;
+  } | null = null;
+  try {
+    const { data: cert } = await supabase
+      .from('certificates')
+      .select('certificate_no, verification_url, issued_at')
+      .eq('user_id', session.userId)
+      .order('issued_at', { ascending: false })
+      .maybeSingle();
+    if (cert) {
+      certificate = {
+        certificateNo: cert.certificate_no,
+        verificationUrl: cert.verification_url,
+        issuedAt: cert.issued_at,
+      };
+    }
+  } catch {}
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-12">
@@ -108,6 +129,48 @@ export default async function DashboardPage() {
           />
         </div>
       </div>
+
+      {certificate ? (
+        <div className="mb-10 flex items-center gap-4 rounded-2xl p-6 backdrop-blur-xl bg-gradient-to-r from-[#1E90FF]/10 to-[#FF6D5A]/10 border border-[#1E90FF]/30">
+          <Award size={36} className="text-[#1E90FF]" />
+          <div className="flex-1">
+            <p className="font-semibold text-gray-900 dark:text-white">
+              ¡Certificado emitido!
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Código {certificate.certificateNo} ·{' '}
+              {new Date(certificate.issuedAt).toLocaleDateString('es')}
+            </p>
+          </div>
+          <a
+            href={certificate.verificationUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="rounded-xl bg-gradient-to-r from-[#FF6D5A] to-[#EA4B71] px-4 py-2 text-sm font-medium text-white"
+          >
+            Ver certificado
+          </a>
+        </div>
+      ) : (
+        <div className="mb-10 rounded-2xl p-6 backdrop-blur-xl bg-white/70 border border-gray-200/50 dark:bg-white/10 dark:border-white/15">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p className="font-semibold text-gray-900 dark:text-white">
+                Examen Final
+              </p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Aprueba con 70% para obtener tu certificación verificable.
+              </p>
+            </div>
+            <Link
+              href="/examen-final"
+              className="rounded-xl bg-gradient-to-r from-[#FF6D5A] to-[#EA4B71] px-5 py-2.5 text-sm font-medium text-white"
+            >
+              Rendir examen
+            </Link>
+          </div>
+        </div>
+      )}
 
       <h2 className="mb-6 text-xl font-bold text-gray-900 dark:text-white">Módulos del Curso</h2>
       <div className="mb-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
