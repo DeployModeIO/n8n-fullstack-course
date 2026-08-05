@@ -1,16 +1,15 @@
 import { createClient } from '@/lib/supabase/server';
+import { getSession } from '@/lib/auth/server';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const session = await getSession();
 
-  if (!user) {
+  if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  const supabase = createClient();
   const body = await request.json();
   const { lesson_id, score, total_questions, answers, passed } = body;
 
@@ -24,7 +23,7 @@ export async function POST(request: NextRequest) {
   const { data, error } = await supabase
     .from('quiz_results')
     .insert({
-      user_id: user.id,
+      user_id: session.userId,
       lesson_id,
       score,
       total_questions: total_questions ?? 0,
@@ -42,22 +41,20 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const session = await getSession();
 
-  if (!user) {
+  if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  const supabase = createClient();
   const { searchParams } = new URL(request.url);
   const lessonId = searchParams.get('lesson_id');
 
   let query = supabase
     .from('quiz_results')
     .select('*')
-    .eq('user_id', user.id)
+    .eq('user_id', session.userId)
     .order('attempted_at', { ascending: false });
 
   if (lessonId) {

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { Users, Plus, Trash2, X, KeyRound, Copy, Check, Eye, EyeOff } from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
 import { generatePassword } from '@/lib/utils/password';
 
 interface User {
@@ -31,12 +30,13 @@ export default function UsersPage() {
   }, []);
 
   async function fetchUsers() {
-    const supabase = createClient();
-    const { data } = await supabase
-      .from('users')
-      .select('id, email, role, created_at')
-      .order('created_at', { ascending: false });
-    setUsers(data || []);
+    try {
+      const response = await fetch('/api/admin/users');
+      const result = await response.json();
+      setUsers(result.data || []);
+    } catch {
+      setUsers([]);
+    }
     setLoading(false);
   }
 

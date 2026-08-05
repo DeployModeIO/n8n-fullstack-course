@@ -1,14 +1,5 @@
-'use client';
-
-import { useEffect, useState } from 'react';
+import { createClient } from '@/lib/supabase/server';
 import { Users, Mail, Clock, UserPlus } from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
-
-interface Stats {
-  totalUsers: number;
-  totalInvitations: number;
-  pendingInvitations: number;
-}
 
 interface RecentUser {
   id: string;
@@ -17,56 +8,35 @@ interface RecentUser {
   created_at: string;
 }
 
-export default function AdminDashboardPage() {
-  const [stats, setStats] = useState<Stats>({
-    totalUsers: 0,
-    totalInvitations: 0,
-    pendingInvitations: 0,
-  });
-  const [recentUsers, setRecentUsers] = useState<RecentUser[]>([]);
-  const [loading, setLoading] = useState(true);
+export const dynamic = 'force-dynamic';
 
-  useEffect(() => {
-    async function fetchData() {
-      const supabase = createClient();
+export default async function AdminDashboardPage() {
+  const supabase = createClient();
 
-      const { count: usersCount } = await supabase
-        .from('users')
-        .select('*', { count: 'exact', head: true });
+  const { count: usersCount } = await supabase
+    .from('users')
+    .select('*', { count: 'exact', head: true });
 
-      const { count: invitationsCount } = await supabase
-        .from('invitations')
-        .select('*', { count: 'exact', head: true });
+  const { count: invitationsCount } = await supabase
+    .from('invitations')
+    .select('*', { count: 'exact', head: true });
 
-      const { count: pendingCount } = await supabase
-        .from('invitations')
-        .select('*', { count: 'exact', head: true })
-        .eq('status', 'pending');
+  const { count: pendingCount } = await supabase
+    .from('invitations')
+    .select('*', { count: 'exact', head: true })
+    .eq('status', 'pending');
 
-      const { data: users } = await supabase
-        .from('users')
-        .select('id, email, role, created_at')
-        .order('created_at', { ascending: false })
-        .limit(5);
+  const { data: recentUsers } = await supabase
+    .from('users')
+    .select('id, email, role, created_at')
+    .order('created_at', { ascending: false })
+    .limit(5);
 
-      setStats({
-        totalUsers: usersCount || 0,
-        totalInvitations: invitationsCount || 0,
-        pendingInvitations: pendingCount || 0,
-      });
-      setRecentUsers(users || []);
-      setLoading(false);
-    }
-    fetchData();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="flex min-h-[40vh] items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#FF6D5A] border-t-transparent" />
-      </div>
-    );
-  }
+  const stats = {
+    totalUsers: usersCount || 0,
+    totalInvitations: invitationsCount || 0,
+    pendingInvitations: pendingCount || 0,
+  };
 
   const statCards = [
     {
@@ -145,7 +115,7 @@ export default function AdminDashboardPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 dark:divide-white/5">
-              {recentUsers.map((user) => (
+              {(recentUsers || []).map((user: RecentUser) => (
                 <tr key={user.id}>
                   <td className="py-3 text-sm text-gray-900 dark:text-white">
                     {user.email}
@@ -160,7 +130,7 @@ export default function AdminDashboardPage() {
                   </td>
                 </tr>
               ))}
-              {recentUsers.length === 0 && (
+              {(!recentUsers || recentUsers.length === 0) && (
                 <tr>
                   <td
                     colSpan={3}

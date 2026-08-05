@@ -4,7 +4,6 @@ import { useState } from "react";
 import { cn } from "@/lib/utils/cn";
 import GlassCard from "@/components/ui/GlassCard";
 import ProgressBar from "@/components/ui/ProgressBar";
-import { createClient } from "@/lib/supabase/client";
 import { CheckCircle2, XCircle, RotateCcw, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface QuizOption {
@@ -51,12 +50,16 @@ export default function QuizViewer({ questions, lessonId }: QuizViewerProps) {
 
     setSaving(true);
     try {
-      const supabase = createClient();
-      await supabase.from("quiz_results").insert({
-        lesson_id: lessonId,
-        score: percentage,
-        passed: percentage >= 70,
-        answers,
+      await fetch("/api/quiz", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          lesson_id: lessonId,
+          score: percentage,
+          total_questions: questions.length,
+          passed: percentage >= 70,
+          answers,
+        }),
       });
     } catch {
     } finally {

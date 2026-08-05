@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { isAdmin } from '@/lib/utils/admin-check';
+import { getSession } from '@/lib/auth/server';
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 
@@ -8,7 +9,7 @@ export async function GET() {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
-  const supabase = await createClient();
+  const supabase = createClient();
   const { data, error } = await supabase
     .from('invitations')
     .select('*')
@@ -26,15 +27,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
+  const session = await getSession();
+  if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  const supabase = createClient();
   const body = await request.json();
   const { email, role } = body;
 
@@ -53,7 +51,7 @@ export async function POST(request: NextRequest) {
     .insert({
       email,
       role,
-      invited_by: user.id,
+      invited_by: session.userId,
       token,
       expires_at,
     })
@@ -82,7 +80,7 @@ export async function PATCH(request: NextRequest) {
     );
   }
 
-  const validStatuses = ['accept', 'revoke', 'expire'];
+  const validStatuses = ['pending', 'accepted', 'expired', 'revoked'];
   if (!validStatuses.includes(status)) {
     return NextResponse.json(
       { error: `status must be one of: ${validStatuses.join(', ')}` },
@@ -90,10 +88,10 @@ export async function PATCH(request: NextRequest) {
     );
   }
 
-  const supabase = await createClient();
+  const supabase = createClient();
   const { data, error } = await supabase
     .from('invitations')
-    .update({ status, updated_at: new Date().toISOString() })
+    .update({ status, accepted_at: status === 'accepted' ? new Date().toISOString() : null })
     .eq('id', id)
     .select()
     .single();

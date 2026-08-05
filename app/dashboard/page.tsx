@@ -1,21 +1,20 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
+import { getSession } from '@/lib/auth/server';
 import { modules } from '@/content/modules';
 import { Clock, BookOpen, Trophy } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
 export default async function DashboardPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const session = await getSession();
 
-  if (!user) {
+  if (!session) {
     redirect('/login');
   }
 
+  const supabase = createClient();
   const totalLessons = modules.reduce(
     (sum, m) => sum + m.lessons.length,
     0
@@ -31,7 +30,7 @@ export default async function DashboardPage() {
     const { data: progress } = await supabase
       .from('user_progress')
       .select('lesson_id, completed')
-      .eq('user_id', user.id)
+      .eq('user_id', session.userId)
       .eq('completed', true);
 
     completedLessonIds = new Set(
@@ -52,10 +51,7 @@ export default async function DashboardPage() {
     return { ...mod, completed, percent };
   });
 
-  const userName =
-    user.user_metadata?.full_name ||
-    user.email?.split('@')[0] ||
-    'Estudiante';
+  const userName = session.email?.split('@')[0] || 'Estudiante';
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-12">

@@ -1,38 +1,28 @@
-import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import { createClient } from '@/lib/supabase/server';
+import { getSession } from '@/lib/auth/server';
+import { modules } from '@/content/modules';
 import { BookOpen, Clock, CheckCircle2 } from 'lucide-react';
 
-export default async function CursoPage() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+export const dynamic = 'force-dynamic';
 
-  if (!user) {
+export default async function CursoPage() {
+  const session = await getSession();
+
+  if (!session) {
     redirect('/login');
   }
 
-  const { data: modules } = await supabase
-    .from('modules')
-    .select(`
-      *,
-      lessons (
-        id,
-        title,
-        slug,
-        estimated_minutes,
-        sort_order
-      )
-    `)
-    .order('sort_order');
-
+  const supabase = createClient();
   const { data: progress } = await supabase
     .from('user_progress')
     .select('lesson_id, completed')
-    .eq('user_id', user.id)
+    .eq('user_id', session.userId)
     .eq('completed', true);
 
   const completedLessonIds = new Set(
-    progress?.map(p => p.lesson_id) || []
+    progress?.map((p: { lesson_id: string }) => p.lesson_id) || []
   );
 
   return (
@@ -47,18 +37,18 @@ export default async function CursoPage() {
       </div>
 
       <div className="grid gap-8">
-        {modules?.map((module) => {
-          const totalLessons = module.lessons?.length || 0;
-          const completedLessons = module.lessons?.filter(
-            (lesson: any) => completedLessonIds.has(lesson.id)
-          ).length || 0;
-          const progressPercent = totalLessons > 0 
-            ? Math.round((completedLessons / totalLessons) * 100) 
+        {modules.map((mod) => {
+          const totalLessons = mod.lessons.length;
+          const completedLessons = mod.lessons.filter((l) =>
+            completedLessonIds.has(l.id)
+          ).length;
+          const progressPercent = totalLessons > 0
+            ? Math.round((completedLessons / totalLessons) * 100)
             : 0;
 
           return (
             <div
-              key={module.id}
+              key={mod.slug}
               className="rounded-2xl p-6 backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-lg dark:bg-white/10 dark:border-white/15 dark:shadow-none"
             >
               <div className="flex items-start justify-between mb-4">
@@ -68,11 +58,11 @@ export default async function CursoPage() {
                       <BookOpen size={20} />
                     </span>
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                      {module.title}
+                      {mod.title}
                     </h2>
                   </div>
                   <p className="text-gray-600 dark:text-gray-400 ml-13">
-                    {module.description}
+                    {mod.description}
                   </p>
                 </div>
                 <div className="text-right ml-4">
@@ -95,12 +85,12 @@ export default async function CursoPage() {
               </div>
 
               <div className="grid gap-3">
-                {module.lessons?.map((lesson: any, index: number) => {
+                {mod.lessons.map((lesson, index) => {
                   const isCompleted = completedLessonIds.has(lesson.id);
                   return (
                     <Link
                       key={lesson.id}
-                      href={`/course/${module.slug}/${lesson.slug}`}
+                      href={`/course/${mod.slug}/${lesson.slug}`}
                       className="flex items-center gap-4 p-4 rounded-xl border border-gray-200/50 dark:border-white/15 hover:bg-gray-50 dark:hover:bg-white/10 transition-colors"
                     >
                       <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700/50 text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -117,7 +107,7 @@ export default async function CursoPage() {
                       </div>
                       <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
                         <Clock size={14} />
-                        <span>{lesson.estimated_minutes} min</span>
+                        <span>{lesson.estimatedMinutes} min</span>
                       </div>
                     </Link>
                   );

@@ -1,18 +1,6 @@
-import { createClient } from '@/lib/supabase/server';
+import { getSession } from '@/lib/auth/server';
 
 export async function isAdmin() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) return false;
-
-  const { data } = await supabase
-    .from('users')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-
-  return data?.role === 'admin';
+  const session = await getSession();
+  return session?.role === 'admin' && session?.email === 'luisriverosu@gmail.com';
 }

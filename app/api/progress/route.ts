@@ -1,16 +1,15 @@
 import { createClient } from '@/lib/supabase/server';
+import { getSession } from '@/lib/auth/server';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const session = await getSession();
 
-  if (!user) {
+  if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  const supabase = createClient();
   const body = await request.json();
   const { lesson_id, completed } = body;
 
@@ -25,7 +24,7 @@ export async function POST(request: NextRequest) {
     .from('user_progress')
     .upsert(
       {
-        user_id: user.id,
+        user_id: session.userId,
         lesson_id,
         completed: completed ?? true,
         completed_at: completed ? new Date().toISOString() : null,
@@ -44,22 +43,20 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const session = await getSession();
 
-  if (!user) {
+  if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  const supabase = createClient();
   const { searchParams } = new URL(request.url);
   const lessonId = searchParams.get('lesson_id');
 
   let query = supabase
     .from('user_progress')
     .select('*, lessons(*)')
-    .eq('user_id', user.id);
+    .eq('user_id', session.userId);
 
   if (lessonId) {
     query = query.eq('lesson_id', lessonId);

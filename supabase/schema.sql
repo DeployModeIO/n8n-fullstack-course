@@ -1,6 +1,43 @@
-CREATE TABLE public.users (
-  id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
+-- ============================================================
+-- MIGRATION: Eliminar Supabase Auth, usar auth propio
+-- Ejecutar esto en Supabase SQL Editor (panel existente)
+-- ============================================================
+
+-- 1. Eliminar trigger y funcion que sincronizaban auth.users
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+DROP FUNCTION IF EXISTS public.handle_new_user();
+
+-- 2. Eliminar FK de public.users.id -> auth.users.id
+ALTER TABLE public.users DROP CONSTRAINT IF EXISTS users_id_fkey;
+
+-- 3. Agregar columna password_hash
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS password_hash TEXT;
+
+-- 4. Eliminar funcion RPC auxiliar (ya no se necesita)
+DROP FUNCTION IF EXISTS public.get_user_id_by_email(TEXT);
+
+-- 5. Crear o actualizar el usuario admin con contraseña hasheada
+-- Contraseña: AdminN8N2026!  (cambiar despues del primer login)
+INSERT INTO public.users (id, email, role, password_hash, created_at)
+VALUES (
+  gen_random_uuid(),
+  'luisriverosu@gmail.com',
+  'admin',
+  '$2b$10$RGl5L2SFMniYMK5PSrWFWeu.iJikKH/7kKURTmB12KoLv5QGCwWBu',
+  now()
+)
+ON CONFLICT (email) DO UPDATE
+SET password_hash = EXCLUDED.password_hash,
+    role = 'admin';
+
+-- ============================================================
+-- SCHEMA COMPLETO (referencia / instalaciones nuevas)
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS public.users (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   email TEXT UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,
   full_name TEXT,
   avatar_url TEXT,
   role TEXT DEFAULT 'student' CHECK (role IN ('student', 'instructor', 'admin')),
@@ -8,7 +45,7 @@ CREATE TABLE public.users (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
-CREATE TABLE public.modules (
+CREATE TABLE IF NOT EXISTS public.modules (
   id SERIAL PRIMARY KEY,
   title TEXT NOT NULL,
   slug TEXT UNIQUE NOT NULL,
@@ -19,7 +56,7 @@ CREATE TABLE public.modules (
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
-CREATE TABLE public.lessons (
+CREATE TABLE IF NOT EXISTS public.lessons (
   id SERIAL PRIMARY KEY,
   module_id INTEGER REFERENCES public.modules(id) ON DELETE CASCADE,
   title TEXT NOT NULL,
@@ -34,20 +71,20 @@ CREATE TABLE public.lessons (
   UNIQUE(module_id, slug)
 );
 
-CREATE TABLE public.user_progress (
+CREATE TABLE IF NOT EXISTS public.user_progress (
   id SERIAL PRIMARY KEY,
   user_id UUID REFERENCES public.users(id) ON DELETE CASCADE,
-  lesson_id INTEGER REFERENCES public.lessons(id) ON DELETE CASCADE,
+  lesson_id TEXT,
   completed BOOLEAN DEFAULT false,
   completed_at TIMESTAMPTZ,
   last_accessed_at TIMESTAMPTZ DEFAULT now(),
   UNIQUE(user_id, lesson_id)
 );
 
-CREATE TABLE public.quiz_results (
+CREATE TABLE IF NOT EXISTS public.quiz_results (
   id SERIAL PRIMARY KEY,
   user_id UUID REFERENCES public.users(id) ON DELETE CASCADE,
-  lesson_id INTEGER REFERENCES public.lessons(id) ON DELETE CASCADE,
+  lesson_id TEXT,
   score INTEGER NOT NULL DEFAULT 0,
   total_questions INTEGER NOT NULL DEFAULT 0,
   answers JSONB,
@@ -55,10 +92,10 @@ CREATE TABLE public.quiz_results (
   attempted_at TIMESTAMPTZ DEFAULT now()
 );
 
-CREATE TABLE public.submissions (
+CREATE TABLE IF NOT EXISTS public.submissions (
   id SERIAL PRIMARY KEY,
   user_id UUID REFERENCES public.users(id) ON DELETE CASCADE,
-  lesson_id INTEGER REFERENCES public.lessons(id) ON DELETE CASCADE,
+  lesson_id TEXT,
   content JSONB,
   status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'reviewed', 'approved', 'rejected')),
   feedback TEXT,
@@ -66,64 +103,13 @@ CREATE TABLE public.submissions (
   reviewed_at TIMESTAMPTZ
 );
 
-CREATE INDEX idx_user_progress_user ON public.user_progress(user_id);
-CREATE INDEX idx_user_progress_lesson ON public.user_progress(lesson_id);
-CREATE INDEX idx_quiz_results_user ON public.quiz_results(user_id);
-CREATE INDEX idx_submissions_user ON public.submissions(user_id);
-CREATE INDEX idx_lessons_module ON public.lessons(module_id);
+CREATE INDEX IF NOT EXISTS idx_user_progress_user ON public.user_progress(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_progress_lesson ON public.user_progress(lesson_id);
+CREATE INDEX IF NOT EXISTS idx_quiz_results_user ON public.quiz_results(user_id);
+CREATE INDEX IF NOT EXISTS idx_submissions_user ON public.submissions(user_id);
+CREATE INDEX IF NOT EXISTS idx_lessons_module ON public.lessons(module_id);
 
-CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS TRIGGER AS $$
-BEGIN
-  INSERT INTO public.users (id, email, full_name, avatar_url)
-  VALUES (
-    NEW.id,
-    NEW.email,
-    COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'name', split_part(NEW.email, '@', 1)),
-    COALESCE(NEW.raw_user_meta_data->>'avatar_url', NEW.raw_user_meta_data->>'picture')
-  );
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-CREATE TRIGGER on_auth_user_created
-  AFTER INSERT ON auth.users
-  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
-
-ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.modules ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.lessons ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.user_progress ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.quiz_results ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.submissions ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Users can view own profile" ON public.users FOR SELECT USING (auth.uid() = id);
-CREATE POLICY "Users can update own profile" ON public.users FOR UPDATE USING (auth.uid() = id);
-
-CREATE POLICY "Modules are viewable by authenticated users" ON public.modules FOR SELECT USING (auth.role() = 'authenticated');
-
-CREATE POLICY "Lessons are viewable by authenticated users" ON public.lessons FOR SELECT USING (auth.role() = 'authenticated');
-
-CREATE POLICY "Users can view own progress" ON public.user_progress FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY "Users can insert own progress" ON public.user_progress FOR INSERT WITH CHECK (auth.uid() = user_id);
-CREATE POLICY "Users can update own progress" ON public.user_progress FOR UPDATE USING (auth.uid() = user_id);
-
-CREATE POLICY "Users can view own quiz results" ON public.quiz_results FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY "Users can insert own quiz results" ON public.quiz_results FOR INSERT WITH CHECK (auth.uid() = user_id);
-
-CREATE POLICY "Users can view own submissions" ON public.submissions FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY "Users can insert own submissions" ON public.submissions FOR INSERT WITH CHECK (auth.uid() = user_id);
-CREATE POLICY "Users can update own submissions" ON public.submissions FOR UPDATE USING (auth.uid() = user_id);
-
-INSERT INTO public.modules (title, slug, description, icon, sort_order) VALUES
-('Fundamentos e Infraestructura', 'fundamentos-infraestructura', 'Introducción a N8N, despliegue local y en producción, configuración de entorno.', 'Server', 1),
-('Core de N8N y Nodos Esenciales', 'core-nodos-esenciales', 'Triggers, transformación de datos, Code Node, sub-workflows y modularización.', 'Cpu', 2),
-('Integraciones, APIs y Autenticación', 'integraciones-apis', 'REST APIs, OAuth2, integración con Supabase, PostgreSQL, Notion y Google Workspace.', 'Plug', 3),
-('Automatización con IA (AI Agentic)', 'automatizacion-ia', 'Agentes IA con LangChain, OpenAI, Claude, Ollama, RAG y bases de datos vectoriales.', 'Brain', 4),
-('Custom Nodes y Desarrollo', 'custom-nodes', 'Creación de nodos personalizados con TypeScript y el N8N CLI.', 'Code', 5),
-('Escalabilidad y Seguridad', 'escalabilidad-seguridad', 'Manejo de errores, escalado horizontal con workers, Docker/Kubernetes y hardening.', 'Shield', 6);
-
-CREATE TABLE public.invitations (
+CREATE TABLE IF NOT EXISTS public.invitations (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   email TEXT UNIQUE NOT NULL,
   role TEXT DEFAULT 'student' CHECK (role IN ('student', 'instructor', 'admin')),
@@ -135,30 +121,6 @@ CREATE TABLE public.invitations (
   accepted_at TIMESTAMPTZ
 );
 
-CREATE INDEX idx_invitations_email ON public.invitations(email);
-CREATE INDEX idx_invitations_token ON public.invitations(token);
-CREATE INDEX idx_invitations_status ON public.invitations(status);
-
-ALTER TABLE public.invitations ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Admins can view all invitations" ON public.invitations FOR SELECT USING (
-  EXISTS (
-    SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin'
-  )
-);
-
-CREATE POLICY "Admins can insert invitations" ON public.invitations FOR INSERT WITH CHECK (
-  EXISTS (
-    SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin'
-  )
-);
-
-CREATE POLICY "Admins can update invitations" ON public.invitations FOR UPDATE USING (
-  EXISTS (
-    SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin'
-  )
-);
-
-CREATE POLICY "Users can view own invitation by email" ON public.invitations FOR SELECT USING (
-  email = auth.email()
-);
+CREATE INDEX IF NOT EXISTS idx_invitations_email ON public.invitations(email);
+CREATE INDEX IF NOT EXISTS idx_invitations_token ON public.invitations(token);
+CREATE INDEX IF NOT EXISTS idx_invitations_status ON public.invitations(status);

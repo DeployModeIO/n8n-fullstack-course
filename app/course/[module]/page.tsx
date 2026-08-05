@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
+import { getSession } from '@/lib/auth/server';
 import CourseSidebar from '@/components/CourseSidebar';
 import { modules } from '@/content/modules';
 import { CheckCircle2, Clock } from 'lucide-react';
@@ -14,15 +15,13 @@ interface ModulePageProps {
 export default async function ModulePage({ params }: ModulePageProps) {
   const { module: moduleSlug } = await params;
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const session = await getSession();
 
-  if (!user) {
+  if (!session) {
     redirect('/login');
   }
 
+  const supabase = createClient();
   const currentModule = modules.find((m) => m.slug === moduleSlug);
   if (!currentModule) {
     redirect('/dashboard');
@@ -33,7 +32,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
     const { data: progress } = await supabase
       .from('user_progress')
       .select('lesson_id, completed')
-      .eq('user_id', user.id)
+      .eq('user_id', session.userId)
       .eq('completed', true);
 
     completedLessonIds = new Set(

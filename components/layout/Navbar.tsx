@@ -5,8 +5,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils/cn";
 import AuthButton from "@/components/ui/AuthButton";
 import ThemeToggle from "@/components/ui/ThemeToggle";
-import { Menu, X, Shield } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { Menu, X } from "lucide-react";
 
 const navLinks = [
   { href: "/", label: "Inicio" },
@@ -19,27 +18,20 @@ export default function Navbar() {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    async function checkAdmin() {
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (user && user.email === 'luisriverosu@gmail.com') {
-        const { data } = await supabase
-          .from('users')
-          .select('role')
-          .eq('id', user.id)
-          .single();
-        
-        setIsAdmin(data?.role === 'admin');
-      } else {
-        setIsAdmin(false);
-      }
-    }
-    
-    checkAdmin();
+    fetch("/api/auth/me")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        const user = data?.user;
+        setIsAdmin(
+          !!user &&
+            user.role === "admin" &&
+            user.email === "luisriverosu@gmail.com"
+        );
+      })
+      .catch(() => setIsAdmin(false));
   }, []);
 
-  const allLinks = isAdmin 
+  const allLinks = isAdmin
     ? [...navLinks, { href: "/admin", label: "Admin" }]
     : navLinks;
 

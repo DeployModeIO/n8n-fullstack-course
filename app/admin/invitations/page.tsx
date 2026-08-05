@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { Mail, Plus, X, Copy, Check, Eye, EyeOff, KeyRound } from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
 import { generatePassword } from '@/lib/utils/password';
 
 interface Invitation {
@@ -34,12 +33,13 @@ export default function InvitationsPage() {
   }, []);
 
   async function fetchInvitations() {
-    const supabase = createClient();
-    const { data } = await supabase
-      .from('invitations')
-      .select('id, email, role, status, token, created_at, expires_at')
-      .order('created_at', { ascending: false });
-    setInvitations(data || []);
+    try {
+      const response = await fetch('/api/admin/invitations');
+      const result = await response.json();
+      setInvitations(result.data || []);
+    } catch {
+      setInvitations([]);
+    }
     setLoading(false);
   }
 
@@ -72,19 +72,6 @@ export default function InvitationsPage() {
         return;
       }
 
-      const supabase = createClient();
-      const token = crypto.randomUUID();
-      const expiresAt = new Date();
-      expiresAt.setDate(expiresAt.getDate() + 7);
-
-      await supabase.from('invitations').insert({
-        email: formData.email,
-        role: formData.role,
-        status: 'accepted',
-        token,
-        expires_at: expiresAt.toISOString(),
-      });
-
       setCreatedCredentials({ email: formData.email, password: formData.password });
       setFormData({ email: '', password: '', role: 'student' });
       setSubmitting(false);
@@ -98,11 +85,11 @@ export default function InvitationsPage() {
   async function handleRevoke(invitationId: string) {
     if (!confirm('¿Estás seguro de revocar esta invitación?')) return;
 
-    const supabase = createClient();
-    await supabase
-      .from('invitations')
-      .update({ status: 'revoked' })
-      .eq('id', invitationId);
+    await fetch('/api/admin/invitations', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: invitationId, status: 'revoked' }),
+    });
     fetchInvitations();
   }
 

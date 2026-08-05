@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { getSession } from '@/lib/auth/server';
 import CourseSidebar from '@/components/CourseSidebar';
 import LessonContent from '@/components/course/LessonContent';
 import { modules } from '@/content/modules';
@@ -13,14 +14,13 @@ interface LessonPageProps {
 export default async function LessonPage({ params }: LessonPageProps) {
   const { module: moduleSlug, lesson: lessonSlug } = await params;
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const session = await getSession();
 
-  if (!user) {
+  if (!session) {
     redirect('/login');
   }
+
+  const supabase = createClient();
 
   const currentModule = modules.find((m) => m.slug === moduleSlug);
   if (!currentModule) {
@@ -47,17 +47,17 @@ export default async function LessonPage({ params }: LessonPageProps) {
     const { data: progress } = await supabase
       .from('user_progress')
       .select('completed')
-      .eq('user_id', user.id)
+      .eq('user_id', session.userId)
       .eq('lesson_id', lesson.id)
-      .single();
+      .maybeSingle();
     isCompleted = progress?.completed ?? false;
 
     await supabase.from('user_progress').upsert({
-      user_id: user.id,
+      user_id: session.userId,
       lesson_id: lesson.id,
       last_accessed_at: new Date().toISOString(),
       completed: isCompleted,
-    });
+    }, { onConflict: 'user_id,lesson_id' });
   } catch {}
 
   return (

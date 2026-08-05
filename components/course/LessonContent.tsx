@@ -8,7 +8,6 @@ import { cn } from "@/lib/utils/cn";
 import GlassCard from "@/components/ui/GlassCard";
 import WorkflowCopier from "@/components/course/WorkflowCopier";
 import QuizViewer from "@/components/course/QuizViewer";
-import { createClient } from "@/lib/supabase/client";
 import {
   CheckCircle2,
   ChevronLeft,
@@ -104,11 +103,13 @@ export default function LessonContent({
   const handleMarkComplete = async () => {
     setMarkingComplete(true);
     try {
-      const supabase = createClient();
-      await supabase.from("user_progress").upsert({
-        lesson_id: lessonId,
-        completed: true,
-        completed_at: new Date().toISOString(),
+      await fetch("/api/progress", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          lesson_id: lessonId,
+          completed: true,
+        }),
       });
       setIsCompleted(true);
     } catch {
