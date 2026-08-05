@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils/cn";
 import AuthButton from "@/components/ui/AuthButton";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import { Menu, X } from "lucide-react";
+import { useAuth } from "@/lib/auth/context";
 
 const navLinks = [
   { href: "/", label: "Inicio" },
@@ -15,21 +16,10 @@ const navLinks = [
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const { user } = useAuth();
 
-  useEffect(() => {
-    fetch("/api/auth/me")
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        const user = data?.user;
-        setIsAdmin(
-          !!user &&
-            user.role === "admin" &&
-            user.email === "luisriverosu@gmail.com"
-        );
-      })
-      .catch(() => setIsAdmin(false));
-  }, []);
+  const isAdmin =
+    !!user && user.role === "admin" && user.email === "luisriverosu@gmail.com";
 
   const allLinks = isAdmin
     ? [...navLinks, { href: "/admin", label: "Admin" }]

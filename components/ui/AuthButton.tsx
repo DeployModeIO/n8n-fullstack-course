@@ -1,35 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/utils/cn";
 import { LogIn, LogOut } from "lucide-react";
-
-type SessionUser = {
-  id: string;
-  email: string;
-  role: string;
-};
+import { useAuth } from "@/lib/auth/context";
 
 export default function AuthButton() {
-  const [user, setUser] = useState<SessionUser | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, loading, logout } = useAuth();
   const router = useRouter();
-
-  useEffect(() => {
-    fetch("/api/auth/me")
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        setUser(data?.user || null);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
 
   const handleLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
-    setUser(null);
+    logout();
     router.push("/login");
     router.refresh();
   };
@@ -61,7 +44,7 @@ export default function AuthButton() {
           )}
         >
           <LogOut size={16} />
-          <span className="hidden sm:inline">Salir</span>
+          <span className="hidden sm:inline">Cerrar Sesión</span>
         </button>
       </div>
     );

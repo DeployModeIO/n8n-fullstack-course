@@ -43,4 +43,8 @@ export const sessionCookieOptions = {
   sameSite: 'lax' as const,
   path: '/',
   maxAge: SESSION_MAX_AGE,
+  // Explicitly set domain only in production to avoid issues in local dev
+  ...(process.env.NODE_ENV === 'production' && {
+    domain: process.env.AUTH_COOKIE_DOMAIN || undefined,
+  }),
 };

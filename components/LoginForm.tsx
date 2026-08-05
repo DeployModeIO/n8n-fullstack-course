@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils/cn";
 import { Mail, Lock, Loader2 } from "lucide-react";
+import { useAuth } from "@/lib/auth/context";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -11,6 +12,7 @@ export default function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+  const { login } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,6 +34,7 @@ export default function LoginForm() {
         return;
       }
 
+      login(data.user);
       router.push("/dashboard");
       router.refresh();
     } catch {
