@@ -4,7 +4,7 @@ export const module3: Module = {
   id: "mod-03",
   slug: "integraciones-apis",
   title: "Integraciones, APIs y Autenticación",
-  description: "Conecta N8N con servicios externos: HTTP Request, Supabase, Google Workspace, Notion, Airtable y patrones de diseño de APIs.",
+  description: "Conecta N8N con servicios externos usando REST APIs, OAuth2, y autenticación avanzada.",
   icon: "Plug",
   sortOrder: 3,
   lessons: [
@@ -12,94 +12,96 @@ export const module3: Module = {
       id: "les-03-01",
       moduleSlug: "integraciones-apis",
       slug: "http-request-node",
-      title: "HTTP Request: Deep Dive",
-      description: "Domina el nodo HTTP Request: métodos, headers, autenticación OAuth2, API Keys, Bearer tokens y manejo de respuestas.",
-      content: `## HTTP Request Node: Deep Dive
+      title: "HTTP Request Node: Consumo de APIs REST",
+      description: "Domina el HTTP Request node para consumir cualquier API REST con diferentes métodos y autenticación.",
+      estimatedMinutes: 25,
+      content: `## HTTP Request Node
 
-El HTTP Request es el nodo más versátil de N8N. Permite interactuar con cualquier API REST, GraphQL o SOAP.
+El HTTP Request node es fundamental para integrarar N8N con servicios externos vía APIs REST.
 
-### Configuración básica
+### Métodos HTTP Soportados
+
+- **GET**: Obtener datos
+- **POST**: Crear recursos
+- **PUT**: Actualizar recursos completos
+- **PATCH**: Actualizar recursos parciales
+- **DELETE**: Eliminar recursos
+- **HEAD**: Obtener headers
+- **OPTIONS**: Obtener métodos permitidos
+
+### Configuración Básica
+
+#### GET Request Simple
+
+\`\`\`json
+{
+  "method": "GET",
+  "url": "https://api.example.com/users",
+  "authentication": "none",
+  "sendHeaders": false,
+  "sendQuery": false,
+  "options": {}
+}
+\`\`\`
+
+#### POST Request con JSON Body
 
 \`\`\`json
 {
   "method": "POST",
-  "url": "https://api.example.com/v1/resource",
-  "sendHeaders": true,
-  "headerParameters": {
-    "parameters": [
-      { "name": "Content-Type", "value": "application/json" },
-      { "name": "Accept", "value": "application/json" }
-    ]
-  },
+  "url": "https://api.example.com/users",
   "sendBody": true,
-  "bodyParameters": {
-    "parameters": [
-      { "name": "nombre", "value": "={{ $json.nombre }}" },
-      { "name": "email", "value": "={{ $json.email }}" }
-    ]
-  },
+  "specifyBody": "json",
+  "jsonBody": "={{ JSON.stringify({ name: $json.nombre, email: $json.email }) }}",
   "options": {
-    "timeout": 30000,
-    "response": { "response": { "responseFormat": "json" } }
+    "response": {
+      "response": {
+        "responseFormat": "json"
+      }
+    }
   }
 }
 \`\`\`
 
-### Métodos HTTP
-
-| Método | Uso típico |
-|---|---|
-| GET | Obtener datos |
-| POST | Crear recursos |
-| PUT | Reemplazar recursos completos |
-| PATCH | Actualizar parcialmente |
-| DELETE | Eliminar recursos |
-
 ### Autenticación
 
-#### API Key (Header)
+#### 1. API Key en Header
 
 \`\`\`json
 {
   "authentication": "genericCredentialType",
   "genericAuthType": "httpHeaderAuth",
-  "sendHeaders": true
+  "sendHeaders": true,
+  "headerParameters": {
+    "parameters": [
+      {
+        "name": "X-API-Key",
+        "value": "={{ $credentials.apiKey }}"
+      }
+    ]
+  }
 }
 \`\`\`
 
-Configura en Credentials:
-- Name: \`X-API-Key\`
-- Value: \`tu-api-key-secreta\`
-
-#### Bearer Token
+#### 2. API Key en Query
 
 \`\`\`json
 {
   "authentication": "genericCredentialType",
-  "genericAuthType": "httpHeaderAuth"
+  "genericAuthType": "httpQueryAuth",
+  "sendQuery": true,
+  "queryParameters": {
+    "parameters": [
+      {
+        "name": "api_key",
+        "value": "={{ $credentials.apiKey }}"
+      }
+    ]
+  }
 }
 \`\`\`
 
-Credentials:
-- Name: \`Authorization\`
-- Value: \`Bearer eyJhbGciOiJIUzI1NiIs...\`
-
-#### OAuth2
-
-N8N maneja el flujo OAuth2 completo:
-
-1. Configura las credenciales OAuth2 con Client ID y Secret
-2. N8N solicita y renueva tokens automáticamente
-3. El token se incluye en el header Authorization
-
-\`\`\`json
-{
-  "authentication": "predefinedCredentialType",
-  "nodeCredentialType": "googleOAuth2Api"
-}
-\`\`\`
-
-#### Basic Auth
+#### 3. Basic Auth
 
 \`\`\`json
 {
@@ -108,1055 +110,2545 @@ N8N maneja el flujo OAuth2 completo:
 }
 \`\`\`
 
-### Opciones avanzadas
-
-#### Paginación automática
+#### 4. Bearer Token
 
 \`\`\`json
 {
-  "options": {
-    "pagination": {
-      "pagination": {
-        "type": "nextUrl",
-        "nextUrl": "={{ $response.body.next_page }}",
-        "maxRequests": 100
+  "authentication": "genericCredentialType",
+  "genericAuthType": "httpHeaderAuth",
+  "sendHeaders": true,
+  "headerParameters": {
+    "parameters": [
+      {
+        "name": "Authorization",
+        "value": "=Bearer {{ $credentials.token }}"
       }
-    }
+    ]
   }
 }
 \`\`\`
 
-#### Retry on failure
+#### 5. OAuth2
 
 \`\`\`json
 {
-  "options": {
-    "retry": {
-      "maxRetries": 3,
-      "retryInterval": 5000
-    }
+  "authentication": "predefinedCredentialType",
+  "nodeCredentialType": "googleOAuth2Api"
+}
+\`\`\`
+
+### Headers Personalizados
+
+\`\`\`json
+{
+  "sendHeaders": true,
+  "headerParameters": {
+    "parameters": [
+      {
+        "name": "Content-Type",
+        "value": "application/json"
+      },
+      {
+        "name": "Accept",
+        "value": "application/json"
+      },
+      {
+        "name": "X-Custom-Header",
+        "value": "={{ $json.customValue }}"
+      }
+    ]
   }
 }
 \`\`\`
 
-#### Proxy y SSL
+### Query Parameters
 
 \`\`\`json
 {
-  "options": {
-    "proxy": "http://proxy.empresa.com:8080",
-    "allowUnauthorizedCerts": false
+  "sendQuery": true,
+  "queryParameters": {
+    "parameters": [
+      {
+        "name": "page",
+        "value": "={{ $json.page || 1 }}"
+      },
+      {
+        "name": "limit",
+        "value": "={{ $json.limit || 50 }}"
+      },
+      {
+        "name": "filter",
+        "value": "={{ $json.filter }}"
+      }
+    ]
   }
 }
 \`\`\`
 
-### GraphQL
+### Manejo de Respuestas
 
-\`\`\`json
-{
-  "method": "POST",
-  "url": "https://api.example.com/graphql",
-  "sendBody": true,
-  "specifyBody": "json",
-  "jsonBody": "={{ JSON.stringify({ query: '{ users { id name email } }' }) }}"
-}
-\`\`\`
-
-### Manejo de respuestas
-
-#### Response codes
-
-- **2xx**: Éxito
-- **3xx**: Redirección (N8N sigue automáticamente)
-- **4xx**: Error del cliente (revisar parámetros)
-- **5xx**: Error del servidor (reintentar o alertar)
-
-#### Parseo de respuestas
+#### Respuesta JSON
 
 \`\`\`json
 {
   "options": {
     "response": {
       "response": {
-        "responseFormat": "json",
-        "outputPropertyName": "responseData"
+        "responseFormat": "json"
       }
     }
   }
 }
 \`\`\`
 
-### Tips de HTTP Request
+#### Respuesta de Texto
 
-- Siempre configura **timeout** para evitar bloqueos infinitos
-- Usa **pagination** para APIs que retornan datos paginados
-- Configura **retry** para APIs inestables
-- Usa **expressions** para construir URLs dinámicas
-- Guarda credenciales en **N8N Credentials**, nunca en el workflow directamente`,
-      estimatedMinutes: 20,
-      quiz: [
-        {
-          id: "q-03-01-1",
-          question: "¿Qué tipo de autenticación maneja la renovación de tokens automáticamente?",
-          options: ["API Key", "Bearer Token", "OAuth2", "Basic Auth"],
-          correctIndex: 2,
-          explanation: "OAuth2 en N8N maneja automáticamente la solicitud, almacenamiento y renovación de tokens de acceso sin intervención manual."
+\`\`\`json
+{
+  "options": {
+    "response": {
+      "response": {
+        "responseFormat": "text"
+      }
+    }
+  }
+}
+\`\`\`
+
+#### Respuesta Binaria (Descarga de Archivo)
+
+\`\`\`json
+{
+  "options": {
+    "response": {
+      "response": {
+        "responseFormat": "file",
+        "outputPropertyName": "data",
+        "fileName": "={{ $json.fileName }}"
+      }
+    }
+  }
+}
+\`\`\`
+
+### Paginación Automática
+
+#### Offset-Based Pagination
+
+\`\`\`json
+{
+  "options": {
+    "pagination": {
+      "pagination": {
+        "mode": "offset",
+        "pageSize": 100,
+        "type": "body",
+        "propertyName": "offset"
+      }
+    }
+  }
+}
+\`\`\`
+
+#### Cursor-Based Pagination
+
+\`\`\`json
+{
+  "options": {
+    "pagination": {
+      "pagination": {
+        "mode": "cursor",
+        "type": "body",
+        "propertyName": "cursor",
+        "cursorValue": "={{ $response.body.nextCursor }}"
+      }
+    }
+  }
+}
+\`\`\`
+
+### Ejemplos Prácticos
+
+#### Ejemplo 1: Consumir API de GitHub
+
+\`\`\`json
+{
+  "method": "GET",
+  "url": "https://api.github.com/repos/n8n-io/n8n/issues",
+  "authentication": "genericCredentialType",
+  "genericAuthType": "httpHeaderAuth",
+  "sendHeaders": true,
+  "headerParameters": {
+    "parameters": [
+      {
+        "name": "Accept",
+        "value": "application/vnd.github.v3+json"
+      }
+    ]
+  },
+  "sendQuery": true,
+  "queryParameters": {
+    "parameters": [
+      {
+        "name": "state",
+        "value": "open"
+      },
+      {
+        "name": "per_page",
+        "value": "100"
+      }
+    ]
+  }
+}
+\`\`\`
+
+#### Ejemplo 2: Crear Registro en Airtable
+
+\`\`\`json
+{
+  "method": "POST",
+  "url": "https://api.airtable.com/v0/appXXXXXXXXXXXXXX/Contacts",
+  "authentication": "genericCredentialType",
+  "genericAuthType": "httpHeaderAuth",
+  "sendHeaders": true,
+  "headerParameters": {
+    "parameters": [
+      {
+        "name": "Content-Type",
+        "value": "application/json"
+      }
+    ]
+  },
+  "sendBody": true,
+  "specifyBody": "json",
+  "jsonBody": "={{ JSON.stringify({ fields: { Name: $json.nombre, Email: $json.email, Phone: $json.telefono } }) }}"
+}
+\`\`\`
+
+#### Ejemplo 3: Upload de Archivo a S3
+
+\`\`\`json
+{
+  "method": "PUT",
+  "url": "={{ $json.presignedUrl }}",
+  "sendBody": true,
+  "contentType": "multipart-form-data",
+  "bodyParameters": {
+    "parameters": [
+      {
+        "parameterType": "formData",
+        "name": "file",
+        "value": "={{ $binary.data }}"
+      }
+    ]
+  }
+}
+\`\`\`
+
+### Manejo de Errores
+
+#### Retry Automático
+
+\`\`\`json
+{
+  "options": {
+    "timeout": 10000,
+    "response": {
+      "response": {
+        "neverError": false
+      }
+    }
+  }
+}
+\`\`\`
+
+#### Patrón: Retry con Code Node
+
+\`\`\`javascript
+const items = $input.all();
+const results = [];
+const maxRetries = 3;
+
+for (const item of items) {
+  let success = false;
+  let attempt = 0;
+  let lastError = null;
+
+  while (!success && attempt < maxRetries) {
+    try {
+      const response = await this.helpers.httpRequest({
+        method: 'POST',
+        url: 'https://api.example.com/data',
+        headers: {
+          'Authorization': \`Bearer \${$credentials.token}\`,
+          'Content-Type': 'application/json'
         },
-        {
-          id: "q-03-01-2",
-          question: "¿Cómo se configura la paginación automática en HTTP Request?",
-          options: [
-            "Con un loop en Code node",
-            "En options.pagination con nextUrl",
-            "No es posible, hay que hacerlo manualmente",
-            "Con SplitInBatches"
-          ],
-          correctIndex: 1,
-          explanation: "La paginación automática se configura en options.pagination, donde se especifica cómo obtener la URL de la siguiente página."
-        },
-        {
-          id: "q-03-01-3",
-          question: "¿Dónde se deben almacenar las credenciales de API en N8N?",
-          options: [
-            "En variables del workflow",
-            "En el Code node como constantes",
-            "En N8N Credentials",
-            "En el docker-compose.yml"
-          ],
-          correctIndex: 2,
-          explanation: "Las credenciales deben almacen en N8N Credentials, que las encripta y gestiona de forma segura, separadas del workflow."
+        body: item.json
+      });
+
+      results.push({
+        json: {
+          ...item.json,
+          response: response.data,
+          success: true,
+          attempt: attempt + 1
         }
-      ]
+      });
+      success = true;
+    } catch (error) {
+      attempt++;
+      lastError = error;
+      
+      // Exponential backoff
+      await new Promise(resolve => 
+        setTimeout(resolve, Math.pow(2, attempt) * 1000)
+      );
+    }
+  }
+
+  if (!success) {
+    results.push({
+      json: {
+        ...item.json,
+        error: lastError.message,
+        success: false,
+        attempts: attempt
+      }
+    });
+  }
+}
+
+return results;
+\`\`\`
+
+### Rate Limiting
+
+#### Implementar Rate Limiting
+
+\`\`\`javascript
+const items = $input.all();
+const results = [];
+const requestsPerSecond = 10;
+const delay = 1000 / requestsPerSecond;
+
+for (let i = 0; i < items.length; i++) {
+  const item = items[i];
+  
+  try {
+    const response = await this.helpers.httpRequest({
+      method: 'GET',
+      url: \`https://api.example.com/data/\${item.json.id}\`
+    });
+
+    results.push({
+      json: {
+        ...item.json,
+        apiData: response.data
+      }
+    });
+  } catch (error) {
+    results.push({
+      json: {
+        ...item.json,
+        error: error.message
+      }
+    });
+  }
+
+  // Rate limiting
+  if (i < items.length - 1) {
+    await new Promise(resolve => setTimeout(resolve, delay));
+  }
+}
+
+return results;
+\`\`\`
+
+### Webhooks y Callbacks
+
+#### Crear Webhook Endpoint
+
+\`\`\`json
+{
+  "httpMethod": "POST",
+  "path": "webhook-callback",
+  "responseMode": "responseNode",
+  "options": {
+    "rawBody": true
+  }
+}
+\`\`\`
+
+#### Enviar Webhook con Datos
+
+\`\`\`json
+{
+  "method": "POST",
+  "url": "https://tu-n8n.com/webhook/webhook-callback",
+  "sendBody": true,
+  "specifyBody": "json",
+  "jsonBody": "={{ JSON.stringify({ status: 'completed', data: $json, timestamp: $now.toISO() }) }}"
+}
+\`\`\`
+
+### Mejores Prácticas
+
+1. **Usa credenciales**: Nunca hardcodees API keys en el workflow
+2. **Valida respuestas**: Verifica que la respuesta sea válida antes de procesarla
+3. **Maneja errores**: Implementa retry logic para APIs inestables
+4. **Rate limiting**: Respeta los límites de las APIs
+5. **Timeouts**: Configura timeouts apropiados
+6. **Logs**: Registra requests y responses para debugging
+7. **Versionado**: Usa versiones específicas de APIs cuando sea posible
+
+### Debugging
+
+#### Inspeccionar Request y Response
+
+\`\`\`javascript
+// Después del HTTP Request node
+const response = $input.first().json;
+
+console.log('=== HTTP REQUEST DEBUG ===');
+console.log('Status:', $response.statusCode);
+console.log('Headers:', $response.headers);
+console.log('Body:', JSON.stringify(response, null, 2));
+console.log('Timing:', $response.timing);
+
+return $input.all();
+\`\`\`
+
+### Recursos Adicionales
+
+- [HTTP Request Node](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.httprequest/)
+- [REST API Best Practices](https://restfulapi.net/)
+- [OAuth2 Flow](https://oauth.net/2/)
+`,
     },
     {
       id: "les-03-02",
       moduleSlug: "integraciones-apis",
       slug: "integracion-supabase",
       title: "Integración con Supabase",
-      description: "Conecta N8N con Supabase para operaciones CRUD, autenticación, real-time subscriptions y manejo de tokens.",
+      description: "Conecta N8N con Supabase para operaciones CRUD, autenticación y tiempo real.",
+      estimatedMinutes: 30,
       content: `## Integración con Supabase
 
-Supabase es una plataforma open-source que proporciona base de datos PostgreSQL, autenticación, almacenamiento y real-time subscriptions. N8N se integra perfectamente con todos sus servicios.
+Supabase es una plataforma open-source alternativa a Firebase que proporciona base de datos PostgreSQL, autenticación y APIs en tiempo real.
 
-### Configuración de credenciales
+### Configuración de Credenciales
 
-N8N tiene un nodo nativo para Supabase, pero también puedes usar HTTP Request directamente.
+#### Crear Credenciales en N8N
 
-**Credenciales necesarias:**
-- **Supabase URL**: \`https://xxxxx.supabase.co\`
-- **Service Role Key**: Clave con permisos completos (no exponer al cliente)
-- **Anon Key**: Clave pública para operaciones limitadas
+1. Ve a **Credentials** en N8N
+2. Click en **New**
+3. Selecciona **Supabase API**
+4. Configura:
+   - **Host**: \`https://tu-proyecto.supabase.co\`
+   - **Service Role Key**: Tu service role key (desde Supabase Dashboard)
 
 ### Operaciones CRUD
 
-#### INSERT (Crear registros)
-
-\`\`\`json
-{
-  "method": "POST",
-  "url": "={{ $env.SUPABASE_URL }}/rest/v1/leads",
-  "sendHeaders": true,
-  "headerParameters": {
-    "parameters": [
-      { "name": "apikey", "value": "={{ $env.SUPABASE_SERVICE_KEY }}" },
-      { "name": "Authorization", "value": "Bearer {{ $env.SUPABASE_SERVICE_KEY }}" },
-      { "name": "Content-Type", "value": "application/json" },
-      { "name": "Prefer", "value": "return=representation" }
-    ]
-  },
-  "sendBody": true,
-  "specifyBody": "json",
-  "jsonBody": "={{ JSON.stringify({ nombre: $json.nombre, email: $json.email, empresa: $json.empresa, source: 'webhook', created_at: $now.toISO() }) }}"
-}
-\`\`\`
-
-#### SELECT (Leer registros)
-
-\`\`\`json
-{
-  "method": "GET",
-  "url": "={{ $env.SUPABASE_URL }}/rest/v1/leads?select=*&status=eq.pending&order=created_at.desc&limit=50",
-  "sendHeaders": true,
-  "headerParameters": {
-    "parameters": [
-      { "name": "apikey", "value": "={{ $env.SUPABASE_SERVICE_KEY }}" },
-      { "name": "Authorization", "value": "Bearer {{ $env.SUPABASE_SERVICE_KEY }}" }
-    ]
-  }
-}
-\`\`\`
-
-#### UPDATE (Actualizar registros)
-
-\`\`\`json
-{
-  "method": "PATCH",
-  "url": "={{ $env.SUPABASE_URL }}/rest/v1/leads?id=eq.{{ $json.id }}",
-  "sendHeaders": true,
-  "headerParameters": {
-    "parameters": [
-      { "name": "apikey", "value": "={{ $env.SUPABASE_SERVICE_KEY }}" },
-      { "name": "Authorization", "value": "Bearer {{ $env.SUPABASE_SERVICE_KEY }}" },
-      { "name": "Prefer", "value": "return=representation" }
-    ]
-  },
-  "sendBody": true,
-  "specifyBody": "json",
-  "jsonBody": "={{ JSON.stringify({ status: 'processed', processed_at: $now.toISO() }) }}"
-}
-\`\`\`
-
-#### DELETE (Eliminar registros)
-
-\`\`\`json
-{
-  "method": "DELETE",
-  "url": "={{ $env.SUPABASE_URL }}/rest/v1/leads?id=eq.{{ $json.id }}",
-  "sendHeaders": true,
-  "headerParameters": {
-    "parameters": [
-      { "name": "apikey", "value": "={{ $env.SUPABASE_SERVICE_KEY }}" },
-      { "name": "Authorization", "value": "Bearer {{ $env.SUPABASE_SERVICE_KEY }}" }
-    ]
-  }
-}
-\`\`\`
-
-### Filtros de PostgREST
-
-Supabase usa PostgREST, que soporta operadores de filtro en la URL:
-
-| Operador | Sintaxis | Ejemplo |
-|---|---|---|
-| Igual | \`eq\` | \`status=eq.active\` |
-| No igual | \`neq\` | \`status=neq.deleted\` |
-| Mayor que | \`gt\` | \`score=gt.80\` |
-| Menor que | \`lt\` | \`created_at=lt.2024-01-01\` |
-| LIKE | \`like\` | \`nombre=like.*juan*\` |
-| IN | \`in\` | \`status=in.(active,pending)\` |
-| IS NULL | \`is\` | \`email=is.null\` |
-
-### RPC (Funciones de base de datos)
-
-\`\`\`json
-{
-  "method": "POST",
-  "url": "={{ $env.SUPABASE_URL }}/rest/v1/rpc/process_lead",
-  "sendBody": true,
-  "specifyBody": "json",
-  "jsonBody": "={{ JSON.stringify({ lead_id: $json.id, action: 'enrich' }) }}"
-}
-\`\`\`
-
-### Real-time con Webhooks de Supabase
-
-Configura un trigger en Supabase que llame a N8N:
-
-\`\`\`sql
-CREATE OR REPLACE FUNCTION notify_n8n()
-RETURNS trigger AS $$
-BEGIN
-  PERFORM net.http_post(
-    url := 'https://n8n.tu-dominio.com/webhook/supabase-event',
-    headers := '{"Content-Type": "application/json"}'::jsonb,
-    body := jsonb_build_object(
-      'table', TG_TABLE_NAME,
-      'action', TG_OP,
-      'data', CASE WHEN TG_OP = 'DELETE' THEN OLD ELSE NEW END
-    )
-  );
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-\`\`\`
-
-### Upset (INSERT o UPDATE)
-
-\`\`\`json
-{
-  "method": "POST",
-  "url": "={{ $env.SUPABASE_URL }}/rest/v1/leads",
-  "sendHeaders": true,
-  "headerParameters": {
-    "parameters": [
-      { "name": "apikey", "value": "={{ $env.SUPABASE_SERVICE_KEY }}" },
-      { "name": "Authorization", "value": "Bearer {{ $env.SUPABASE_SERVICE_KEY }}" },
-      { "name": "Prefer", "value": "resolution=merge-duplicates,return=representation" }
-    ]
-  },
-  "sendBody": true,
-  "specifyBody": "json",
-  "jsonBody": "={{ JSON.stringify({ email: $json.email, nombre: $json.nombre, updated_at: $now.toISO() }) }}"
-}
-\`\`\`
-
-### Seguridad
-
-- **Nunca uses la Service Role Key en el frontend**; solo en N8N (backend)
-- **Usa Row Level Security (RLS)** en Supabase para controlar acceso a nivel de fila
-- **Rota las claves** periódicamente
-- **Usa variables de entorno** en N8N para las claves, no las hardcodees en workflows`,
-      estimatedMinutes: 22,
-      n8nWorkflowJson: {
-        name: "Supabase CRUD Pipeline",
-        nodes: [
-          {
-            parameters: { httpMethod: "POST", path: "new-lead" },
-            id: "webhook-1",
-            name: "Nuevo Lead",
-            type: "n8n-nodes-base.webhook",
-            typeVersion: 1,
-            position: [250, 300]
-          },
-          {
-            parameters: {
-              method: "POST",
-              url: "={{ $env.SUPABASE_URL }}/rest/v1/leads",
-              sendHeaders: true,
-              headerParameters: {
-                parameters: [
-                  { name: "apikey", value: "={{ $env.SUPABASE_SERVICE_KEY }}" },
-                  { name: "Authorization", value: "Bearer {{ $env.SUPABASE_SERVICE_KEY }}" },
-                  { name: "Prefer", value: "return=representation" }
-                ]
-              },
-              sendBody: true,
-              specifyBody: "json",
-              jsonBody: "={{ JSON.stringify($json) }}"
-            },
-            id: "http-insert",
-            name: "Insertar en Supabase",
-            type: "n8n-nodes-base.httpRequest",
-            typeVersion: 4,
-            position: [470, 300]
-          },
-          {
-            parameters: {
-              method: "GET",
-              url: "={{ $env.SUPABASE_URL }}/rest/v1/leads?id=eq.{{ $json.id }}&select=*,enrichment(*)",
-              sendHeaders: true,
-              headerParameters: {
-                parameters: [
-                  { name: "apikey", value: "={{ $env.SUPABASE_SERVICE_KEY }}" },
-                  { name: "Authorization", value: "Bearer {{ $env.SUPABASE_SERVICE_KEY }}" }
-                ]
-              }
-            },
-            id: "http-select",
-            name: "Leer Lead Completo",
-            type: "n8n-nodes-base.httpRequest",
-            typeVersion: 4,
-            position: [690, 300]
-          }
-        ],
-        connections: {
-          "Nuevo Lead": { main: [[{ node: "Insertar en Supabase", type: "main", index: 0 }]] },
-          "Insertar en Supabase": { main: [[{ node: "Leer Lead Completo", type: "main", index: 0 }]] }
-        }
-      },
-      quiz: [
-        {
-          id: "q-03-02-1",
-          question: "¿Qué header de Supabase permite retornar los datos insertados/actualizados?",
-          options: [
-            "X-Return-Data: true",
-            "Prefer: return=representation",
-            "Accept: application/json",
-            "X-Include-Data: true"
-          ],
-          correctIndex: 1,
-          explanation: "El header 'Prefer: return=representation' le indica a PostgREST que retorne los datos del registro insertado o actualizado en la respuesta."
-        },
-        {
-          id: "q-03-02-2",
-          question: "¿Qué clave de Supabase NO debe usarse en el frontend?",
-          options: ["Anon Key", "Service Role Key", "API URL", "Project Reference"],
-          correctIndex: 1,
-          explanation: "La Service Role Key tiene permisos completos sobre la base de datos y solo debe usarse en el backend (N8N). Nunca debe exponerse en el frontend."
-        },
-        {
-          id: "q-03-02-3",
-          question: "¿Qué operador de PostgREST se usa para buscar valores que contengan un texto?",
-          options: ["contains", "like", "match", "search"],
-          correctIndex: 1,
-          explanation: "El operador 'like' con wildcards (*texto*) se usa para buscar valores que contengan un texto específico en PostgREST."
-        }
-      ]
-    },
-    {
-      id: "les-03-03",
-      moduleSlug: "integraciones-apis",
-      slug: "integracion-google-workspace",
-      title: "Integración con Google Workspace",
-      description: "Conecta N8N con Gmail, Google Sheets y Google Drive usando OAuth2 para automatizaciones completas.",
-      content: `## Integración con Google Workspace
-
-Google Workspace es uno de los ecosistemas más usados en empresas. N8N ofrece nodos nativos para Gmail, Sheets y Drive con soporte OAuth2.
-
-### Configuración OAuth2
-
-#### Paso 1: Google Cloud Console
-
-1. Ve a Google Cloud Console
-2. Crea un proyecto nuevo
-3. Habilita las APIs necesarias: Gmail API, Google Sheets API, Google Drive API
-4. Ve a **Credentials** → **Create OAuth 2.0 Client ID**
-5. Tipo: **Web application**
-6. Authorized redirect URIs: agrega la URL que N8N te proporciona
-
-#### Paso 2: Configurar en N8N
-
-1. En N8N, crea nuevas credenciales de tipo **Google OAuth2**
-2. Pega el Client ID y Client Secret
-3. Selecciona los scopes necesarios
-4. Haz clic en **Connect** y autoriza la cuenta
-
-### Gmail Node
-
-#### Enviar email
-
-\`\`\`json
-{
-  "operation": "send",
-  "sendTo": "={{ $json.email }}",
-  "subject": "Bienvenido a nuestro servicio, {{ $json.nombre }}",
-  "emailType": "html",
-  "message": "<h1>Bienvenido</h1><p>Hola {{ $json.nombre }}, tu cuenta ha sido creada exitosamente.</p>",
-  "options": {
-    "ccEmail": "ventas@tuempresa.com"
-  }
-}
-\`\`\`
-
-#### Leer emails
+#### SELECT: Leer Datos
 
 \`\`\`json
 {
   "operation": "getAll",
-  "simple": false,
-  "filters": {
-    "labelIds": ["INBOX"],
-    "readStatus": "unread",
-    "q": "from:cliente@empresa.com subject:factura"
-  },
+  "tableId": "users",
   "returnAll": false,
-  "limit": 10
-}
-\`\`\`
-
-#### Gmail Trigger
-
-Configura un trigger para nuevos emails:
-
-\`\`\`json
-{
-  "event": "messageReceived",
+  "limit": 100,
   "filters": {
-    "labelIds": ["INBOX"],
-    "q": "has:attachment"
+    "filters": [
+      {
+        "key": "status",
+        "value": "active"
+      }
+    ]
   }
 }
 \`\`\`
 
-### Google Sheets Node
-
-#### Leer datos
+**Con filtros avanzados:**
 
 \`\`\`json
 {
-  "operation": "read",
-  "documentId": { "value": "={{ $env.GOOGLE_SHEET_ID }}" },
-  "sheetName": { "value": "Leads" },
-  "options": {
-    "dataLocationOnSheet": {
-      "values": {
-        "rangeDefinition": "detectAutomatically"
+  "operation": "getAll",
+  "tableId": "orders",
+  "returnAll": false,
+  "limit": 50,
+  "filters": {
+    "filters": [
+      {
+        "key": "created_at",
+        "value": "={{ $now.minus({ days: 7 }).toISO() }}",
+        "condition": "gte"
+      },
+      {
+        "key": "amount",
+        "value": "100",
+        "condition": "gt"
       }
+    ]
+  }
+}
+\`\`\`
+
+#### INSERT: Crear Registros
+
+\`\`\`json
+{
+  "operation": "insert",
+  "tableId": "contacts",
+  "fields": {
+    "values": [
+      {
+        "name": "name",
+        "value": "={{ $json.nombre }}"
+      },
+      {
+        "name": "email",
+        "value": "={{ $json.email }}"
+      },
+      {
+        "name": "phone",
+        "value": "={{ $json.telefono }}"
+      }
+    ]
+  }
+}
+\`\`\`
+
+**Insert múltiple:**
+
+\`\`\`javascript
+// Code node para preparar datos
+const items = $input.all();
+
+return items.map(item => ({
+  json: {
+    name: item.json.nombre,
+    email: item.json.email,
+    phone: item.json.telefono,
+    created_at: new Date().toISOString()
+  }
+}));
+\`\`\`
+
+#### UPDATE: Actualizar Registros
+
+\`\`\`json
+{
+  "operation": "update",
+  "tableId": "users",
+  "updateKey": "id",
+  "fields": {
+    "values": [
+      {
+        "name": "status",
+        "value": "={{ $json.nuevoStatus }}"
+      },
+      {
+        "name": "updated_at",
+        "value": "={{ $now.toISO() }}"
+      }
+    ]
+  }
+}
+\`\`\`
+
+#### DELETE: Eliminar Registros
+
+\`\`\`json
+{
+  "operation": "delete",
+  "tableId": "temp_data",
+  "deleteKey": "id"
+}
+\`\`\`
+
+### Queries Avanzadas
+
+#### Usar Supabase Client Directamente
+
+\`\`\`javascript
+const items = $input.all();
+const supabaseUrl = $credentials.host;
+const supabaseKey = $credentials.serviceRoleKey;
+
+async function supabaseQuery(endpoint, options = {}) {
+  const response = await this.helpers.httpRequest({
+    method: options.method || 'GET',
+    url: \`\${supabaseUrl}/rest/v1/\${endpoint}\`,
+    headers: {
+      'apikey': supabaseKey,
+      'Authorization': \`Bearer \${supabaseKey}\`,
+      'Content-Type': 'application/json',
+      'Prefer': options.prefer || 'return=representation'
+    },
+    body: options.body,
+    qs: options.qs
+  });
+  return response;
+}
+
+const results = [];
+
+for (const item of items) {
+  try {
+    // Query con filtros complejos
+    const response = await supabaseQuery('orders', {
+      qs: {
+        select: '*,customer:customers(name,email)',
+        user_id: \`eq.\${item.json.userId}\`,
+        status: 'eq.completed',
+        order: 'created_at.desc',
+        limit: '10'
+      }
+    });
+
+    results.push({
+      json: {
+        ...item.json,
+        orders: response.data
+      }
+    });
+  } catch (error) {
+    results.push({
+      json: {
+        ...item.json,
+        error: error.message
+      }
+    });
+  }
+}
+
+return results;
+\`\`\`
+
+#### Joins y Relaciones
+
+\`\`\`javascript
+// Obtener órdenes con datos de clientes y productos
+const response = await supabaseQuery('orders', {
+  qs: {
+    select: \`
+      *,
+      customer:customers(id,name,email),
+      order_items(
+        quantity,
+        price,
+        product:products(name,sku,category)
+      )
+    \`,
+    created_at: \`gte.\${$now.minus({ days: 30 }).toISO()}\`,
+    order: 'created_at.desc'
+  }
+});
+
+return response.data.map(order => ({
+  json: {
+    orderId: order.id,
+    customerName: order.customer.name,
+    customerEmail: order.customer.email,
+    totalAmount: order.order_items.reduce(
+      (sum, item) => sum + (item.quantity * item.price), 0
+    ),
+    items: order.order_items.map(item => ({
+      product: item.product.name,
+      quantity: item.quantity,
+      price: item.price
+    }))
+  }
+}));
+\`\`\`
+
+### Autenticación de Usuarios
+
+#### Crear Usuario
+
+\`\`\`javascript
+const items = $input.all();
+const results = [];
+
+for (const item of items) {
+  try {
+    const response = await this.helpers.httpRequest({
+      method: 'POST',
+      url: \`\${$credentials.host}/auth/v1/admin/users\`,
+      headers: {
+        'apikey': $credentials.serviceRoleKey,
+        'Authorization': \`Bearer \${$credentials.serviceRoleKey}\`,
+        'Content-Type': 'application/json'
+      },
+      body: {
+        email: item.json.email,
+        password: item.json.password,
+        email_confirm: true,
+        user_metadata: {
+          full_name: item.json.nombre,
+          phone: item.json.telefono
+        }
+      }
+    });
+
+    results.push({
+      json: {
+        ...item.json,
+        userId: response.data.id,
+        created: true
+      }
+    });
+  } catch (error) {
+    results.push({
+      json: {
+        ...item.json,
+        error: error.message,
+        created: false
+      }
+    });
+  }
+}
+
+return results;
+\`\`\`
+
+#### Login de Usuario
+
+\`\`\`javascript
+const { email, password } = $input.first().json;
+
+const response = await this.helpers.httpRequest({
+  method: 'POST',
+  url: \`\${$credentials.host}/auth/v1/token?grant_type=password\`,
+  headers: {
+    'apikey': $credentials.serviceRoleKey,
+    'Content-Type': 'application/json'
+  },
+  body: { email, password }
+});
+
+return [{
+  json: {
+    accessToken: response.data.access_token,
+    refreshToken: response.data.refresh_token,
+    user: response.data.user
+  }
+}];
+\`\`\`
+
+### Tiempo Real con Webhooks
+
+#### Configurar Webhook en Supabase
+
+En Supabase Dashboard:
+1. Ve a **Database** → **Webhooks**
+2. Click en **Create a new webhook**
+3. Configura:
+   - **Name**: \`order_created\`
+   - **Table**: \`orders\`
+   - **Events**: \`INSERT\`
+   - **URL**: \`https://tu-n8n.com/webhook/supabase-orders\`
+
+#### Procesar Webhook de Supabase
+
+\`\`\`javascript
+// Webhook node recibe datos de Supabase
+const webhookData = $input.first().json;
+
+// Estructura del webhook de Supabase
+const {
+  type,        // "INSERT", "UPDATE", "DELETE"
+  table,       // Nombre de la tabla
+  record,      // Nuevo registro
+  old_record,  // Registro anterior (para UPDATE)
+  schema       // Schema (usualmente "public")
+} = webhookData;
+
+return [{
+  json: {
+    eventType: type,
+    table,
+    data: record,
+    previousData: old_record,
+    timestamp: new Date().toISOString()
+  }
+}];
+\`\`\`
+
+### Row Level Security (RLS)
+
+#### Crear Políticas RLS
+
+\`\`\`sql
+-- Habilitar RLS en la tabla
+ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
+
+-- Política: Usuarios solo ven sus propias órdenes
+CREATE POLICY "Users can view own orders"
+ON orders FOR SELECT
+USING (auth.uid() = user_id);
+
+-- Política: Usuarios solo pueden crear sus propias órdenes
+CREATE POLICY "Users can create own orders"
+ON orders FOR INSERT
+WITH CHECK (auth.uid() = user_id);
+
+-- Política: Admins pueden ver todas las órdenes
+CREATE POLICY "Admins can view all orders"
+ON orders FOR SELECT
+USING (
+  EXISTS (
+    SELECT 1 FROM users 
+    WHERE users.id = auth.uid() 
+    AND users.role = 'admin'
+  )
+);
+\`\`\`
+
+### Funciones RPC
+
+#### Crear Función en Supabase
+
+\`\`\`sql
+CREATE OR REPLACE FUNCTION get_user_orders(user_uuid uuid)
+RETURNS TABLE (
+  order_id uuid,
+  total_amount numeric,
+  status text,
+  created_at timestamptz
+) AS $$
+BEGIN
+  RETURN QUERY
+  SELECT id, total, status, created_at
+  FROM orders
+  WHERE user_id = user_uuid
+  ORDER BY created_at DESC
+  LIMIT 10;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+\`\`\`
+
+#### Llamar Función RPC desde N8N
+
+\`\`\`javascript
+const userId = $input.first().json.userId;
+
+const response = await this.helpers.httpRequest({
+  method: 'POST',
+  url: \`\${$credentials.host}/rest/v1/rpc/get_user_orders\`,
+  headers: {
+    'apikey': $credentials.serviceRoleKey,
+    'Authorization': \`Bearer \${$credentials.serviceRoleKey}\`,
+    'Content-Type': 'application/json'
+  },
+  body: { user_uuid: userId }
+});
+
+return response.data.map(order => ({
+  json: {
+    orderId: order.order_id,
+    total: order.total_amount,
+    status: order.status,
+    createdAt: order.created_at
+  }
+}));
+\`\`\`
+
+### Storage: Manejo de Archivos
+
+#### Upload de Archivo
+
+\`\`\`javascript
+const item = $input.first();
+const binaryData = item.binary.data;
+const bucket = 'user-uploads';
+const fileName = \`uploads/\${Date.now()}_\${binaryData.fileName}\`;
+
+// Convertir base64 a buffer
+const buffer = Buffer.from(binaryData.data, 'base64');
+
+const response = await this.helpers.httpRequest({
+  method: 'POST',
+  url: \`\${$credentials.host}/storage/v1/object/\${bucket}/\${fileName}\`,
+  headers: {
+    'apikey': $credentials.serviceRoleKey,
+    'Authorization': \`Bearer \${$credentials.serviceRoleKey}\`,
+    'Content-Type': binaryData.mimeType
+  },
+  body: buffer,
+  json: false
+});
+
+return [{
+  json: {
+    fileName,
+    publicUrl: \`\${$credentials.host}/storage/v1/object/public/\${bucket}/\${fileName}\`,
+    uploaded: true
+  }
+}];
+\`\`\`
+
+#### Descargar Archivo
+
+\`\`\`javascript
+const filePath = $input.first().json.filePath;
+const bucket = 'user-uploads';
+
+const response = await this.helpers.httpRequest({
+  method: 'GET',
+  url: \`\${$credentials.host}/storage/v1/object/\${bucket}/\${filePath}\`,
+  headers: {
+    'apikey': $credentials.serviceRoleKey,
+    'Authorization': \`Bearer \${$credentials.serviceRoleKey}\`
+  },
+  encoding: null
+});
+
+const base64Data = Buffer.from(response).toString('base64');
+
+return [{
+  json: { fileName: filePath.split('/').pop() },
+  binary: {
+    data: {
+      data: base64Data,
+      mimeType: 'application/octet-stream',
+      fileName: filePath.split('/').pop()
     }
   }
+}];
+\`\`\`
+
+### Patrones Comunes
+
+#### Patrón: Sync Bidireccional
+
+\`\`\`
+[Webhook: Supabase Change] → [Process Change] → [Update External System]
+                                                        ↓
+[Webhook: External Change] → [Process Change] → [Update Supabase]
+\`\`\`
+
+#### Patrón: Data Pipeline
+
+\`\`\`
+[Schedule: Cada hora]
+    ↓
+[Supabase: Get New Records]
+    ↓
+[Transform Data]
+    ↓
+[Supabase: Update Processed]
+    ↓
+[Send to External API]
+\`\`\`
+
+### Mejores Prácticas
+
+1. **Usa Service Role Key con cuidado**: Solo en server-side, nunca en client-side
+2. **Implementa RLS**: Siempre habilita Row Level Security
+3. **Usa índices**: Crea índices para queries frecuentes
+4. **Batch operations**: Usa bulk insert/update para mejor performance
+5. **Maneja errores**: Implementa retry logic para operaciones críticas
+6. **Monitorea**: Usa logs para trackear operaciones importantes
+7. **Backup**: Configura backups automáticos de tu base de datos
+
+### Debugging
+
+#### Verificar Conexión
+
+\`\`\`javascript
+// Test de conexión a Supabase
+try {
+  const response = await this.helpers.httpRequest({
+    method: 'GET',
+    url: \`\${$credentials.host}/rest/v1/\`,
+    headers: {
+      'apikey': $credentials.serviceRoleKey,
+      'Authorization': \`Bearer \${$credentials.serviceRoleKey}\`
+    }
+  });
+  
+  console.log('Supabase connection successful');
+  console.log('Available tables:', response.data.definitions);
+} catch (error) {
+  console.error('Connection failed:', error.message);
 }
 \`\`\`
 
-#### Escribir datos (append)
+### Recursos Adicionales
+
+- [Supabase Documentation](https://supabase.com/docs)
+- [Supabase API Reference](https://supabase.com/docs/reference/javascript/introduction)
+- [Row Level Security](https://supabase.com/docs/guides/auth/row-level-security)
+`,
+    },
+    {
+      id: "les-03-03",
+      moduleSlug: "integraciones-apis",
+      slug: "google-workspace",
+      title: "Google Workspace: Gmail, Sheets y Drive",
+      description: "Integra N8N con Google Workspace para automatizar emails, hojas de cálculo y archivos.",
+      estimatedMinutes: 30,
+      content: `## Google Workspace Integration
+
+Google Workspace (antes G Suite) ofrece Gmail, Google Sheets, Drive y más. N8N puede integrarse con todos estos servicios.
+
+### Configuración de OAuth2
+
+#### Crear Credenciales OAuth2
+
+1. Ve a [Google Cloud Console](https://console.cloud.google.com/)
+2. Crea un nuevo proyecto o selecciona uno existente
+3. Habilita las APIs necesarias:
+   - Gmail API
+   - Google Sheets API
+   - Google Drive API
+4. Ve a **Credentials** → **Create Credentials** → **OAuth client ID**
+5. Configura:
+   - **Application type**: Web application
+   - **Authorized redirect URIs**: \`https://tu-n8n.com/rest/oauth2-credential/callback\`
+6. Copia **Client ID** y **Client Secret**
+7. En N8N, crea credenciales **Google OAuth2 API**
+
+### Gmail
+
+#### Enviar Email Simple
 
 \`\`\`json
 {
-  "operation": "append",
-  "documentId": { "value": "={{ $env.GOOGLE_SHEET_ID }}" },
-  "sheetName": { "value": "Leads" },
-  "dataMode": "autoMapInputData",
+  "resource": "message",
+  "operation": "send",
+  "sendTo": "={{ $json.email }}",
+  "subject": "Bienvenido a nuestro servicio",
+  "emailType": "text",
+  "message": "Hola {{ $json.nombre }},\\n\\nGracias por registrarte.\\n\\nSaludos!"
+}
+\`\`\`
+
+#### Enviar Email HTML
+
+\`\`\`json
+{
+  "resource": "message",
+  "operation": "send",
+  "sendTo": "={{ $json.email }}",
+  "subject": "Tu reporte mensual",
+  "emailType": "html",
+  "message": "={{ $json.htmlContent }}"
+}
+\`\`\`
+
+**Ejemplo de HTML dinámico:**
+
+\`\`\`javascript
+// Code node para generar HTML
+const items = $input.all();
+
+return items.map(item => {
+  const html = \`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <style>
+        body { font-family: Arial, sans-serif; }
+        .header { background: #4285f4; color: white; padding: 20px; }
+        .content { padding: 20px; }
+        .footer { background: #f5f5f5; padding: 10px; text-align: center; }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <h1>Reporte Mensual</h1>
+      </div>
+      <div class="content">
+        <p>Hola \${item.json.nombre},</p>
+        <p>Aquí está tu reporte del mes:</p>
+        <ul>
+          <li>Ventas: $\${item.json.ventas}</li>
+          <li>Clientes nuevos: \${item.json.clientesNuevos}</li>
+          <li>Satisfacción: \${item.json.satisfaccion}%</li>
+        </ul>
+      </div>
+      <div class="footer">
+        <p>Generado automáticamente por N8N</p>
+      </div>
+    </body>
+    </html>
+  \`;
+
+  return {
+    json: {
+      ...item.json,
+      htmlContent: html
+    }
+  };
+});
+\`\`\`
+
+#### Enviar Email con Adjuntos
+
+\`\`\`json
+{
+  "resource": "message",
+  "operation": "send",
+  "sendTo": "={{ $json.email }}",
+  "subject": "Documento adjunto",
+  "emailType": "text",
+  "message": "Adjunto encontrarás el documento solicitado.",
+  "options": {
+    "attachments": "data"
+  }
+}
+\`\`\`
+
+#### Leer Emails
+
+\`\`\`json
+{
+  "resource": "message",
+  "operation": "getAll",
+  "returnAll": false,
+  "limit": 50,
+  "filters": {
+    "labelIds": ["INBOX"],
+    "q": "is:unread",
+    "includeSpamTrash": false
+  }
+}
+\`\`\`
+
+#### Buscar Emails Específicos
+
+\`\`\`json
+{
+  "resource": "message",
+  "operation": "getAll",
+  "returnAll": false,
+  "limit": 10,
+  "filters": {
+    "q": "from:cliente@example.com subject:pedido newer_than:7d"
+  }
+}
+\`\`\`
+
+**Operadores de búsqueda Gmail:**
+- \`from:email@ejemplo.com\`: De un remitente específico
+- \`subject:palabra\`: En el asunto
+- \`newer_than:7d\`: Más reciente que 7 días
+- \`older_than:1m\`: Más antiguo que 1 mes
+- \`has:attachment\`: Con adjuntos
+- \`is:unread\`: No leídos
+- \`label:importante\`: Con etiqueta específica
+
+### Google Sheets
+
+#### Leer Datos de Sheet
+
+\`\`\`json
+{
+  "operation": "getData",
+  "documentId": "={{ $json.sheetId }}",
+  "sheetName": "Hoja 1",
+  "range": "A1:Z1000",
   "options": {
     "valueInputMode": "USER_ENTERED"
   }
 }
 \`\`\`
 
-#### Actualizar celda específica
+#### Escribir Datos en Sheet
 
 \`\`\`json
 {
-  "operation": "update",
-  "documentId": { "value": "={{ $env.GOOGLE_SHEET_ID }}" },
-  "sheetName": { "value": "Leads" },
-  "dataMode": "defineBelow",
-  "columns": {
-    "mappingMode": "defineBelow",
-    "value": {
-      "Nombre": "={{ $json.nombre }}",
-      "Email": "={{ $json.email }}",
-      "Status": "Procesado",
-      "Fecha": "={{ $now.toFormat('yyyy-MM-dd HH:mm') }}"
-    }
+  "operation": "append",
+  "documentId": "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms",
+  "sheetName": "Datos",
+  "dataMode": "autoMap",
+  "options": {
+    "valueInputMode": "USER_ENTERED"
   }
 }
 \`\`\`
 
-### Google Drive Node
-
-#### Subir archivo
+#### Actualizar Celdas Específicas
 
 \`\`\`json
 {
-  "operation": "upload",
-  "name": "reporte-{{ $now.toFormat('yyyy-MM-dd') }}.pdf",
-  "folderId": { "value": "={{ $env.DRIVE_FOLDER_ID }}" },
-  "inputDataFieldName": "data"
+  "operation": "update",
+  "documentId": "={{ $json.sheetId }}",
+  "sheetName": "Hoja 1",
+  "range": "A2:B2",
+  "dataMode": "defineBelow",
+  "fieldsValues": {
+    "values": [
+      {
+        "lookupValue": "={{ $json.nombre }}",
+        "lookupColumn": "Nombre",
+        "newColumn": "Status",
+        "newValue": "Procesado"
+      }
+    ]
+  }
 }
 \`\`\`
 
-#### Buscar archivos
+#### Crear Nuevo Sheet
 
-\`\`\`json
-{
-  "operation": "search",
-  "query": "mimeType='application/pdf' and modifiedTime > '2024-01-01'"
-}
-\`\`\`
+\`\`\`javascript
+const sheetName = \`Reporte_\${$now.toFormat('yyyy-MM-dd')}\`;
 
-### Workflow completo: Lead → Sheet → Email → Drive
-
-\`\`\`
-[Webhook: Nuevo Lead]
-  → [Google Sheets: Append Row]
-  → [Gmail: Enviar Bienvenida]
-  → [Google Drive: Guardar PDF del contrato]
-\`\`\`
-
-### Tips de Google Workspace
-
-- **Usa Service Accounts** para automatizaciones server-to-server sin intervención humana
-- **Respeta los rate limits**: Gmail permite 250 mensajes/día por usuario con quota de API
-- **Usa filtros de Gmail** para pre-clasificar emails antes de procesarlos en N8N
-- **Cachea datos de Sheets** si los lees frecuentemente; usa un webhook para cambios en vez de polling
-- **Maneja errores de OAuth**: Los tokens expiran; N8N los renueva automáticamente, pero monitorea fallos de autenticación`,
-      estimatedMinutes: 20,
-      quiz: [
-        {
-          id: "q-03-03-1",
-          question: "¿Qué tipo de credenciales se usa para conectar N8N con Google Workspace?",
-          options: ["API Key", "Basic Auth", "OAuth2", "Service Account siempre"],
-          correctIndex: 2,
-          explanation: "N8N usa OAuth2 para conectar con Google Workspace, permitiendo acceso delegado sin compartir contraseñas."
-        },
-        {
-          id: "q-03-03-2",
-          question: "¿Qué operación de Google Sheets agrega datos al final de la hoja?",
-          options: ["write", "append", "insert", "push"],
-          correctIndex: 1,
-          explanation: "La operación 'append' agrega datos al final de la hoja de cálculo, después de la última fila con datos."
-        },
-        {
-          id: "q-03-03-3",
-          question: "¿Cuál es el límite diario de envío de emails con Gmail API por usuario?",
-          options: ["50 mensajes", "100 mensajes", "250 mensajes", "Ilimitado"],
-          correctIndex: 2,
-          explanation: "Gmail API tiene un límite de aproximadamente 250 mensajes por día por usuario con quota de API. Para mayor volumen, usa un servicio de email transaccional."
+// Crear nuevo spreadsheet
+const createResponse = await this.helpers.httpRequest({
+  method: 'POST',
+  url: 'https://sheets.googleapis.com/v4/spreadsheets',
+  headers: {
+    'Authorization': \`Bearer \${$credentials.accessToken}\`,
+    'Content-Type': 'application/json'
+  },
+  body: {
+    properties: {
+      title: sheetName
+    },
+    sheets: [
+      {
+        properties: {
+          title: 'Datos',
+          gridProperties: {
+            rowCount: 1000,
+            columnCount: 26
+          }
         }
-      ]
+      }
+    ]
+  }
+});
+
+return [{
+  json: {
+    sheetId: createResponse.data.spreadsheetId,
+    sheetUrl: createResponse.data.spreadsheetUrl,
+    sheetName
+  }
+}];
+\`\`\`
+
+### Google Drive
+
+#### Listar Archivos
+
+\`\`\`json
+{
+  "resource": "file",
+  "operation": "getAll",
+  "returnAll": false,
+  "limit": 100,
+  "filters": {
+    "query": "mimeType='application/pdf' and 'root' in parents"
+  }
+}
+\`\`\`
+
+#### Upload de Archivo
+
+\`\`\`json
+{
+  "resource": "file",
+  "operation": "upload",
+  "name": "={{ $json.fileName }}",
+  "inputDataFieldName": "data",
+  "options": {
+    "parents": ["folder-id-here"]
+  }
+}
+\`\`\`
+
+#### Descargar Archivo
+
+\`\`\`json
+{
+  "resource": "file",
+  "operation": "download",
+  "fileId": "={{ $json.fileId }}"
+}
+\`\`\`
+
+#### Compartir Archivo
+
+\`\`\`json
+{
+  "resource": "file",
+  "operation": "share",
+  "fileId": "={{ $json.fileId }}",
+  "permissions": {
+    "permissions": [
+      {
+        "role": "reader",
+        "type": "user",
+        "emailAddress": "usuario@example.com"
+      }
+    ]
+  }
+}
+\`\`\`
+
+### Patrones de Automatización
+
+#### Patrón 1: Email Processing Pipeline
+
+\`\`\`
+[Schedule: Cada 5 min]
+    ↓
+[Gmail: Get Unread Emails]
+    ↓
+[IF: Tiene adjunto?]
+    ├─ Yes → [Drive: Download Attachment]
+    │           ↓
+    │         [Process Attachment]
+    │           ↓
+    │         [Sheets: Log Data]
+    │           ↓
+    └─→ [Gmail: Mark as Read]
+\`\`\`
+
+#### Patrón 2: Report Generator
+
+\`\`\`
+[Schedule: Lunes 9 AM]
+    ↓
+[Supabase: Get Weekly Data]
+    ↓
+[Code: Generate HTML Report]
+    ↓
+[Sheets: Create Report Sheet]
+    ↓
+[Drive: Upload PDF]
+    ↓
+[Gmail: Send Report Email]
+\`\`\`
+
+#### Patrón 3: Form to Sheet Automation
+
+\`\`\`
+[Webhook: Form Submission]
+    ↓
+[Validate Data]
+    ↓
+[Sheets: Append Row]
+    ↓
+[Drive: Create Folder]
+    ↓
+[Gmail: Send Confirmation]
+\`\`\`
+
+### Ejemplos Avanzados
+
+#### Procesar Emails con Attachments
+
+\`\`\`javascript
+const items = $input.all();
+const results = [];
+
+for (const item of items) {
+  const email = item.json;
+  
+  // Verificar si tiene attachments
+  if (email.attachments && email.attachments.length > 0) {
+    for (const attachment of email.attachments) {
+      // Descargar attachment
+      const fileData = await this.helpers.httpRequest({
+        method: 'GET',
+        url: \`https://www.googleapis.com/gmail/v1/users/me/messages/\${email.id}/attachments/\${attachment.attachmentId}\`,
+        headers: {
+          'Authorization': \`Bearer \${$credentials.accessToken}\`
+        }
+      });
+
+      // Upload a Drive
+      const driveResponse = await this.helpers.httpRequest({
+        method: 'POST',
+        url: 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',
+        headers: {
+          'Authorization': \`Bearer \${$credentials.accessToken}\`,
+          'Content-Type': 'multipart/related'
+        },
+        body: {
+          metadata: {
+            name: attachment.filename,
+            parents: ['folder-id']
+          },
+          media: {
+            mimeType: attachment.mimeType,
+            body: Buffer.from(fileData.data.data, 'base64')
+          }
+        }
+      });
+
+      results.push({
+        json: {
+          emailId: email.id,
+          from: email.from,
+          subject: email.subject,
+          attachmentName: attachment.filename,
+          driveFileId: driveResponse.data.id,
+          driveFileUrl: driveResponse.data.webViewLink
+        }
+      });
+    }
+  }
+}
+
+return results;
+\`\`\`
+
+#### Generar Reporte Dinámico en Sheets
+
+\`\`\`javascript
+const items = $input.all();
+
+// Preparar datos para Sheets
+const headers = ['Fecha', 'Cliente', 'Producto', 'Cantidad', 'Total'];
+const rows = items.map(item => [
+  item.json.fecha,
+  item.json.cliente,
+  item.json.producto,
+  item.json.cantidad,
+  \`$\${item.json.total}\`
+]);
+
+// Calcular totales
+const totalGeneral = items.reduce((sum, item) => sum + item.json.total, 0);
+rows.push(['', '', '', 'TOTAL:', \`$\${totalGeneral}\`]);
+
+// Combinar headers y datos
+const allData = [headers, ...rows];
+
+return [{
+  json: {
+    data: allData,
+    rowCount: allData.length,
+    columnCount: headers.length
+  }
+}];
+\`\`\`
+
+### Mejores Prácticas
+
+1. **Rate limiting**: Respeta los límites de la API de Google
+2. **Batch operations**: Usa batch requests cuando sea posible
+3. **Error handling**: Maneja errores de autenticación y permisos
+4. **Scopes mínimos**: Solicita solo los permisos necesarios
+5. **Token refresh**: Implementa refresh automático de tokens
+6. **Logs**: Registra operaciones importantes para auditoría
+7. **Backup**: Mantén backups de datos críticos en Sheets
+
+### Debugging
+
+#### Verificar Permisos
+
+\`\`\`javascript
+// Verificar scopes disponibles
+const scopes = $credentials.scope;
+console.log('Available scopes:', scopes);
+
+// Test de conexión
+try {
+  const profile = await this.helpers.httpRequest({
+    method: 'GET',
+    url: 'https://www.googleapis.com/oauth2/v1/userinfo',
+    headers: {
+      'Authorization': \`Bearer \${$credentials.accessToken}\`
+    }
+  });
+  console.log('User profile:', profile.data);
+} catch (error) {
+  console.error('Auth error:', error.message);
+}
+\`\`\`
+
+### Recursos Adicionales
+
+- [Gmail API Documentation](https://developers.google.com/gmail/api)
+- [Google Sheets API](https://developers.google.com/sheets/api)
+- [Google Drive API](https://developers.google.com/drive/api)
+- [OAuth2 Playground](https://developers.google.com/oauthplayground/)
+`,
     },
     {
       id: "les-03-04",
       moduleSlug: "integraciones-apis",
-      slug: "integracion-notion-airtable",
-      title: "Integración con Notion y Airtable",
-      description: "Automatiza Notion databases y Airtable como CMS, con patrones de sincronización bidireccional entre plataformas.",
-      content: `## Integración con Notion y Airtable
+      slug: "notion-airtable",
+      title: "Notion y Airtable como CMS",
+      description: "Usa Notion y Airtable como sistemas de gestión de contenido para tus workflows.",
+      estimatedMinutes: 25,
+      content: `## Notion y Airtable como CMS
 
-Notion y Airtable son herramientas populares para gestión de datos. N8N permite automatizar ambos como base de datos, CMS o sistema de gestión.
+Notion y Airtable son herramientas poderosas que pueden funcionar como CMS (Content Management System) para tus automatizaciones.
 
-### Notion: Configuración
+### Notion Integration
 
-1. Crea una integración en notion.so/my-integrations
-2. Copia el **Internal Integration Token**
-3. Comparte la base de datos con la integración
-4. Configura las credenciales en N8N
+#### Configuración
 
-### Notion: Consultar base de datos
+1. Ve a [Notion Integrations](https://www.notion.so/my-integrations)
+2. Click en **New integration**
+3. Configura:
+   - **Name**: N8N Integration
+   - **Associated workspace**: Tu workspace
+4. Copia el **Internal Integration Token**
+5. En Notion, comparte la base de datos con la integración
+6. En N8N, crea credenciales **Notion API**
+
+#### Leer Base de Datos
 
 \`\`\`json
 {
-  "operation": "search",
-  "resource": "database",
-  "query": "Leads Pipeline"
+  "operation": "getAll",
+  "databaseId": "={{ $json.databaseId }}",
+  "returnAll": false,
+  "limit": 100,
+  "filters": {
+    "filter": {
+      "property": "Status",
+      "select": {
+        "equals": "Published"
+      }
+    }
+  }
 }
 \`\`\`
 
-### Notion: Crear página en database
+#### Crear Página
 
 \`\`\`json
 {
   "operation": "create",
-  "resource": "databasePage",
-  "databaseId": "={{ $env.NOTION_DB_ID }}",
+  "databaseId": "={{ $json.databaseId }}",
   "properties": {
     "properties": [
-      { "key": "Nombre", "value": "={{ $json.nombre }}" },
-      { "key": "Email", "value": "={{ $json.email }}" },
-      { "key": "Status", "value": "Nuevo" },
-      { "key": "Score", "value": "={{ $json.score }}" }
+      {
+        "key": "Name",
+        "type": "title",
+        "title": "={{ $json.titulo }}"
+      },
+      {
+        "key": "Status",
+        "type": "select",
+        "select": "Draft"
+      },
+      {
+        "key": "Author",
+        "type": "rich_text",
+        "rich_text": "={{ $json.autor }}"
+      }
     ]
   }
 }
 \`\`\`
 
-### Notion: Actualizar página
+#### Actualizar Página
 
 \`\`\`json
 {
   "operation": "update",
-  "resource": "databasePage",
-  "pageId": "={{ $json.notionPageId }}",
+  "pageId": "={{ $json.pageId }}",
   "properties": {
     "properties": [
-      { "key": "Status", "value": "Procesado" },
-      { "key": "Última actualización", "value": "={{ $now.toISO() }}" }
+      {
+        "key": "Status",
+        "type": "select",
+        "select": "Published"
+      },
+      {
+        "key": "Published Date",
+        "type": "date",
+        "date": "={{ $now.toISO() }}"
+      }
     ]
   }
 }
 \`\`\`
 
-### Notion: Tipos de propiedades
+#### Agregar Contenido a Página
 
-| Tipo | Ejemplo de valor |
-|---|---|
-| Title | \`"Mi página"\` |
-| Rich text | \`"Texto con formato"\` |
-| Number | \`42\` |
-| Select | \`"Opción A"\` |
-| Multi-select | \`["Tag1", "Tag2"]\` |
-| Date | \`"2024-01-15"\` |
-| Checkbox | \`true\` |
-| URL | \`"https://ejemplo.com"\` |
-| Email | \`"user@mail.com"\` |
+\`\`\`javascript
+const items = $input.all();
+const results = [];
 
-### Airtable: Configuración
+for (const item of items) {
+  const pageId = item.json.pageId;
+  const content = item.json.contenido;
 
-1. Ve a airtable.com/create/tokens
-2. Crea un Personal Access Token
-3. Selecciona los scopes: \`data.records:read\`, \`data.records:write\`
-4. Configura en N8N
+  // Crear bloques de contenido
+  const blocks = [
+    {
+      object: 'block',
+      type: 'heading_2',
+      heading_2: {
+        rich_text: [{ type: 'text', text: { content: item.json.subtitulo } }]
+      }
+    },
+    {
+      object: 'block',
+      type: 'paragraph',
+      paragraph: {
+        rich_text: [{ type: 'text', text: { content } }]
+      }
+    },
+    {
+      object: 'block',
+      type: 'bulleted_list_item',
+      bulleted_list_item: {
+        rich_text: [{ type: 'text', text: { content: 'Punto 1' } }]
+      }
+    },
+    {
+      object: 'block',
+      type: 'code',
+      code: {
+        rich_text: [{ type: 'text', text: { content: item.json.codigo } }],
+        language: 'javascript'
+      }
+    }
+  ];
 
-### Airtable: Listar registros
+  const response = await this.helpers.httpRequest({
+    method: 'PATCH',
+    url: \`https://api.notion.com/v1/blocks/\${pageId}/children\`,
+    headers: {
+      'Authorization': \`Bearer \${$credentials.accessToken}\`,
+      'Notion-Version': '2022-06-28',
+      'Content-Type': 'application/json'
+    },
+    body: { children: blocks }
+  });
+
+  results.push({
+    json: {
+      pageId,
+      blocksAdded: blocks.length,
+      success: true
+    }
+  });
+}
+
+return results;
+\`\`\`
+
+### Airtable Integration
+
+#### Configuración
+
+1. Ve a [Airtable API](https://airtable.com/api)
+2. Selecciona tu base
+3. Genera un **API Key**
+4. En N8N, crea credenciales **Airtable API**
+
+#### Leer Registros
 
 \`\`\`json
 {
   "operation": "list",
-  "base": { "value": "={{ $env.AIRTABLE_BASE_ID }}" },
-  "table": { "value": "Leads" },
+  "application": "appXXXXXXXXXXXXXX",
+  "table": "Contacts",
+  "returnAll": false,
+  "limit": 100,
   "options": {
-    "filterByFormula": "AND({Status} = 'Nuevo', {Score} > 50)",
-    "sort": [{ "field": "created_at", "direction": "desc" }],
-    "maxRecords": 100
+    "filterByFormula": "{Status} = 'Active'",
+    "sort": [
+      {
+        "field": "Created",
+        "direction": "desc"
+      }
+    ]
   }
 }
 \`\`\`
 
-### Airtable: Crear registro
+#### Crear Registro
 
 \`\`\`json
 {
   "operation": "create",
-  "base": { "value": "={{ $env.AIRTABLE_BASE_ID }}" },
-  "table": { "value": "Leads" },
-  "columns": {
-    "mappingMode": "defineBelow",
-    "value": {
-      "Nombre": "={{ $json.nombre }}",
-      "Email": "={{ $json.email }}",
-      "Empresa": "={{ $json.empresa }}",
-      "Status": "Nuevo",
-      "Score": "={{ $json.score }}"
-    }
+  "application": "appXXXXXXXXXXXXXX",
+  "table": "Contacts",
+  "fields": {
+    "values": [
+      {
+        "name": "Name",
+        "value": "={{ $json.nombre }}"
+      },
+      {
+        "name": "Email",
+        "value": "={{ $json.email }}"
+      },
+      {
+        "name": "Phone",
+        "value": "={{ $json.telefono }}"
+      },
+      {
+        "name": "Status",
+        "value": "New"
+      }
+    ]
   }
 }
 \`\`\`
 
-### Patrón: Sincronización Bidireccional
+#### Actualizar Registro
 
-Sincroniza datos entre Notion y Airtable:
-
+\`\`\`json
+{
+  "operation": "update",
+  "application": "appXXXXXXXXXXXXXX",
+  "table": "Contacts",
+  "id": "={{ $json.recordId }}",
+  "fields": {
+    "values": [
+      {
+        "name": "Status",
+        "value": "Processed"
+      },
+      {
+        "name": "Last Contact",
+        "value": "={{ $now.toISO() }}"
+      }
+    ]
+  }
+}
 \`\`\`
-[Schedule cada 15min]
-  → [Leer Notion: últimos cambios]
-  → [Comparar con Airtable]
-  → [Actualizar diferencias en Airtable]
-  → [Leer Airtable: últimos cambios]
-  → [Comparar con Notion]
-  → [Actualizar diferencias en Notion]
-\`\`\`
 
-#### Implementación del sync
+#### Bulk Operations
 
 \`\`\`javascript
-const notionItems = $input.all();
-const airtableItems = $('Airtable').all();
+const items = $input.all();
 
-const airtableMap = new Map(
-  airtableItems.map(item => [item.json.fields.Email, item.json])
-);
+// Preparar para bulk create
+const records = items.map(item => ({
+  fields: {
+    Name: item.json.nombre,
+    Email: item.json.email,
+    Phone: item.json.telefono,
+    Status: 'New',
+    Source: 'N8N Automation'
+  }
+}));
 
-const toUpdateInAirtable = [];
-const toCreateInAirtable = [];
+// Airtable permite máximo 10 registros por request
+const batchSize = 10;
+const results = [];
 
-for (const item of notionItems) {
-  const existing = airtableMap.get(item.json.properties.Email);
-  if (existing) {
-    if (existing.fields.Status !== item.json.properties.Status) {
-      toUpdateInAirtable.push({
-        id: existing.id,
-        fields: { Status: item.json.properties.Status }
-      });
+for (let i = 0; i < records.length; i += batchSize) {
+  const batch = records.slice(i, i + batchSize);
+  
+  const response = await this.helpers.httpRequest({
+    method: 'POST',
+    url: \`https://api.airtable.com/v0/appXXXXXXXXXXXXXX/Contacts\`,
+    headers: {
+      'Authorization': \`Bearer \${$credentials.apiKey}\`,
+      'Content-Type': 'application/json'
+    },
+    body: { records: batch }
+  });
+
+  results.push(...response.data.records);
+  
+  // Rate limiting: Airtable permite 5 requests por segundo
+  if (i + batchSize < records.length) {
+    await new Promise(resolve => setTimeout(resolve, 200));
+  }
+}
+
+return results.map(record => ({
+  json: {
+    recordId: record.id,
+    created: true,
+    fields: record.fields
+  }
+}));
+\`\`\`
+
+### Patrones de CMS
+
+#### Patrón 1: Content Publishing Pipeline
+
+\`\`\`
+[Webhook: New Content]
+    ↓
+[Validate Content]
+    ↓
+[Notion: Create Draft Page]
+    ↓
+[AI: Generate Summary]
+    ↓
+[Notion: Update with Summary]
+    ↓
+[Notify Reviewers]
+    ↓
+[Webhook: Content Approved]
+    ↓
+[Notion: Publish Page]
+    ↓
+[Post to Social Media]
+\`\`\`
+
+#### Patrón 2: CRM con Airtable
+
+\`\`\`
+[Webhook: New Lead]
+    ↓
+[Airtable: Create Contact]
+    ↓
+[Enrich Data from API]
+    ↓
+[Airtable: Update Contact]
+    ↓
+[Send Welcome Email]
+    ↓
+[Schedule Follow-up]
+\`\`\`
+
+#### Patrón 3: Knowledge Base Sync
+
+\`\`\`
+[Schedule: Diario]
+    ↓
+[Notion: Get Updated Pages]
+    ↓
+[Transform to Searchable Format]
+    ↓
+[Upload to Search Index]
+    ↓
+[Airtable: Log Sync Status]
+\`\`\`
+
+### Ejemplos Avanzados
+
+#### Content Approval Workflow
+
+\`\`\`javascript
+const items = $input.all();
+const results = [];
+
+for (const item of items) {
+  const pageId = item.json.pageId;
+  
+  // Obtener página de Notion
+  const page = await this.helpers.httpRequest({
+    method: 'GET',
+    url: \`https://api.notion.com/v1/pages/\${pageId}\`,
+    headers: {
+      'Authorization': \`Bearer \${$credentials.accessToken}\`,
+      'Notion-Version': '2022-06-28'
     }
-  } else {
-    toCreateInAirtable.push({
-      fields: {
-        Nombre: item.json.properties.Nombre,
-        Email: item.json.properties.Email,
-        Status: item.json.properties.Status
+  });
+
+  // Verificar status
+  const status = page.data.properties.Status.select?.name;
+  
+  if (status === 'Pending Review') {
+    // Enviar notificación de aprobación
+    const reviewers = ['editor@example.com', 'manager@example.com'];
+    
+    for (const reviewer of reviewers) {
+      // Aquí iría el nodo de email
+      console.log(\`Sending approval request to \${reviewer}\`);
+    }
+
+    results.push({
+      json: {
+        pageId,
+        title: page.data.properties.Name.title[0].plain_text,
+        status: 'Review Requested',
+        reviewers
       }
     });
   }
 }
 
-return { json: { toUpdateInAirtable, toCreateInAirtable } };
+return results;
 \`\`\`
 
-### Tips
+#### Sync Bidireccional Notion-Airtable
 
-- **Notion API rate limit**: 3 requests/segundo por integración
-- **Airtable rate limit**: 5 requests/segundo por base
-- Usa **webhooks de Airtable** para cambios en tiempo real en vez de polling
-- Para Notion, usa **Notion Trigger** (disponible en N8N) para detectar cambios
-- **Cachea IDs** de páginas/registros para evitar búsquedas repetidas`,
-      estimatedMinutes: 18,
-      quiz: [
-        {
-          id: "q-03-04-1",
-          question: "¿Qué se debe hacer antes de que una integración de Notion pueda acceder a una base de datos?",
-          options: [
-            "Configurar un webhook",
-            "Compartir la base de datos con la integración",
-            "Crear un token de Airtable",
-            "Activar la API de Notion"
-          ],
-          correctIndex: 1,
-          explanation: "Es necesario compartir la base de datos con la integración de Notion desde la propia página de Notion, de lo contrario la API no tendrá acceso."
-        },
-        {
-          id: "q-03-04-2",
-          question: "¿Cuál es el rate limit de la API de Airtable por base?",
-          options: [
-            "1 request/segundo",
-            "3 requests/segundo",
-            "5 requests/segundo",
-            "10 requests/segundo"
-          ],
-          correctIndex: 2,
-          explanation: "Airtable tiene un rate limit de 5 requests por segundo por base. Usa SplitInBatches con Wait para respetar este límite."
-        },
-        {
-          id: "q-03-04-3",
-          question: "¿Qué fórmula de Airtable filtra registros con Status 'Nuevo' y Score mayor a 50?",
-          options: [
-            "Status = 'Nuevo' AND Score > 50",
-            "AND({Status} = 'Nuevo', {Score} > 50)",
-            "WHERE Status='Nuevo' AND Score>50",
-            "filter(Status:Nuevo,Score:>50)"
-          ],
-          correctIndex: 1,
-          explanation: "Airtable usa sintaxis de fórmula con AND({Campo} = valor, {Campo} operador valor) para filtrar registros."
+\`\`\`javascript
+// Sincronizar datos entre Notion y Airtable
+const notionItems = $input.all();
+const results = [];
+
+for (const notionItem of notionItems) {
+  const notionId = notionItem.json.id;
+  const email = notionItem.json.properties.Email.rich_text[0]?.plain_text;
+  
+  // Buscar en Airtable por email
+  const airtableSearch = await this.helpers.httpRequest({
+    method: 'GET',
+    url: \`https://api.airtable.com/v0/appXXX/Contacts?filterByFormula={Email}="\${email}"\`,
+    headers: {
+      'Authorization': \`Bearer \${$credentials.airtableKey}\`
+    }
+  });
+
+  if (airtableSearch.data.records.length === 0) {
+    // Crear en Airtable
+    const newRecord = await this.helpers.httpRequest({
+      method: 'POST',
+      url: 'https://api.airtable.com/v0/appXXX/Contacts',
+      headers: {
+        'Authorization': \`Bearer \${$credentials.airtableKey}\`,
+        'Content-Type': 'application/json'
+      },
+      body: {
+        fields: {
+          Name: notionItem.json.properties.Name.title[0].plain_text,
+          Email: email,
+          Source: 'Notion',
+          NotionID: notionId
         }
-      ]
+      }
+    });
+
+    results.push({
+      json: {
+        notionId,
+        airtableId: newRecord.data.id,
+        action: 'created'
+      }
+    });
+  } else {
+    // Actualizar en Airtable
+    const recordId = airtableSearch.data.records[0].id;
+    
+    await this.helpers.httpRequest({
+      method: 'PATCH',
+      url: \`https://api.airtable.com/v0/appXXX/Contacts/\${recordId}\`,
+      headers: {
+        'Authorization': \`Bearer \${$credentials.airtableKey}\`,
+        'Content-Type': 'application/json'
+      },
+      body: {
+        fields: {
+          Name: notionItem.json.properties.Name.title[0].plain_text,
+          LastSync: new Date().toISOString()
+        }
+      }
+    });
+
+    results.push({
+      json: {
+        notionId,
+        airtableId: recordId,
+        action: 'updated'
+      }
+    });
+  }
+}
+
+return results;
+\`\`\`
+
+### Mejores Prácticas
+
+#### Notion
+
+1. **Usa databases**: Prefiere databases sobre pages para datos estructurados
+2. **Propiedades tipadas**: Usa los tipos de propiedad correctos (select, date, etc.)
+3. **Pagination**: Maneja paginación para bases de datos grandes
+4. **Rate limiting**: Notion permite 3 requests por segundo
+5. **Webhooks**: Usa webhooks para cambios en tiempo real
+
+#### Airtable
+
+1. **Field types**: Usa los tipos de campo apropiados
+2. **Views**: Crea vistas específicas para diferentes workflows
+3. **Formulas**: Usa fórmulas de Airtable para cálculos
+4. **Batch operations**: Usa bulk operations para mejor performance
+5. **API limits**: Airtable permite 5 requests por segundo
+
+### Debugging
+
+#### Verificar Conexión Notion
+
+\`\`\`javascript
+try {
+  const response = await this.helpers.httpRequest({
+    method: 'GET',
+    url: 'https://api.notion.com/v1/users/me',
+    headers: {
+      'Authorization': \`Bearer \${$credentials.accessToken}\`,
+      'Notion-Version': '2022-06-28'
+    }
+  });
+  console.log('Notion bot:', response.data.bot);
+} catch (error) {
+  console.error('Notion error:', error.message);
+}
+\`\`\`
+
+#### Verificar Conexión Airtable
+
+\`\`\`javascript
+try {
+  const response = await this.helpers.httpRequest({
+    method: 'GET',
+    url: 'https://api.airtable.com/v0/meta/bases',
+    headers: {
+      'Authorization': \`Bearer \${$credentials.apiKey}\`
+    }
+  });
+  console.log('Available bases:', response.data.bases);
+} catch (error) {
+  console.error('Airtable error:', error.message);
+}
+\`\`\`
+
+### Recursos Adicionales
+
+- [Notion API Documentation](https://developers.notion.com/)
+- [Airtable API Documentation](https://airtable.com/api)
+- [Notion API Cookbook](https://developers.notion.com/docs/cookbook)
+- [Airtable Formulas](https://support.airtable.com/docs/formula-field-reference)
+`,
     },
     {
       id: "les-03-05",
       moduleSlug: "integraciones-apis",
       slug: "api-design-patterns",
       title: "Diseño de APIs con N8N",
-      description: "Construye endpoints API con webhooks de N8N, formateo de respuestas, validación de entrada y patrones de rate limiting.",
+      description: "Crea APIs RESTful usando webhooks de N8N para exponer tus workflows como servicios.",
+      estimatedMinutes: 25,
       content: `## Diseño de APIs con N8N
 
-N8N puede funcionar como backend de API usando webhooks. Esto permite crear endpoints REST sin escribir un servidor tradicional.
+N8N puede funcionar como backend para APIs RESTful usando webhooks. Esto te permite exponer tus workflows como servicios.
 
-### Arquitectura: N8N como API
+### Webhook como API Endpoint
 
-\`\`\`
-[Cliente] → [Webhook N8N] → [Lógica de negocio] → [Respond to Webhook]
-\`\`\`
-
-### Endpoint básico con respuesta JSON
+#### Configuración Básica
 
 \`\`\`json
 {
-  "httpMethod": "GET",
-  "path": "api/v1/products",
-  "responseMode": "responseNode"
+  "httpMethod": "POST",
+  "path": "api/v1/users",
+  "responseMode": "responseNode",
+  "options": {
+    "rawBody": true
+  }
 }
 \`\`\`
 
-El nodo **Respond to Webhook** formatea la respuesta:
+#### Response Node
 
 \`\`\`json
 {
   "respondWith": "json",
-  "responseBody": "={{ JSON.stringify({ success: true, data: $items(), meta: { total: $items().length, timestamp: $now.toISO() } }) }}",
+  "responseBody": "={{ JSON.stringify({ success: true, data: $json }) }}",
   "options": {
     "responseCode": 200,
     "responseHeaders": {
       "entries": [
-        { "name": "Content-Type", "value": "application/json" },
-        { "name": "X-Request-Id", "value": "={{ $execution.id }}" }
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
       ]
     }
   }
 }
 \`\`\`
 
-### Validación de entrada
+### REST API Design
+
+#### Estructura de Endpoints
+
+\`\`\`
+GET    /api/v1/users          # Listar usuarios
+POST   /api/v1/users          # Crear usuario
+GET    /api/v1/users/:id      # Obtener usuario específico
+PUT    /api/v1/users/:id      # Actualizar usuario completo
+PATCH  /api/v1/users/:id      # Actualizar usuario parcial
+DELETE /api/v1/users/:id      # Eliminar usuario
+\`\`\`
+
+#### Ejemplo: GET /api/v1/users
 
 \`\`\`javascript
-const data = $input.first().json;
-const errors = [];
+// Webhook node recibe request
+const query = $input.first().json.query || {};
 
-if (!data.email) errors.push('email es requerido');
-if (!data.nombre || data.nombre.length < 2) errors.push('nombre debe tener al menos 2 caracteres');
-if (data.score && (data.score < 0 || data.score > 100)) errors.push('score debe estar entre 0 y 100');
+// Parsear query parameters
+const page = parseInt(query.page) || 1;
+const limit = parseInt(query.limit) || 50;
+const offset = (page - 1) * limit;
+
+// Obtener datos de la base de datos
+const users = await this.helpers.httpRequest({
+  method: 'GET',
+  url: \`\${$credentials.supabaseUrl}/rest/v1/users\`,
+  headers: {
+    'apikey': $credentials.supabaseKey,
+    'Authorization': \`Bearer \${$credentials.supabaseKey}\`,
+    'Range': \`\${offset}-\${offset + limit - 1}\`
+  }
+});
+
+// Preparar respuesta
+const response = {
+  success: true,
+  data: users.data,
+  pagination: {
+    page,
+    limit,
+    total: users.headers['content-range']?.split('/')[1] || 0
+  }
+};
+
+return [{ json: response }];
+\`\`\`
+
+#### Ejemplo: POST /api/v1/users
+
+\`\`\`javascript
+const body = $input.first().json.body;
+
+// Validación
+const errors = [];
+if (!body.email) errors.push('Email es requerido');
+if (!body.name) errors.push('Name es requerido');
+if (body.email && !body.email.includes('@')) errors.push('Email inválido');
 
 if (errors.length > 0) {
   return [{
     json: {
-      _response: {
-        statusCode: 400,
-        body: { success: false, errors }
-      }
+      success: false,
+      errors,
+      statusCode: 400
     }
   }];
 }
 
-return [{ json: { ...data, _validated: true } }];
-\`\`\`
+// Crear usuario
+try {
+  const newUser = await this.helpers.httpRequest({
+    method: 'POST',
+    url: \`\${$credentials.supabaseUrl}/rest/v1/users\`,
+    headers: {
+      'apikey': $credentials.supabaseKey,
+      'Authorization': \`Bearer \${$credentials.supabaseKey}\`,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation'
+    },
+    body: {
+      email: body.email,
+      name: body.name,
+      created_at: new Date().toISOString()
+    }
+  });
 
-### Patrón: REST API completa
-
-#### GET /api/v1/users/:id
-
-\`\`\`
-[Webhook GET] → [Extraer ID del path] → [Buscar en Supabase] → [IF: existe?]
-  → (sí) → [Respond 200 con datos]
-  → (no) → [Respond 404]
-\`\`\`
-
-#### POST /api/v1/users
-
-\`\`\`
-[Webhook POST] → [Validar body] → [IF: válido?]
-  → (sí) → [Insertar en Supabase] → [Respond 201]
-  → (no) → [Respond 400 con errores]
-\`\`\`
-
-#### PUT /api/v1/users/:id
-
-\`\`\`
-[Webhook PUT] → [Extraer ID] → [Validar body] → [Actualizar Supabase] → [Respond 200]
+  return [{
+    json: {
+      success: true,
+      data: newUser.data[0],
+      statusCode: 201
+    }
+  }];
+} catch (error) {
+  return [{
+    json: {
+      success: false,
+      error: error.message,
+      statusCode: 500
+    }
+  }];
+}
 \`\`\`
 
 ### Autenticación de API
 
-#### API Key en header
+#### API Key Authentication
 
 \`\`\`javascript
-const apiKey = $input.first().json.headers['x-api-key'];
-const validKeys = ($env.VALID_API_KEYS || '').split(',');
+// Primer nodo después del webhook
+const headers = $input.first().json.headers;
+const apiKey = headers['x-api-key'];
+
+// Verificar API key
+const validKeys = ['key1', 'key2', 'key3']; // O obtener de base de datos
 
 if (!apiKey || !validKeys.includes(apiKey)) {
   return [{
     json: {
-      _response: {
-        statusCode: 401,
-        body: { success: false, error: 'API key inválida' }
-      }
+      success: false,
+      error: 'Unauthorized',
+      statusCode: 401
     }
   }];
 }
 
+// Continuar con el workflow
 return $input.all();
 \`\`\`
 
-#### HMAC Signature Verification
+#### JWT Authentication
 
 \`\`\`javascript
-const crypto = require('crypto');
-const data = $input.first();
-const signature = data.json.headers['x-signature'];
-const secret = $env.WEBHOOK_SECRET;
+const jwt = require('jsonwebtoken');
+const headers = $input.first().json.headers;
+const authHeader = headers['authorization'];
 
-const body = JSON.stringify(data.json.body);
-const expectedSignature = crypto
-  .createHmac('sha256', secret)
-  .update(body)
-  .digest('hex');
-
-if (signature !== expectedSignature) {
-  return [{ json: { _response: { statusCode: 403, body: { error: 'Firma inválida' } } } }];
+if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  return [{
+    json: {
+      success: false,
+      error: 'Missing or invalid authorization header',
+      statusCode: 401
+    }
+  }];
 }
 
-return $input.all();
+const token = authHeader.substring(7);
+
+try {
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  
+  // Agregar usuario autenticado al contexto
+  const items = $input.all();
+  return items.map(item => ({
+    json: {
+      ...item.json,
+      user: decoded
+    }
+  }));
+} catch (error) {
+  return [{
+    json: {
+      success: false,
+      error: 'Invalid token',
+      statusCode: 401
+    }
+  }];
+}
+\`\`\`
+
+### Manejo de Errores
+
+#### Error Response Estándar
+
+\`\`\`javascript
+function createErrorResponse(statusCode, message, details = null) {
+  return {
+    json: {
+      success: false,
+      error: {
+        code: statusCode,
+        message,
+        details,
+        timestamp: new Date().toISOString()
+      },
+      statusCode
+    }
+  };
+}
+
+// Uso
+if (!body.email) {
+  return [createErrorResponse(400, 'Validation error', { email: 'Email is required' })];
+}
+
+if (error.status === 404) {
+  return [createErrorResponse(404, 'Resource not found')];
+}
+
+return [createErrorResponse(500, 'Internal server error', error.message)];
 \`\`\`
 
 ### Rate Limiting
 
-Implementa rate limiting con Redis:
+#### Implementar Rate Limiting
 
 \`\`\`javascript
-const clientIp = $input.first().json.headers['x-forwarded-for'] || 'unknown';
-const key = \`rate_limit:\${clientIp}\`;
-const MAX_REQUESTS = 100;
-const WINDOW_SECONDS = 60;
+const redis = require('redis');
+const client = redis.createClient(process.env.REDIS_URL);
 
-const currentCount = await this.helpers.httpRequest({
-  method: 'GET',
-  url: \`http://redis:6379/\${key}\`
-});
+const ip = $input.first().json.headers['x-forwarded-for'] || 
+           $input.first().json.headers['x-real-ip'];
+const key = \`rate_limit:\${ip}\`;
+const limit = 100; // requests por hora
+const window = 3600; // segundos
 
-if (parseInt(currentCount.body) > MAX_REQUESTS) {
+// Obtener contador actual
+const current = await client.get(key);
+const count = current ? parseInt(current) : 0;
+
+if (count >= limit) {
   return [{
     json: {
-      _response: {
-        statusCode: 429,
-        body: { error: 'Rate limit exceeded', retryAfter: WINDOW_SECONDS }
-      }
+      success: false,
+      error: 'Rate limit exceeded',
+      statusCode: 429,
+      retryAfter: window
     }
   }];
 }
 
+// Incrementar contador
+await client.incr(key);
+await client.expire(key, window);
+
+// Continuar con el workflow
 return $input.all();
 \`\`\`
 
-### CORS Headers
+### Documentación de API
 
-Para APIs consumidas desde el browser:
+#### Generar OpenAPI Spec
 
-\`\`\`json
-{
-  "respondWith": "json",
-  "options": {
-    "responseHeaders": {
-      "entries": [
-        { "name": "Access-Control-Allow-Origin", "value": "*" },
-        { "name": "Access-Control-Allow-Methods", "value": "GET, POST, PUT, DELETE, OPTIONS" },
-        { "name": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization, X-API-Key" }
-      ]
+\`\`\`javascript
+// Endpoint: GET /api/v1/docs
+const openApiSpec = {
+  openapi: '3.0.0',
+  info: {
+    title: 'N8N API',
+    version: '1.0.0',
+    description: 'API generada automáticamente por N8N'
+  },
+  servers: [
+    {
+      url: 'https://tu-n8n.com',
+      description: 'Production server'
+    }
+  ],
+  paths: {
+    '/api/v1/users': {
+      get: {
+        summary: 'List users',
+        parameters: [
+          {
+            name: 'page',
+            in: 'query',
+            schema: { type: 'integer', default: 1 }
+          },
+          {
+            name: 'limit',
+            in: 'query',
+            schema: { type: 'integer', default: 50 }
+          }
+        ],
+        responses: {
+          '200': {
+            description: 'Successful response',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    success: { type: 'boolean' },
+                    data: {
+                      type: 'array',
+                      items: { $ref: '#/components/schemas/User' }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      post: {
+        summary: 'Create user',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/CreateUser' }
+            }
+          }
+        },
+        responses: {
+          '201': {
+            description: 'User created'
+          }
+        }
+      }
+    }
+  },
+  components: {
+    schemas: {
+      User: {
+        type: 'object',
+        properties: {
+          id: { type: 'string' },
+          email: { type: 'string' },
+          name: { type: 'string' },
+          created_at: { type: 'string', format: 'date-time' }
+        }
+      },
+      CreateUser: {
+        type: 'object',
+        required: ['email', 'name'],
+        properties: {
+          email: { type: 'string', format: 'email' },
+          name: { type: 'string' }
+        }
+      }
     }
   }
+};
+
+return [{ json: openApiSpec }];
+\`\`\`
+
+### Patrones Avanzados
+
+#### Patrón: API Gateway
+
+\`\`\`
+[Webhook: /api/*]
+    ↓
+[Authenticate Request]
+    ↓
+[Route Request]
+    ├─ /users → [Users Workflow]
+    ├─ /orders → [Orders Workflow]
+    └─ /products → [Products Workflow]
+\`\`\`
+
+#### Patrón: Async Processing
+
+\`\`\`
+[Webhook: POST /api/v1/jobs]
+    ↓
+[Create Job Record]
+    ↓
+[Return Job ID Immediately]
+    
+[Background: Process Job]
+    ↓
+[Update Job Status]
+    
+[Webhook: GET /api/v1/jobs/:id]
+    ↓
+[Return Job Status]
+\`\`\`
+
+#### Patrón: Webhook Callbacks
+
+\`\`\`
+[Webhook: POST /api/v1/process]
+    ↓
+[Validate Request]
+    ↓
+[Store Callback URL]
+    ↓
+[Return 202 Accepted]
+    
+[Background: Long Process]
+    ↓
+[POST to Callback URL with Result]
+\`\`\`
+
+### Ejemplo Completo: CRUD API
+
+\`\`\`javascript
+// Router node
+const method = $input.first().json.httpMethod;
+const path = $input.first().json.path;
+const body = $input.first().json.body || {};
+const params = $input.first().json.params || {};
+
+// Parse path: /api/v1/users/:id
+const pathParts = path.split('/');
+const resource = pathParts[3]; // users
+const id = pathParts[4]; // id (opcional)
+
+// Routing
+if (resource === 'users') {
+  if (method === 'GET' && !id) {
+    // List users
+    return handleListUsers();
+  } else if (method === 'GET' && id) {
+    // Get user by ID
+    return handleGetUser(id);
+  } else if (method === 'POST') {
+    // Create user
+    return handleCreateUser(body);
+  } else if (method === 'PUT' && id) {
+    // Update user
+    return handleUpdateUser(id, body);
+  } else if (method === 'DELETE' && id) {
+    // Delete user
+    return handleDeleteUser(id);
+  }
+}
+
+return [{
+  json: {
+    success: false,
+    error: 'Route not found',
+    statusCode: 404
+  }
+}];
+
+async function handleListUsers() {
+  // Implementación
+}
+
+async function handleGetUser(id) {
+  // Implementación
+}
+
+async function handleCreateUser(body) {
+  // Implementación
+}
+
+async function handleUpdateUser(id, body) {
+  // Implementación
+}
+
+async function handleDeleteUser(id) {
+  // Implementación
 }
 \`\`\`
 
-### Mejores prácticas
+### Mejores Prácticas
 
-- Usa **versionado de API** (\`/api/v1/\`, \`/api/v2/\`)
-- Retorna **códigos HTTP correctos** (200, 201, 400, 401, 404, 429, 500)
-- Incluye **X-Request-Id** en respuestas para debugging
-- Implementa **rate limiting** siempre que la API sea pública
-- Documenta tus endpoints con **Sticky Notes** en el workflow
-- Usa **Respond to Webhook** siempre en lugar de response mode en el webhook`,
-      estimatedMinutes: 22,
-      n8nWorkflowJson: {
-        name: "REST API - Users",
-        nodes: [
-          {
-            parameters: { httpMethod: "GET", path: "api/v1/users/{id}", responseMode: "responseNode" },
-            id: "webhook-get",
-            name: "GET User",
-            type: "n8n-nodes-base.webhook",
-            typeVersion: 1,
-            position: [250, 200]
-          },
-          {
-            parameters: { httpMethod: "POST", path: "api/v1/users", responseMode: "responseNode" },
-            id: "webhook-post",
-            name: "POST User",
-            type: "n8n-nodes-base.webhook",
-            typeVersion: 1,
-            position: [250, 400]
-          },
-          {
-            parameters: {
-              respondWith: "json",
-              responseBody: "={{ JSON.stringify({ success: true, data: $json }) }}",
-              options: {
-                responseCode: 200,
-                responseHeaders: {
-                  entries: [
-                    { name: "Content-Type", value: "application/json" },
-                    { name: "X-Request-Id", value: "={{ $execution.id }}" }
-                  ]
-                }
-              }
-            },
-            id: "respond-200",
-            name: "Respond 200",
-            type: "n8n-nodes-base.respondToWebhook",
-            typeVersion: 1,
-            position: [900, 200]
-          }
-        ],
-        connections: {
-          "GET User": { main: [[{ node: "Respond 200", type: "main", index: 0 }]] }
-        }
-      },
-      quiz: [
-        {
-          id: "q-03-05-1",
-          question: "¿Qué nodo se usa para enviar una respuesta personalizada al cliente en un webhook?",
-          options: [
-            "HTTP Response",
-            "Respond to Webhook",
-            "Send Response",
-            "Webhook Response"
-          ],
-          correctIndex: 1,
-          explanation: "El nodo 'Respond to Webhook' permite enviar respuestas personalizadas con status code, headers y body al cliente que llamó el webhook."
-        },
-        {
-          id: "q-03-05-2",
-          question: "¿Qué código HTTP se debe retornar cuando un recurso se crea exitosamente?",
-          options: ["200 OK", "201 Created", "204 No Content", "301 Moved"],
-          correctIndex: 1,
-          explanation: "201 Created es el código HTTP correcto cuando un recurso se crea exitosamente mediante POST."
-        },
-        {
-          id: "q-03-05-3",
-          question: "¿Qué header se usa comúnmente para verificar la autenticidad de un webhook?",
-          options: [
-            "X-API-Key",
-            "X-Signature (HMAC)",
-            "Content-Type",
-            "X-Request-Id"
-          ],
-          correctIndex: 1,
-          explanation: "X-Signature con HMAC permite verificar que el webhook fue enviado por el servicio legítimo y que el body no fue modificado en tránsito."
-        }
-      ]
-    }
-  ]
+1. **Versionado**: Usa versiones en URLs (/api/v1/, /api/v2/)
+2. **Validación**: Valida todos los inputs
+3. **Autenticación**: Implementa auth en todos los endpoints
+4. **Rate limiting**: Protege contra abuso
+5. **Logging**: Registra todas las requests
+6. **Error handling**: Usa códigos HTTP apropiados
+7. **Documentation**: Genera OpenAPI specs
+8. **Testing**: Prueba todos los endpoints
+9. **CORS**: Configura CORS apropiadamente
+10. **HTTPS**: Siempre usa HTTPS en producción
+
+### Debugging
+
+#### Test de API con curl
+
+\`\`\`bash
+# GET request
+curl -X GET https://tu-n8n.com/api/v1/users \\
+  -H "X-API-Key: your-api-key"
+
+# POST request
+curl -X POST https://tu-n8n.com/api/v1/users \\
+  -H "Content-Type: application/json" \\
+  -H "X-API-Key: your-api-key" \\
+  -d '{"email": "user@example.com", "name": "John Doe"}'
+
+# PUT request
+curl -X PUT https://tu-n8n.com/api/v1/users/123 \\
+  -H "Content-Type: application/json" \\
+  -H "X-API-Key: your-api-key" \\
+  -d '{"name": "Jane Doe"}'
+\`\`\`
+
+### Recursos Adicionales
+
+- [REST API Design Best Practices](https://restfulapi.net/)
+- [OpenAPI Specification](https://swagger.io/specification/)
+- [HTTP Status Codes](https://httpstatuses.com/)
+- [API Security Checklist](https://github.com/shieldfy/API-Security-Checklist)
+`,
+    },
+  ],
 };
