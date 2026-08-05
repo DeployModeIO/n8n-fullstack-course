@@ -24,7 +24,7 @@ export default async function AdminLayout({
     <div className="mx-auto max-w-7xl px-4 py-8">
       <div className="flex flex-col gap-8 lg:flex-row">
         <aside className="w-full lg:w-64">
-          <div className="sticky top-24 rounded-2xl p-4 backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-lg dark:bg-white/5 dark:border-white/10 dark:shadow-none">
+          <div className="sticky top-24 rounded-2xl p-4 backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-lg dark:bg-white/10 dark:border-white/15 dark:shadow-none">
             <h2 className="mb-4 px-3 text-lg font-bold text-gray-900 dark:text-white">
               Admin Panel
             </h2>

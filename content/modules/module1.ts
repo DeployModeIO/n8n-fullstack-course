@@ -4,7 +4,7 @@ export const module1: Module = {
   id: "mod-01",
   slug: "fundamentos-infraestructura",
   title: "Fundamentos e Infraestructura",
-  description: "Domina los fundamentos de N8N, desde la instalación con Docker hasta el despliegue en producción con PostgreSQL y configuraciones profesionales.",
+  description: "Aprende los conceptos básicos de N8N y cómo desplegarlo en diferentes entornos, desde local hasta producción.",
   icon: "Server",
   sortOrder: 1,
   lessons: [
@@ -12,122 +12,90 @@ export const module1: Module = {
       id: "les-01-01",
       moduleSlug: "fundamentos-infraestructura",
       slug: "introduccion-n8n",
-      title: "Introducción a N8N: ¿Qué es y por qué automatizar?",
-      description: "Descubre qué es N8N, por qué la automatización de flujos de trabajo es esencial en el desarrollo moderno, y cómo se compara con alternativas como Zapier y Make.",
-      content: `## ¿Qué es N8N?
-
-N8N (pronunciado "nodemation") es una plataforma de automatización de flujos de trabajo **open-source** que permite conectar aplicaciones, servicios y APIs mediante una interfaz visual de nodos. A diferencia de soluciones propietarias, N8N te da control total sobre tu infraestructura, datos y lógica de automatización.
-
-### ¿Por qué automatización?
-
-En el desarrollo moderno, los equipos pierden horas en tareas repetitivas: mover datos entre sistemas, enviar notificaciones, sincronizar bases de datos, procesar formularios. La automatización elimina este trabajo manual y reduce errores humanos.
-
-**Beneficios clave de la automatización:**
-
-- **Eficiencia operativa**: Tareas que tomaban horas se ejecutan en segundos
-- **Consistencia**: Elimina errores humanos en procesos repetitivos
-- **Escalabilidad**: Los flujos automatizados manejan volúmenes crecientes sin esfuerzo adicional
-- **Visibilidad**: Cada ejecución queda registrada para auditoría y debugging
-
-### N8N vs Zapier vs Make
-
-| Característica | N8N | Zapier | Make (Integromat) |
-|---|---|---|---|
-| Código abierto | Sí | No | No |
-| Self-hosted | Sí | No | No |
-| Precio | Gratis (self-hosted) | Desde $19.99/mes | Desde $9/mes |
-| Código personalizado | JS + Python | Limitado | Limitado |
-| Nodos personalizados | Sí | No | No |
-| Control de datos | Total | En servidores de Zapier | En servidores de Make |
-
-### Ventajas Open-Source
-
-El modelo open-source de N8N ofrece ventajas significativas para desarrolladores y empresas:
-
-1. **Soberanía de datos**: Tus datos nunca salen de tu infraestructura
-2. **Extensibilidad**: Puedes crear nodos personalizados para cualquier API
-3. **Sin límites artificiales**: No hay restricciones en ejecuciones ni tareas
-4. **Comunidad activa**: Miles de contribuidores mejoran la plataforma constantemente
-5. **Transparencia**: Puedes auditar el código fuente completo
-
-### Casos de uso reales
-
-- **Sincronización CRM-ERP**: Conectar HubSpot con SAP automáticamente
-- **Procesamiento de leads**: Capturar formularios, enriquecer datos, asignar a vendedores
-- **Monitorización**: Alertas automáticas cuando métricas superan umbrales
-- **Content pipeline**: Publicar contenido en múltiples plataformas simultáneamente
-- **Soporte al cliente**: Clasificar tickets con IA y routing automático`,
+      title: "Introducción a N8N",
+      description: "Descubre qué es N8N y por qué es la herramienta líder en automatización de workflows.",
       estimatedMinutes: 15,
-      quiz: [
-        {
-          id: "q-01-01-1",
-          question: "¿Cuál es la principal ventaja de N8N sobre Zapier?",
-          options: [
-            "Tiene más integraciones nativas",
-            "Es open-source y permite self-hosting",
-            "Es más rápido en ejecución",
-            "Tiene mejor interfaz gráfica"
-          ],
-          correctIndex: 1,
-          explanation: "N8N es open-source y permite self-hosting, lo que da control total sobre datos, infraestructura y costos sin límites artificiales de ejecuciones."
-        },
-        {
-          id: "q-01-01-2",
-          question: "¿Qué lenguajes soporta el Code node de N8N?",
-          options: [
-            "Solo JavaScript",
-            "JavaScript y Python",
-            "JavaScript, Python y Ruby",
-            "Cualquier lenguaje via Docker"
-          ],
-          correctIndex: 1,
-          explanation: "El Code node de N8N soporta JavaScript y Python, permitiendo lógica personalizada dentro de los flujos de trabajo."
-        },
-        {
-          id: "q-01-01-3",
-          question: "¿Qué significa 'soberanía de datos' en el contexto de N8N?",
-          options: [
-            "Que N8N cumple con GDPR automáticamente",
-            "Que los datos se encriptan en tránsito",
-            "Que tus datos nunca salen de tu infraestructura",
-            "Que N8N almacena backups en múltiples regiones"
-          ],
-          correctIndex: 2,
-          explanation: "La soberanía de datos significa que al hacer self-hosting, tus datos permanecen en tu infraestructura y nunca se envían a servidores de terceros."
-        }
-      ]
+      content: `## Introducción a N8N
+
+### ¿Qué es N8N?
+
+N8N es una plataforma de automatización de workflows **open-source** que te permite conectar diferentes aplicaciones y servicios para automatizar tareas repetitivas.
+
+### Características principales:
+
+- **Open Source**: Código abierto y auto-hospedable
+- **Visual**: Editor visual de workflows con nodos arrastrables
+- **Flexible**: Más de 300 integraciones nativas
+- **Extensible**: Puedes crear nodos personalizados
+- **Escalable**: Desde uso personal hasta enterprise
+
+### ¿Por qué N8N?
+
+#### Ventajas sobre otras herramientas:
+
+1. **Control total**: Tú controlas tus datos y la infraestructura
+2. **Sin límites artificiales**: No hay límites en ejecuciones o nodos
+3. **Personalizable**: Adapta la herramienta a tus necesidades
+4. **Comunidad activa**: Gran comunidad y documentación extensa
+5. **Costo-efectivo**: Gratis para uso personal, licencias accesibles para empresas
+
+### Casos de uso comunes
+
+#### Automatización de marketing:
+- Sincronizar leads entre CRM y email marketing
+- Publicar contenido en redes sociales automáticamente
+- Generar reportes de campañas
+
+#### Operaciones:
+- Procesar pedidos automáticamente
+- Sincronizar inventario entre plataformas
+- Notificaciones de eventos importantes
+
+#### Desarrollo:
+- CI/CD pipelines
+- Monitoreo de aplicaciones
+- Backup automático de bases de datos
+
+### Tu primer workflow
+
+En la próxima lección, aprenderás a instalar N8N y crear tu primer workflow automatizado.
+
+#### Recursos adicionales:
+- [Documentación oficial de N8N](https://docs.n8n.io)
+- [Comunidad de N8N](https://community.n8n.io)
+- [GitHub de N8N](https://github.com/n8n-io/n8n)
+`,
     },
     {
       id: "les-01-02",
       moduleSlug: "fundamentos-infraestructura",
-      slug: "instalacion-docker",
-      title: "Instalación con Docker",
-      description: "Aprende a instalar N8N usando Docker y docker-compose, configurando variables de entorno para un entorno de desarrollo profesional.",
-      content: `## Instalación de N8N con Docker
+      slug: "instalacion-local",
+      title: "Instalación Local",
+      description: "Aprende a instalar N8N en tu máquina local usando Docker o npm.",
+      estimatedMinutes: 20,
+      content: `## Instalación Local de N8N
 
-Docker es la forma recomendada de ejecutar N8N. Proporciona aislamiento, reproducibilidad y facilidad de actualización.
+### Métodos de instalación
 
-### Prerrequisitos
+#### Opción 1: Docker (Recomendado)
 
-Antes de comenzar, asegúrate de tener instalado:
+Docker es la forma más fácil y consistente de ejecutar N8N.
 
-- **Docker** (v20.10 o superior)
-- **Docker Compose** (v2.0 o superior)
-- Al menos 2GB de RAM disponible
+**Requisitos:**
+- Docker instalado en tu sistema
+- Docker Compose (opcional pero recomendado)
 
-### Instalación de Docker
-
-En **Ubuntu/Debian**:
+**Instalación con Docker:**
 
 \`\`\`bash
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
-sudo usermod -aG docker $USER
+docker run -it --rm \\
+  --name n8n \\
+  -p 5678:5678 \\
+  -v ~/.n8n:/home/node/.n8n \\
+  n8nio/n8n
 \`\`\`
 
-En **Windows/Mac**, descarga Docker Desktop desde docker.com.
-
-### Docker Compose básico
+**Con Docker Compose:**
 
 Crea un archivo \`docker-compose.yml\`:
 
@@ -135,236 +103,115 @@ Crea un archivo \`docker-compose.yml\`:
 version: '3.8'
 services:
   n8n:
-    image: n8nio/n8n:latest
-    container_name: n8n
+    image: n8nio/n8n
     ports:
       - "5678:5678"
+    volumes:
+      - ~/.n8n:/home/node/.n8n
     environment:
       - N8N_BASIC_AUTH_ACTIVE=true
       - N8N_BASIC_AUTH_USER=admin
       - N8N_BASIC_AUTH_PASSWORD=tu_password_seguro
-      - N8N_HOST=tu-dominio.com
-      - N8N_PORT=5678
-      - N8N_PROTOCOL=https
-      - WEBHOOK_URL=https://tu-dominio.com/
-    volumes:
-      - n8n_data:/home/node/.n8n
-    restart: unless-stopped
-
-volumes:
-  n8n_data:
 \`\`\`
 
-### Variables de entorno explicadas
-
-| Variable | Descripción |
-|---|---|
-| \`N8N_BASIC_AUTH_ACTIVE\` | Activa autenticación básica |
-| \`N8N_BASIC_AUTH_USER\` | Usuario para login |
-| \`N8N_BASIC_AUTH_PASSWORD\` | Contraseña para login |
-| \`N8N_HOST\` | Hostname público |
-| \`WEBHOOK_URL\` | URL base para webhooks (debe ser pública) |
-| \`N8N_PROTOCOL\` | Protocolo (http/https) |
-
-### Configuración avanzada con PostgreSQL
-
-Para producción, usa PostgreSQL en lugar de SQLite:
-
-\`\`\`yaml
-version: '3.8'
-services:
-  n8n:
-    image: n8nio/n8n:latest
-    container_name: n8n
-    ports:
-      - "5678:5678"
-    environment:
-      - DB_TYPE=postgresdb
-      - DB_POSTGRESDB_HOST=postgres
-      - DB_POSTGRESDB_PORT=5432
-      - DB_POSTGRESDB_DATABASE=n8n
-      - DB_POSTGRESDB_USER=n8n
-      - DB_POSTGRESDB_PASSWORD=db_password_seguro
-      - WEBHOOK_URL=https://tu-dominio.com/
-    depends_on:
-      - postgres
-    volumes:
-      - n8n_data:/home/node/.n8n
-    restart: unless-stopped
-
-  postgres:
-    image: postgres:16-alpine
-    container_name: n8n-postgres
-    environment:
-      - POSTGRES_USER=n8n
-      - POSTGRES_PASSWORD=db_password_seguro
-      - POSTGRES_DB=n8n
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    restart: unless-stopped
-
-volumes:
-  n8n_data:
-  postgres_data:
+Ejecuta:
+\`\`\`bash
+docker-compose up -d
 \`\`\`
 
-### Comandos esenciales
+#### Opción 2: npm
+
+Si prefieres instalar N8N globalmente:
 
 \`\`\`bash
-docker compose up -d
-docker compose logs -f n8n
-docker compose down
-docker compose pull
-docker compose up -d
+npm install -g n8n
+n8n start
 \`\`\`
 
-### Tips de producción
+#### Opción 3: npx (sin instalación)
 
-- **Nunca uses \`latest\`** en producción; fija una versión específica
-- **Usa secrets de Docker** para credenciales en lugar de variables en texto plano
-- **Configura healthchecks** para monitorizar el estado del contenedor
-- **Limita recursos** con \`deploy.resources.limits\` en el compose`,
-      estimatedMinutes: 20,
-      n8nWorkflowJson: {
-        name: "Health Check",
-        nodes: [
-          {
-            parameters: { rule: { interval: [{ field: "minutes", minutesInterval: 5 }] } },
-            id: "schedule-1",
-            name: "Cada 5 minutos",
-            type: "n8n-nodes-base.scheduleTrigger",
-            typeVersion: 1,
-            position: [250, 300]
-          },
-          {
-            parameters: { url: "http://localhost:5678/healthz", options: {} },
-            id: "http-1",
-            name: "Health Check",
-            type: "n8n-nodes-base.httpRequest",
-            typeVersion: 4,
-            position: [470, 300]
-          }
-        ],
-        connections: {
-          "Cada 5 minutos": { main: [[{ node: "Health Check", type: "main", index: 0 }]] }
-        }
-      },
-      quiz: [
-        {
-          id: "q-01-02-1",
-          question: "¿Qué base de datos usa N8N por defecto sin configuración adicional?",
-          options: ["MySQL", "PostgreSQL", "SQLite", "MongoDB"],
-          correctIndex: 2,
-          explanation: "N8N usa SQLite por defecto, lo cual es adecuado para desarrollo pero no recomendado para producción donde se debe usar PostgreSQL."
-        },
-        {
-          id: "q-01-02-2",
-          question: "¿Qué variable de entorno define la URL pública para webhooks?",
-          options: ["N8N_HOST", "WEBHOOK_URL", "N8N_PROTOCOL", "N8N_ENDPOINT_WEBHOOK"],
-          correctIndex: 1,
-          explanation: "WEBHOOK_URL define la URL base pública que N8N usa para generar las URLs de webhook. Debe ser accesible desde internet."
-        },
-        {
-          id: "q-01-02-3",
-          question: "¿Por qué no se recomienda usar la tag 'latest' en producción?",
-          options: [
-            "Porque es más lenta",
-            "Porque no tiene soporte",
-            "Porque puede introducir cambios breaking sin control",
-            "Porque requiere más recursos"
-          ],
-          correctIndex: 2,
-          explanation: "La tag 'latest' puede traer cambios breaking sin previo aviso. En producción se debe fijar una versión específica para garantizar estabilidad."
-        }
-      ]
+\`\`\`bash
+npx n8n
+\`\`\`
+
+### Acceder a N8N
+
+Una vez instalado, abre tu navegador y ve a:
+\`\`\`
+http://localhost:5678
+\`\`\`
+
+### Configuración inicial
+
+1. **Crear cuenta de administrador**
+2. **Configurar zona horaria**
+3. **Explorar la interfaz**
+
+### Solución de problemas
+
+#### Puerto ocupado:
+Si el puerto 5678 está en uso, cambia el mapeo:
+\`\`\`bash
+docker run -p 8080:5678 n8nio/n8n
+\`\`\`
+
+#### Permisos de volumen:
+\`\`\`bash
+chmod -R 755 ~/.n8n
+\`\`\`
+
+### Próximos pasos
+
+En la siguiente lección aprenderás a configurar N8N para producción.
+`,
     },
     {
       id: "les-01-03",
       moduleSlug: "fundamentos-infraestructura",
-      slug: "despliegue-produccion",
-      title: "Despliegue en Producción",
-      description: "Despliega N8N en servidores VPS (Hetzner, DigitalOcean), Railway y Render con SSL, dominio personalizado y reverse proxy con nginx.",
-      content: `## Despliegue en Producción
+      slug: "configuracion-produccion",
+      title: "Configuración para Producción",
+      description: "Configura N8N para entornos de producción con seguridad y escalabilidad.",
+      estimatedMinutes: 25,
+      content: `## Configuración para Producción
 
-Desplegar N8N en producción requiere considerar SSL, dominio personalizado, reverse proxy y estrategia de backups.
+### Consideraciones importantes
 
-### Opción 1: VPS (Hetzner/DigitalOcean)
+Antes de desplegar N8N en producción, considera:
 
-Un VPS te da máximo control y mejor relación costo-rendimiento.
+1. **Seguridad**: Autenticación, HTTPS, firewalls
+2. **Persistencia**: Base de datos externa (PostgreSQL)
+3. **Escalabilidad**: Workers múltiples para alta carga
+4. **Monitoreo**: Logs y métricas
+5. **Backup**: Estrategia de respaldo de datos
 
-**Hetzner** ofrece servidores desde €3.79/mes con excelente rendimiento.
+### Variables de entorno esenciales
 
-#### Configuración del servidor
-
+#### Base de datos:
 \`\`\`bash
-apt update && apt upgrade -y
-apt install -y docker.io docker-compose-plugin nginx certbot python3-certbot-nginx
-systemctl enable docker nginx
+DB_TYPE=postgresdb
+DB_POSTGRESDB_HOST=localhost
+DB_POSTGRESDB_PORT=5432
+DB_POSTGRESDB_DATABASE=n8n
+DB_POSTGRESDB_USER=n8n_user
+DB_POSTGRESDB_PASSWORD=tu_password_seguro
 \`\`\`
 
-#### Nginx Reverse Proxy
-
-\`\`\`nginx
-server {
-    listen 80;
-    server_name n8n.tu-dominio.com;
-    return 301 https://$server_name$request_uri;
-}
-
-server {
-    listen 443 ssl http2;
-    server_name n8n.tu-dominio.com;
-
-    ssl_certificate /etc/letsencrypt/live/n8n.tu-dominio.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/n8n.tu-dominio.com/privkey.pem;
-
-    location / {
-        proxy_pass http://localhost:5678;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
-\`\`\`
-
-#### SSL con Let's Encrypt
-
+#### Seguridad:
 \`\`\`bash
-certbot --nginx -d n8n.tu-dominio.com
+N8N_BASIC_AUTH_ACTIVE=true
+N8N_BASIC_AUTH_USER=admin
+N8N_BASIC_AUTH_PASSWORD=password_seguro
+N8N_HOST=tu-dominio.com
+N8N_PORT=5678
+N8N_PROTOCOL=https
+WEBHOOK_URL=https://tu-dominio.com/
 \`\`\`
 
-Certbot renueva automáticamente los certificados cada 90 días.
-
-### Opción 2: Railway
-
-Railway ofrece deploy con un clic desde GitHub:
-
-1. Conecta tu repositorio en Railway
-2. Añade las variables de entorno en el dashboard
-3. Railway asigna un dominio automáticamente o usa el tuyo
-
-**Ventajas**: Zero-config, auto-scaling, SSL automático.
-**Desventajas**: Más costoso a escala, menos control.
-
-### Opción 3: Render
-
-Render ofrece servicios web con Docker:
-
-1. Crea un nuevo Web Service desde Docker
-2. Configura las variables de entorno
-3. Render maneja SSL, CDN y deployments
-
-### Configuración DNS
-
-Configura un registro A o CNAME apuntando a tu servidor:
-
-\`\`\`
-n8n.tu-dominio.com  A  →  123.45.67.89
+#### Ejecución:
+\`\`\`bash
+EXECUTIONS_MODE=queue
+QUEUE_BULL_REDIS_HOST=localhost
+QUEUE_BULL_REDIS_PORT=6379
 \`\`\`
 
 ### Docker Compose para producción
@@ -372,461 +219,410 @@ n8n.tu-dominio.com  A  →  123.45.67.89
 \`\`\`yaml
 version: '3.8'
 services:
-  n8n:
-    image: n8nio/n8n:1.48.0
-    environment:
-      - N8N_HOST=n8n.tu-dominio.com
-      - N8N_PORT=5678
-      - N8N_PROTOCOL=https
-      - WEBHOOK_URL=https://n8n.tu-dominio.com/
-      - GENERIC_TIMEZONE=America/Mexico_City
-      - DB_TYPE=postgresdb
-      - DB_POSTGRESDB_HOST=postgres
-      - DB_POSTGRESDB_DATABASE=n8n
-      - DB_POSTGRESDB_USER=\${POSTGRES_USER}
-      - DB_POSTGRESDB_PASSWORD=\${POSTGRES_PASSWORD}
-    depends_on:
-      postgres:
-        condition: service_healthy
-    restart: unless-stopped
-
   postgres:
-    image: postgres:16-alpine
+    image: postgres:13
     environment:
-      - POSTGRES_USER=\${POSTGRES_USER}
-      - POSTGRES_PASSWORD=\${POSTGRES_PASSWORD}
-      - POSTGRES_DB=n8n
+      POSTGRES_USER: n8n_user
+      POSTGRES_PASSWORD: password_seguro
+      POSTGRES_DB: n8n
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U \${POSTGRES_USER}"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
+
+  redis:
+    image: redis:6-alpine
+    volumes:
+      - redis_data:/data
+
+  n8n:
+    image: n8nio/n8n
+    ports:
+      - "5678:5678"
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=n8n
+      - DB_POSTGRESDB_USER=n8n_user
+      - DB_POSTGRESDB_PASSWORD=password_seguro
+      - EXECUTIONS_MODE=queue
+      - QUEUE_BULL_REDIS_HOST=redis
+      - N8N_HOST=tu-dominio.com
+      - N8N_PROTOCOL=https
+      - WEBHOOK_URL=https://tu-dominio.com/
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - n8n_data:/home/node/.n8n
 
 volumes:
   postgres_data:
+  redis_data:
+  n8n_data:
+\`\`\`
+
+### Nginx como proxy reverso
+
+\`\`\`nginx
+server {
+    listen 80;
+    server_name tu-dominio.com;
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name tu-dominio.com;
+
+    ssl_certificate /path/to/cert.pem;
+    ssl_certificate_key /path/to/key.pem;
+
+    location / {
+        proxy_pass http://localhost:5678;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+\`\`\`
+
+### SSL con Let's Encrypt
+
+\`\`\`bash
+certbot --nginx -d tu-dominio.com
+\`\`\`
+
+### Monitoreo y logs
+
+#### Ver logs en tiempo real:
+\`\`\`bash
+docker-compose logs -f n8n
+\`\`\`
+
+#### Métricas con Prometheus:
+Habilita el endpoint de métricas:
+\`\`\`bash
+N8N_METRICS=true
+\`\`\`
+
+### Backup automático
+
+Script de backup diario:
+\`\`\`bash
+#!/bin/bash
+docker exec postgres pg_dump -U n8n_user n8n > backup_$(date +%Y%m%d).sql
 \`\`\`
 
 ### Checklist de producción
 
-- [ ] SSL configurado y verificado
-- [ ] Dominio apuntando correctamente
-- [ ] PostgreSQL como base de datos
-- [ ] Variables de entorno en archivo .env (no en docker-compose)
-- [ ] Backups automáticos configurados
-- [ ] Firewall configurado (solo puertos 80, 443)
-- [ ] Monitoring activo (Uptime, logs)`,
-      estimatedMinutes: 25,
-      quiz: [
-        {
-          id: "q-01-03-1",
-          question: "¿Qué header de nginx es esencial para que los webhooks de N8N funcionen correctamente detrás de un proxy?",
-          options: [
-            "X-Frame-Options",
-            "X-Forwarded-Proto",
-            "Content-Security-Policy",
-            "Strict-Transport-Security"
-          ],
-          correctIndex: 1,
-          explanation: "X-Forwarded-Proto le indica a N8N si la petición original era HTTP o HTTPS, lo cual es esencial para generar URLs de webhook correctas."
-        },
-        {
-          id: "q-01-03-2",
-          question: "¿Cada cuántos días renueva Certbot los certificados SSL automáticamente?",
-          options: ["30 días", "60 días", "90 días", "365 días"],
-          correctIndex: 2,
-          explanation: "Let's Encrypt emite certificados válidos por 90 días y Certbot los renueva automáticamente antes de que expiren."
-        },
-        {
-          id: "q-01-03-3",
-          question: "¿Cuál es la principal ventaja de usar un VPS sobre Railway o Render?",
-          options: [
-            "Es más fácil de configurar",
-            "Tiene SSL automático",
-            "Máximo control y mejor relación costo-rendimiento",
-            "No requiere conocimientos de Docker"
-          ],
-          correctIndex: 2,
-          explanation: "Un VPS ofrece control total sobre la infraestructura, mejor rendimiento por el costo, pero requiere más configuración manual."
-        }
-      ]
+- [ ] Base de datos PostgreSQL configurada
+- [ ] Redis para cola de ejecución
+- [ ] HTTPS habilitado
+- [ ] Autenticación configurada
+- [ ] Variables de entorno seguras
+- [ ] Backup automático configurado
+- [ ] Monitoreo habilitado
+- [ ] Firewall configurado
+- [ ] Logs centralizados
+`,
     },
     {
       id: "les-01-04",
       moduleSlug: "fundamentos-infraestructura",
-      slug: "configuracion-postgresql",
-      title: "Configuración de PostgreSQL y Redis",
-      description: "Configura PostgreSQL dedicado para N8N, Redis para cola de trabajos, y estrategias de backup para garantizar la persistencia de datos.",
-      content: `## PostgreSQL para N8N
-
-N8N almacena workflows, ejecuciones, credenciales y configuraciones en su base de datos. Para producción, PostgreSQL es la opción recomendada.
-
-### ¿Por qué PostgreSQL?
-
-- **Rendimiento**: Maneja miles de ejecuciones concurrentes
-- **Fiabilidad**: ACID compliance, recuperación ante fallos
-- **Escalabilidad**: Soporta replicación y clustering
-- **Madurez**: Ecosistema robusto de herramientas
-
-### Configuración optimizada
-
-\`\`\`yaml
-postgres:
-  image: postgres:16-alpine
-  container_name: n8n-postgres
-  environment:
-    POSTGRES_USER: n8n
-    POSTGRES_PASSWORD: \${DB_PASSWORD}
-    POSTGRES_DB: n8n
-  volumes:
-    - postgres_data:/var/lib/postgresql/data
-    - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-  command: >
-    postgres
-    -c shared_buffers=256MB
-    -c effective_cache_size=768MB
-    -c work_mem=16MB
-    -c maintenance_work_mem=128MB
-    -c max_connections=200
-    -c wal_level=replica
-    -c max_wal_senders=3
-  healthcheck:
-    test: ["CMD-SHELL", "pg_isready -U n8n"]
-    interval: 5s
-    timeout: 5s
-    retries: 10
-  restart: unless-stopped
-\`\`\`
-
-### Archivo init.sql
-
-\`\`\`sql
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
-ALTER SYSTEM SET shared_buffers = '256MB';
-ALTER SYSTEM SET effective_cache_size = '768MB';
-ALTER SYSTEM SET work_mem = '16MB';
-
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_execution_workflow
-ON execution_entity("workflowId");
-
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_execution_finished
-ON execution_entity(finished);
-\`\`\`
-
-### Redis para Queue Mode
-
-Redis permite distribuir trabajos entre múltiples workers de N8N:
-
-\`\`\`yaml
-redis:
-  image: redis:7-alpine
-  container_name: n8n-redis
-  command: redis-server --requirepass \${REDIS_PASSWORD} --maxmemory 256mb --maxmemory-policy allkeys-lru
-  volumes:
-    - redis_data:/data
-  healthcheck:
-    test: ["CMD", "redis-cli", "-a", "\${REDIS_PASSWORD}", "ping"]
-    interval: 5s
-    timeout: 5s
-    retries: 10
-  restart: unless-stopped
-\`\`\`
-
-### Variables para Queue Mode en N8N
-
-\`\`\`yaml
-n8n:
-  environment:
-    - EXECUTIONS_MODE=queue
-    - QUEUE_BULL_REDIS_HOST=redis
-    - QUEUE_BULL_REDIS_PORT=6379
-    - QUEUE_BULL_REDIS_PASSWORD=\${REDIS_PASSWORD}
-    - QUEUE_WORKER_TIMEOUT=300
-    - QUEUE_WORKER_CONCURRENCY=10
-\`\`\`
-
-### Estrategias de Backup
-
-#### Backup automático con pg_dump
-
-\`\`\`bash
-#!/bin/bash
-BACKUP_DIR="/backups/postgres"
-TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-
-pg_dump -h localhost -U n8n -d n8n -F c -f "$BACKUP_DIR/n8n_$TIMESTAMP.dump"
-
-find "$BACKUP_DIR" -name "n8n_*.dump" -mtime +7 -delete
-\`\`\`
-
-#### Backup con WAL-G (Point-in-Time Recovery)
-
-Para recuperación punto-en-el-tiempo, configura WAL archiving:
-
-\`\`\`yaml
-postgres:
-  environment:
-    - POSTGRES_INITDB_ARGS=--wal-segsize=16
-  volumes:
-    - ./wal-archive:/var/lib/postgresql/wal-archive
-\`\`\`
-
-### Monitoreo de PostgreSQL
-
-Queries útiles para diagnosticar rendimiento:
-
-\`\`\`sql
-SELECT count(*) FROM pg_stat_activity WHERE state = 'active';
-SELECT pg_size_pretty(pg_database_size('n8n'));
-SELECT schemaname, relname, n_live_tup FROM pg_stat_user_tables ORDER BY n_live_tup DESC;
-\`\`\`
-
-### Mantenimiento
-
-\`\`\`sql
-VACUUM ANALYZE;
-REINDEX DATABASE n8n;
-\`\`\`
-
-Ejecuta VACUUM semanalmente y monitorea el tamaño de la tabla \`execution_entity\`, que crece rápidamente.`,
+      slug: "interfaz-n8n",
+      title: "Conociendo la Interfaz",
+      description: "Explora la interfaz de N8N y aprende a navegar por sus diferentes secciones.",
       estimatedMinutes: 20,
-      quiz: [
-        {
-          id: "q-01-04-1",
-          question: "¿Qué variable de entorno activa el modo cola (queue mode) en N8N?",
-          options: [
-            "N8N_QUEUE_MODE=true",
-            "EXECUTIONS_MODE=queue",
-            "QUEUE_ENABLED=true",
-            "N8N_WORKERS=auto"
-          ],
-          correctIndex: 1,
-          explanation: "EXECUTIONS_MODE=queue activa el modo cola en N8N, que distribuye trabajos entre workers usando Redis como broker."
-        },
-        {
-          id: "q-01-04-2",
-          question: "¿Qué tabla de N8N crece más rápido y requiere mantenimiento frecuente?",
-          options: [
-            "workflow_entity",
-            "credentials_entity",
-            "execution_entity",
-            "user"
-          ],
-          correctIndex: 2,
-          explanation: "La tabla execution_entity almacena el historial de todas las ejecuciones y crece rápidamente. Requiere limpieza periódica y VACUUM."
-        },
-        {
-          id: "q-01-04-3",
-          question: "¿Qué política de Redis se recomienda para manejar el límite de memoria?",
-          options: [
-            "noeviction",
-            "allkeys-lru",
-            "volatile-ttl",
-            "allkeys-random"
-          ],
-          correctIndex: 1,
-          explanation: "allkeys-lru (Least Recently Used) elimina las claves menos usadas cuando se alcanza el límite de memoria, ideal para colas de trabajo."
-        }
-      ]
+      content: `## Conociendo la Interfaz de N8N
+
+### Vista general
+
+La interfaz de N8N se divide en varias secciones principales:
+
+#### 1. Dashboard principal
+- Lista de workflows
+- Botón para crear nuevo workflow
+- Filtros y búsqueda
+- Estadísticas de ejecución
+
+#### 2. Editor de workflows
+- Canvas principal para diseñar workflows
+- Panel de nodos (izquierda)
+- Panel de configuración (derecha)
+- Barra de herramientas superior
+
+#### 3. Ejecuciones
+- Historial de ejecuciones
+- Logs detallados
+- Reintentos manuales
+
+#### 4. Credenciales
+- Gestión de credenciales de APIs
+- Conexiones OAuth
+- Tokens de acceso
+
+### El editor de workflows
+
+#### Canvas principal
+El área central donde construyes tu workflow arrastrando y conectando nodos.
+
+#### Panel de nodos
+- **Trigger nodes**: Inician el workflow
+- **Regular nodes**: Procesan datos
+- **Flow nodes**: Controlan el flujo
+
+#### Barra de herramientas
+- **Save**: Guardar workflow
+- **Execute**: Ejecutar workflow manualmente
+- **Active**: Activar/desactivar workflow
+- **Settings**: Configuración del workflow
+
+### Tipos de nodos
+
+#### Trigger nodes (Disparadores)
+- Webhook
+- Schedule (Cron)
+- Email triggers
+- Database triggers
+
+#### Action nodes (Acciones)
+- HTTP Request
+- Email
+- Database queries
+- File operations
+
+#### Flow nodes (Control de flujo)
+- IF (condicional)
+- Switch (múltiples caminos)
+- Merge (combinar datos)
+- Wait (esperar)
+
+### Navegación rápida
+
+#### Atajos de teclado:
+- \`Ctrl + S\`: Guardar
+- \`Ctrl + Enter\`: Ejecutar
+- \`Ctrl + Z\`: Deshacer
+- \`Ctrl + Y\`: Rehacer
+- \`Delete\`: Eliminar nodo seleccionado
+
+#### Zoom y navegación:
+- Scroll del mouse: Zoom
+- Click + arrastrar: Mover canvas
+- Doble click en nodo: Editar
+
+### Configuración del workflow
+
+#### Settings importantes:
+- **Name**: Nombre del workflow
+- **Timezone**: Zona horaria para schedules
+- **Error workflow**: Workflow a ejecutar en caso de error
+- **Save execution progress**: Guardar progreso de ejecución
+
+### Ejecuciones
+
+#### Ver ejecuciones:
+1. Click en "Executions" en el menú
+2. Filtra por workflow, estado o fecha
+3. Click en una ejecución para ver detalles
+
+#### Detalles de ejecución:
+- Input data
+- Output data
+- Tiempo de ejecución
+- Logs completos
+- Errores (si los hay)
+
+### Credenciales
+
+#### Crear credenciales:
+1. Ve a "Credentials"
+2. Click en "New"
+3. Selecciona el tipo (OAuth2, API Key, etc.)
+4. Completa los campos requeridos
+5. Guarda
+
+#### Tipos comunes:
+- **OAuth2**: Para Google, GitHub, etc.
+- **Header Auth**: API keys en headers
+- **Basic Auth**: Usuario y contraseña
+- **Query Auth**: API keys en query params
+
+### Tips y trucos
+
+#### Organización:
+- Usa nombres descriptivos para nodos
+- Agrupa nodos relacionados con notas
+- Usa colores para identificar tipos de nodos
+
+#### Debugging:
+- Ejecuta nodo por nodo
+- Inspecciona datos en cada paso
+- Usa el nodo "No Operation" para debuggear
+
+#### Performance:
+- Evita loops innecesarios
+- Usa batch processing cuando sea posible
+- Limita la cantidad de datos procesados
+
+### Próximos pasos
+
+Ahora que conoces la interfaz, en la siguiente lección crearás tu primer workflow completo.
+`,
     },
     {
       id: "les-01-05",
       moduleSlug: "fundamentos-infraestructura",
       slug: "primer-workflow",
       title: "Tu Primer Workflow",
-      description: "Crea tu primer workflow completo: webhook trigger, petición HTTP y envío de email. Incluye el JSON del workflow para importar directamente.",
-      content: `## Tu Primer Workflow en N8N
+      description: "Crea tu primer workflow completo: desde un trigger hasta la acción final.",
+      estimatedMinutes: 30,
+      content: `## Tu Primer Workflow
 
-Vamos a crear un workflow que recibe datos vía webhook, los procesa con una petición HTTP y envía un email con los resultados.
+### Objetivo
 
-### Arquitectura del workflow
+Crear un workflow que:
+1. Reciba datos de un webhook
+2. Procese la información
+3. Envíe un email de confirmación
 
+### Paso 1: Crear el workflow
+
+1. Click en "New Workflow"
+2. Nombra tu workflow: "Mi Primer Workflow"
+3. Guarda con Ctrl + S
+
+### Paso 2: Agregar trigger
+
+#### Webhook node:
+1. Click en el botón "+" para agregar un nodo
+2. Busca "Webhook"
+3. Configura:
+   - **HTTP Method**: POST
+   - **Path**: mi-primer-webhook
+   - **Response Mode**: When Last Node Finishes
+
+#### URL del webhook:
 \`\`\`
-[Webhook] → [HTTP Request] → [Send Email]
+https://tu-instancia.com/webhook/mi-primer-webhook
 \`\`\`
 
-**Caso de uso**: Un formulario web envía datos de contacto, N8N enriquece los datos consultando una API externa y notifica al equipo de ventas por email.
+### Paso 3: Procesar datos
 
-### Paso 1: Webhook Trigger
+#### Function node:
+1. Agrega un nodo "Function"
+2. Conecta el webhook al function
+3. Código:
 
-El nodo Webhook crea un endpoint HTTP que recibe datos:
+\`\`\`javascript
+const items = $input.all();
+const results = [];
 
-1. Añade un nodo **Webhook**
-2. Configura el método HTTP como **POST**
-3. Copia la URL del webhook (test o production)
-4. Activa el workflow
+for (const item of items) {
+  const nombre = item.json.nombre || 'Usuario';
+  const email = item.json.email;
+  
+  results.push({
+    json: {
+      nombre,
+      email,
+      mensaje: \`Hola \${nombre}, gracias por contactarnos!\`,
+      timestamp: new Date().toISOString()
+    }
+  });
+}
 
-La URL del webhook tiene este formato:
+return results;
 \`\`\`
-https://n8n.tu-dominio.com/webhook/contact-form
-\`\`\`
 
-### Paso 2: HTTP Request
+### Paso 4: Enviar email
 
-El nodo HTTP Request consulta una API para enriquecer datos:
+#### Email node (Gmail):
+1. Agrega un nodo "Gmail"
+2. Configura credenciales OAuth2
+3. Configura:
+   - **To**: \`={{ $json.email }}\`
+   - **Subject**: "Confirmación de contacto"
+   - **Body**: \`={{ $json.mensaje }}\`
 
-1. Añade un nodo **HTTP Request**
-2. Método: **GET**
-3. URL: \`https://api.enriquecimiento.com/v1/lookup?email={{ $json.email }}\`
-4. Autenticación: Header Auth con tu API key
+### Paso 5: Probar el workflow
 
-### Paso 3: Send Email
-
-El nodo Email envía la notificación:
-
-1. Añade un nodo **Send Email** (o Gmail node)
-2. Configura SMTP o credenciales de Gmail
-3. To: \`ventas@tuempresa.com\`
-4. Subject: \`Nuevo lead: {{ $json.nombre }}\`
-5. Body con datos del lead
-
-### Testing del workflow
-
-Para probar, envía un POST al webhook:
+#### Ejecución manual:
+1. Click en "Execute Workflow"
+2. Envía datos de prueba al webhook:
 
 \`\`\`bash
-curl -X POST https://n8n.tu-dominio.com/webhook/contact-form \\
+curl -X POST https://tu-instancia.com/webhook/mi-primer-webhook \\
   -H "Content-Type: application/json" \\
-  -d '{"nombre": "Juan Pérez", "email": "juan@ejemplo.com", "empresa": "TechCorp"}'
+  -d '{"nombre": "Juan", "email": "juan@example.com"}'
 \`\`\`
 
-### Modo Test vs Producción
+#### Ver resultados:
+- Revisa la ejecución en "Executions"
+- Verifica que el email fue enviado
+- Inspecciona los datos en cada nodo
 
-- **Test URL**: Solo funciona con el editor abierto y "Execute Workflow" activo
-- **Production URL**: Funciona siempre que el workflow esté activado
+### Paso 6: Activar el workflow
+
+1. Toggle "Active" en la barra superior
+2. El webhook ahora está escuchando
+3. Prueba con datos reales
+
+### Workflow completo
+
+\`\`\`
+[Webhook] → [Function] → [Gmail]
+\`\`\`
+
+### Mejoras posibles
+
+#### Agregar validación:
+\`\`\`javascript
+if (!item.json.email) {
+  throw new Error('Email es requerido');
+}
+\`\`\`
+
+#### Agregar error handling:
+- Crea un "Error Workflow"
+- Configúralo en Settings
+- Envía notificaciones de error
+
+#### Agregar base de datos:
+- Guarda los contactos en una BD
+- Usa el nodo "PostgreSQL" o "MySQL"
 
 ### Debugging
 
-N8N muestra los datos de cada nodo después de la ejecución:
+#### Problemas comunes:
 
-- **Input**: Datos que recibió el nodo
-- **Output**: Datos que produjo el nodo
-- **JSON/Schema/Table**: Vistas diferentes de los datos
+**Webhook no responde:**
+- Verifica que el workflow esté activo
+- Revisa la URL del webhook
+- Comprueba los logs
 
-### Manejo de errores básico
+**Email no se envía:**
+- Verifica credenciales OAuth2
+- Revisa permisos de Gmail
+- Inspecciona el nodo de email
 
-Añade un **Error Trigger** para capturar fallos:
+**Datos incorrectos:**
+- Usa "Execute Node" en cada paso
+- Inspecciona los datos de entrada/salida
+- Verifica las expresiones
 
-\`\`\`
-[Error Trigger] → [Send Email (Error Alert)]
-\`\`\`
+### Recursos adicionales
 
-Esto envía un email cuando cualquier nodo del workflow falla.
+- [Documentación de Webhooks](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.webhook/)
+- [Expresiones en N8N](https://docs.n8n.io/code/expressions/)
+- [Manejo de errores](https://docs.n8n.io/flow-logic/error-handling/)
 
-### Activación del workflow
+### ¡Felicidades!
 
-Una vez probado, activa el workflow con el toggle en la esquina superior derecha. El webhook de producción estará activo y procesará peticiones automáticamente.
-
-### Tips para tu primer workflow
-
-- Usa el **modo test** antes de activar en producción
-- Revisa la pestaña **Executions** para ver el historial
-- Configura **timeout** en nodos HTTP para evitar esperas infinitas
-- Usa **expresiones** \`{{ $json.campo }}\` para acceder a datos de nodos anteriores`,
-      estimatedMinutes: 15,
-      n8nWorkflowJson: {
-        name: "Lead Enrichment Pipeline",
-        nodes: [
-          {
-            parameters: {
-              httpMethod: "POST",
-              path: "contact-form",
-              responseMode: "responseNode",
-              options: {}
-            },
-            id: "webhook-1",
-            name: "Webhook - Formulario",
-            type: "n8n-nodes-base.webhook",
-            typeVersion: 1,
-            position: [250, 300],
-            webhookId: "contact-form"
-          },
-          {
-            parameters: {
-              method: "GET",
-              url: "=https://api.enriquecimiento.com/v1/lookup?email={{ $json.email }}",
-              authentication: "genericCredentialType",
-              genericAuthType: "httpHeaderAuth",
-              options: { timeout: 10000 }
-            },
-            id: "http-1",
-            name: "Enriquecer Datos",
-            type: "n8n-nodes-base.httpRequest",
-            typeVersion: 4,
-            position: [470, 300]
-          },
-          {
-            parameters: {
-              fromEmail: "n8n@tuempresa.com",
-              toEmail: "ventas@tuempresa.com",
-              subject: "=Nuevo lead: {{ $json.nombre }}",
-              emailType: "text",
-              message: "=Nuevo lead recibido:\\n\\nNombre: {{ $json.nombre }}\\nEmail: {{ $json.email }}\\nEmpresa: {{ $json.empresa }}\\n\\nDatos enriquecidos:\\n{{ JSON.stringify($json.enrichment) }}"
-            },
-            id: "email-1",
-            name: "Notificar Ventas",
-            type: "n8n-nodes-base.emailSend",
-            typeVersion: 2,
-            position: [690, 300]
-          },
-          {
-            parameters: {
-              respondWith: "json",
-              responseBody: "={{ JSON.stringify({ success: true, message: 'Lead procesado correctamente' }) }}"
-            },
-            id: "respond-1",
-            name: "Responder OK",
-            type: "n8n-nodes-base.respondToWebhook",
-            typeVersion: 1,
-            position: [910, 300]
-          }
-        ],
-        connections: {
-          "Webhook - Formulario": { main: [[{ node: "Enriquecer Datos", type: "main", index: 0 }]] },
-          "Enriquecer Datos": { main: [[{ node: "Notificar Ventas", type: "main", index: 0 }]] },
-          "Notificar Ventas": { main: [[{ node: "Responder OK", type: "main", index: 0 }]] }
-        }
-      },
-      quiz: [
-        {
-          id: "q-01-05-1",
-          question: "¿Cuál es la diferencia entre la URL de test y la de producción en un webhook de N8N?",
-          options: [
-            "La URL de test es más rápida",
-            "La URL de test solo funciona con el editor abierto y Execute Workflow activo",
-            "La URL de producción requiere autenticación adicional",
-            "No hay diferencia, son la misma URL"
-          ],
-          correctIndex: 1,
-          explanation: "La URL de test solo captura datos cuando el editor de N8N está abierto y se ejecuta manualmente. La URL de producción funciona siempre que el workflow esté activado."
-        },
-        {
-          id: "q-01-05-2",
-          question: "¿Cómo se accede a datos de un nodo anterior en una expresión de N8N?",
-          options: [
-            "{{ previousNode.data }}",
-            "{{ $json.campo }}",
-            "{{ input.campo }}",
-            "{{ data.anterior.campo }}"
-          ],
-          correctIndex: 1,
-          explanation: "La sintaxis {{ $json.campo }} accede a los datos JSON de salida del nodo inmediatamente anterior en el flujo."
-        },
-        {
-          id: "q-01-05-3",
-          question: "¿Qué nodo se usa para capturar errores de cualquier workflow?",
-          options: [
-            "Catch Error",
-            "Error Trigger",
-            "Error Handler",
-            "Try-Catch"
-          ],
-          correctIndex: 1,
-          explanation: "El Error Trigger es un nodo especial que se ejecuta automáticamente cuando cualquier workflow falla, permitiendo enviar alertas o ejecutar lógica de recuperación."
-        }
-      ]
-    }
-  ]
+Has creado tu primer workflow funcional. En los próximos módulos aprenderás técnicas avanzadas para workflows más complejos.
+`,
+    },
+  ],
 };

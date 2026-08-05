@@ -69,7 +69,7 @@ export default async function DashboardPage() {
       </div>
 
       <div className="mb-10 grid gap-4 sm:grid-cols-3">
-        <div className="flex items-center gap-4 rounded-2xl p-5 backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-lg dark:bg-white/5 dark:border-white/10 dark:shadow-none">
+        <div className="flex items-center gap-4 rounded-2xl p-5 backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-lg dark:bg-white/10 dark:border-white/15 dark:shadow-none">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#FF6D5A]/10">
             <BookOpen size={24} className="text-[#FF6D5A]" />
           </div>
@@ -78,7 +78,7 @@ export default async function DashboardPage() {
             <p className="text-xs text-gray-600 dark:text-gray-400">Lecciones</p>
           </div>
         </div>
-        <div className="flex items-center gap-4 rounded-2xl p-5 backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-lg dark:bg-white/5 dark:border-white/10 dark:shadow-none">
+        <div className="flex items-center gap-4 rounded-2xl p-5 backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-lg dark:bg-white/10 dark:border-white/15 dark:shadow-none">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#EA4B71]/10">
             <Clock size={24} className="text-[#EA4B71]" />
           </div>
@@ -87,7 +87,7 @@ export default async function DashboardPage() {
             <p className="text-xs text-gray-600 dark:text-gray-400">Minutos de contenido</p>
           </div>
         </div>
-        <div className="flex items-center gap-4 rounded-2xl p-5 backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-lg dark:bg-white/5 dark:border-white/10 dark:shadow-none">
+        <div className="flex items-center gap-4 rounded-2xl p-5 backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-lg dark:bg-white/10 dark:border-white/15 dark:shadow-none">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#1E90FF]/10">
             <Trophy size={24} className="text-[#1E90FF]" />
           </div>
@@ -98,14 +98,14 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      <div className="mb-10 rounded-2xl p-6 backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-lg dark:bg-white/5 dark:border-white/10 dark:shadow-none">
+      <div className="mb-10 rounded-2xl p-6 backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-lg dark:bg-white/10 dark:border-white/15 dark:shadow-none">
         <div className="mb-2 flex items-center justify-between">
           <span className="font-semibold text-gray-900 dark:text-white">Progreso General</span>
           <span className="text-sm text-[#FF6D5A]">
             {completedLessons}/{totalLessons} lecciones ({overallPercent}%)
           </span>
         </div>
-        <div className="h-3 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-800">
+        <div className="h-3 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-600/50">
           <div
             className="h-full rounded-full bg-gradient-to-r from-[#FF6D5A] to-[#EA4B71] transition-all duration-500"
             style={{ width: `${overallPercent}%` }}
@@ -118,7 +118,7 @@ export default async function DashboardPage() {
         {moduleProgress.map((mod) => (
           <div
             key={mod.slug}
-            className="flex flex-col rounded-2xl p-6 transition backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-lg hover:border-[#FF6D5A]/30 dark:bg-white/5 dark:border-white/10 dark:shadow-none"
+            className="flex flex-col rounded-2xl p-6 transition backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-lg hover:border-[#FF6D5A]/30 dark:bg-white/10 dark:border-white/15 dark:shadow-none"
           >
             <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-white">{mod.title}</h3>
             <p className="mb-1 text-sm text-gray-600 dark:text-gray-400">
@@ -127,7 +127,7 @@ export default async function DashboardPage() {
             <p className="mb-4 text-sm text-gray-500 dark:text-gray-500">
               {mod.completed}/{mod.lessons.length} completadas
             </p>
-            <div className="mb-4 h-2 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-800">
+            <div className="mb-4 h-2 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-600/50">
               <div
                 className="h-full rounded-full bg-gradient-to-r from-[#FF6D5A] to-[#EA4B71] transition-all duration-500"
                 style={{ width: `${mod.percent}%` }}

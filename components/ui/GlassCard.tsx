@@ -24,7 +24,7 @@ export default function GlassCard({
       className={cn(
         "rounded-2xl border backdrop-blur-xl transition-all duration-300",
         "bg-white/60 border-gray-200/50 shadow-lg",
-        "dark:bg-white/5 dark:border-white/10",
+        "dark:bg-white/10 dark:border-white/15",
         paddingMap[padding],
         hover && "hover:-translate-y-1 hover:shadow-xl cursor-pointer",
         className

@@ -56,7 +56,7 @@ export default function AuthButton() {
   if (user) {
     return (
       <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2 rounded-xl border px-3 py-2 backdrop-blur-xl bg-white/70 border-gray-200/50 dark:bg-white/5 dark:border-white/10">
+        <div className="flex items-center gap-2 rounded-xl border px-3 py-2 backdrop-blur-xl bg-white/70 border-gray-200/50 dark:bg-white/10 dark:border-white/15">
           <span className="text-sm font-medium text-gray-900 dark:text-white/90">
             {user.email}
           </span>
@@ -68,7 +68,7 @@ export default function AuthButton() {
             "backdrop-blur-xl text-sm font-medium",
             "bg-white/70 border-gray-200/50 text-gray-700",
             "hover:bg-red-50 hover:border-red-200 hover:text-red-600",
-            "dark:bg-white/5 dark:border-white/10 dark:text-white/70",
+            "dark:bg-white/10 dark:border-white/15 dark:text-white/70",
             "dark:hover:bg-red-500/20 dark:hover:border-red-500/30 dark:hover:text-red-300",
             "transition-all duration-300"
           )}
@@ -88,7 +88,7 @@ export default function AuthButton() {
         "backdrop-blur-xl text-sm font-medium",
         "bg-white/70 border-gray-200/50 text-gray-900",
         "hover:bg-white hover:border-gray-300 hover:-translate-y-0.5",
-        "dark:bg-white/5 dark:border-white/10 dark:text-white/90",
+        "dark:bg-white/10 dark:border-white/15 dark:text-white/90",
         "dark:hover:bg-white/10 dark:hover:border-white/20",
         "transition-all duration-300"
       )}

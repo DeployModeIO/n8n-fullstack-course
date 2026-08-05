@@ -48,7 +48,7 @@ export default function Navbar() {
       className={cn(
         "sticky top-0 z-50 w-full border-b backdrop-blur-xl",
         "bg-white/70 border-gray-200/50 shadow-sm",
-        "dark:bg-white/5 dark:border-white/10 dark:shadow-none"
+        "dark:bg-white/10 dark:border-white/15 dark:shadow-none"
       )}
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -87,7 +87,7 @@ export default function Navbar() {
           className={cn(
             "flex items-center justify-center rounded-lg border p-2",
             "bg-white/50 border-gray-200 text-gray-700 hover:bg-gray-100",
-            "dark:bg-white/5 dark:border-white/10 dark:text-white/70 dark:hover:bg-white/10",
+            "dark:bg-white/10 dark:border-white/15 dark:text-white/70 dark:hover:bg-white/10",
             "backdrop-blur-xl transition-all duration-200 md:hidden"
           )}
         >
@@ -96,7 +96,7 @@ export default function Navbar() {
       </div>
 
       {mobileOpen && (
-        <div className="border-t backdrop-blur-xl md:hidden bg-white/70 border-gray-200/50 dark:bg-white/5 dark:border-white/10">
+        <div className="border-t backdrop-blur-xl md:hidden bg-white/70 border-gray-200/50 dark:bg-white/10 dark:border-white/15">
           <div className="space-y-1 px-4 py-3">
             {allLinks.map((link) => (
               <Link

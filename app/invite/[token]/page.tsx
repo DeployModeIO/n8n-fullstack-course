@@ -97,7 +97,7 @@ export default function InviteAcceptPage() {
   if (error && !invitation) {
     return (
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-16">
-        <div className="w-full max-w-md rounded-2xl p-8 backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-xl dark:bg-white/5 dark:border-white/10">
+        <div className="w-full max-w-md rounded-2xl p-8 backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-xl dark:bg-white/10 dark:border-white/15">
           <div className="text-center">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
               <svg className="h-8 w-8 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -114,7 +114,7 @@ export default function InviteAcceptPage() {
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-16">
-      <div className="w-full max-w-md rounded-2xl p-8 backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-xl dark:bg-white/5 dark:border-white/10">
+      <div className="w-full max-w-md rounded-2xl p-8 backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-xl dark:bg-white/10 dark:border-white/15">
         <div className="mb-8 text-center">
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30">
             <svg className="h-8 w-8 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">

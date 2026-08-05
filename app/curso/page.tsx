@@ -59,7 +59,7 @@ export default async function CursoPage() {
           return (
             <div
               key={module.id}
-              className="rounded-2xl p-6 backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-lg dark:bg-white/5 dark:border-white/10 dark:shadow-none"
+              className="rounded-2xl p-6 backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-lg dark:bg-white/10 dark:border-white/15 dark:shadow-none"
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
@@ -86,7 +86,7 @@ export default async function CursoPage() {
               </div>
 
               <div className="mb-6">
-                <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                <div className="h-2 bg-gray-200 dark:bg-gray-600/50 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-gradient-to-r from-[#FF6D5A] to-[#EA4B71] transition-all duration-500"
                     style={{ width: `${progressPercent}%` }}
@@ -101,9 +101,9 @@ export default async function CursoPage() {
                     <Link
                       key={lesson.id}
                       href={`/course/${module.slug}/${lesson.slug}`}
-                      className="flex items-center gap-4 p-4 rounded-xl border border-gray-200/50 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+                      className="flex items-center gap-4 p-4 rounded-xl border border-gray-200/50 dark:border-white/15 hover:bg-gray-50 dark:hover:bg-white/10 transition-colors"
                     >
-                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 text-sm font-medium text-gray-700 dark:text-gray-300">
+                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700/50 text-sm font-medium text-gray-700 dark:text-gray-300">
                         {isCompleted ? (
                           <CheckCircle2 size={18} className="text-green-500" />
                         ) : (

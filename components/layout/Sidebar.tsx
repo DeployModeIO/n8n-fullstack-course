@@ -65,7 +65,7 @@ export default function Sidebar({
         className={cn(
           "flex h-full w-12 flex-col items-center border-r backdrop-blur-xl py-4",
           "bg-white/70 border-gray-200/50",
-          "dark:bg-white/5 dark:border-white/10",
+          "dark:bg-white/10 dark:border-white/15",
           className
         )}
       >
@@ -84,11 +84,11 @@ export default function Sidebar({
       className={cn(
         "flex h-full w-72 flex-col border-r backdrop-blur-xl overflow-hidden",
         "bg-white/70 border-gray-200/50",
-        "dark:bg-white/5 dark:border-white/10",
+        "dark:bg-white/10 dark:border-white/15",
         className
       )}
     >
-      <div className="flex items-center justify-between border-b px-4 py-3 border-gray-200/50 dark:border-white/10">
+      <div className="flex items-center justify-between border-b px-4 py-3 border-gray-200/50 dark:border-white/15">
         <h2 className="text-sm font-semibold text-gray-900 dark:text-white/90">Contenido del Curso</h2>
         <button
           onClick={() => setCollapsed(true)}

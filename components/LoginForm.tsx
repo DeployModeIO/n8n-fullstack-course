@@ -52,7 +52,7 @@ export default function LoginForm() {
               className={cn(
                 "w-full pl-10 pr-4 py-3 rounded-xl border",
                 "bg-white border-gray-300 text-gray-900",
-                "dark:bg-white/5 dark:border-white/10 dark:text-white",
+                "dark:bg-white/10 dark:border-white/15 dark:text-white",
                 "focus:outline-none focus:ring-2 focus:ring-[#FF6D5A] focus:border-transparent",
                 "transition-all duration-200"
               )}
@@ -76,7 +76,7 @@ export default function LoginForm() {
               className={cn(
                 "w-full pl-10 pr-4 py-3 rounded-xl border",
                 "bg-white border-gray-300 text-gray-900",
-                "dark:bg-white/5 dark:border-white/10 dark:text-white",
+                "dark:bg-white/10 dark:border-white/15 dark:text-white",
                 "focus:outline-none focus:ring-2 focus:ring-[#FF6D5A] focus:border-transparent",
                 "transition-all duration-200"
               )}

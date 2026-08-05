@@ -100,7 +100,7 @@ export default function UsersPage() {
         </button>
       </div>
 
-      <div className="rounded-2xl p-6 backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-lg dark:bg-white/5 dark:border-white/10 dark:shadow-none">
+      <div className="rounded-2xl p-6 backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-lg dark:bg-white/10 dark:border-white/15 dark:shadow-none">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>

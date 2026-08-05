@@ -15,7 +15,7 @@ export default function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <div className="h-9 w-9 rounded-xl border bg-gray-200 border-gray-300 dark:bg-white/5 dark:border-white/10" />
+      <div className="h-9 w-9 rounded-xl border bg-gray-200 border-gray-300 dark:bg-white/10 dark:border-white/15" />
     );
   }
 
@@ -26,7 +26,7 @@ export default function ThemeToggle() {
         "relative flex h-9 w-9 items-center justify-center rounded-xl",
         "border backdrop-blur-xl transition-all duration-300",
         "bg-white/70 border-gray-200/50 text-gray-700 hover:bg-white hover:text-gray-900",
-        "dark:bg-white/5 dark:border-white/10 dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
+        "dark:bg-white/10 dark:border-white/15 dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
       )}
       aria-label="Toggle theme"
     >

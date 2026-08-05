@@ -101,7 +101,7 @@ export default function AdminDashboardPage() {
           return (
             <div
               key={card.label}
-              className="flex items-center gap-4 rounded-2xl p-5 backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-lg dark:bg-white/5 dark:border-white/10 dark:shadow-none"
+              className="flex items-center gap-4 rounded-2xl p-5 backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-lg dark:bg-white/10 dark:border-white/15 dark:shadow-none"
             >
               <div
                 className="flex h-12 w-12 items-center justify-center rounded-xl"
@@ -122,7 +122,7 @@ export default function AdminDashboardPage() {
         })}
       </div>
 
-      <div className="rounded-2xl p-6 backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-lg dark:bg-white/5 dark:border-white/10 dark:shadow-none">
+      <div className="rounded-2xl p-6 backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-lg dark:bg-white/10 dark:border-white/15 dark:shadow-none">
         <div className="mb-4 flex items-center gap-2">
           <UserPlus size={20} className="text-[#FF6D5A]" />
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white">

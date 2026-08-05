@@ -86,7 +86,7 @@ export default function HomePage() {
             </Link>
             <Link
               href="/login"
-              className="rounded-xl border px-8 py-3.5 text-lg font-semibold transition bg-white/70 border-gray-300 text-gray-900 hover:bg-white dark:bg-white/5 dark:border-white/10 dark:text-white dark:hover:bg-white/10"
+              className="rounded-xl border px-8 py-3.5 text-lg font-semibold transition bg-white/70 border-gray-300 text-gray-900 hover:bg-white dark:bg-white/10 dark:border-white/15 dark:text-white dark:hover:bg-white/10"
             >
               Iniciar Sesión
             </Link>
@@ -116,7 +116,7 @@ export default function HomePage() {
             {features.map((feature) => (
               <div
                 key={feature.title}
-                className="rounded-2xl p-6 transition backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-lg hover:border-orange-500/30 dark:bg-white/5 dark:border-white/10 dark:shadow-none"
+                className="rounded-2xl p-6 transition backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-lg hover:border-orange-500/30 dark:bg-white/10 dark:border-white/15 dark:shadow-none"
               >
                 <div className="mb-3 text-3xl">{feature.icon}</div>
                 <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-white">{feature.title}</h3>
@@ -154,7 +154,7 @@ export default function HomePage() {
           </h2>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {testimonials.map((t) => (
-              <div key={t.name} className="rounded-2xl p-6 backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-lg dark:bg-white/5 dark:border-white/10 dark:shadow-none">
+              <div key={t.name} className="rounded-2xl p-6 backdrop-blur-xl bg-white/70 border border-gray-200/50 shadow-lg dark:bg-white/10 dark:border-white/15 dark:shadow-none">
                 <p className="mb-4 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
                   &ldquo;{t.text}&rdquo;
                 </p>
