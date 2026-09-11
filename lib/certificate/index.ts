@@ -6,8 +6,8 @@ const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || 'https://n8n-fullstack-course.vercel.app';
 
 /**
- * Proveedor local de respaldo: emite un registro verificable en nuestra
- * propia plataforma cuando no hay claves de un proveedor externo.
+ * Local fallback provider: issues a verifiable record on our own
+ * platform when no external provider keys are configured.
  */
 class LocalProvider implements CertificateProvider {
   name = 'local';
@@ -20,7 +20,7 @@ class LocalProvider implements CertificateProvider {
       provider: this.name,
       credentialId: null,
       certificateNo: no,
-      verificationUrl: `${BASE_URL}/certificado/${no}`,
+      verificationUrl: `${BASE_URL}/certificate/${no}`,
       pdfUrl: null,
     };
   }
@@ -40,9 +40,9 @@ export async function issueCertificate(
   try {
     return await provider.issue(input);
   } catch (err) {
-    // Si el proveedor externo falla (claves faltantes, error de red),
-    // emitimos localmente para no romper el flujo del curso.
-    console.warn('[certificate] proveedor externo falló, usando local:', err);
+    // If the external provider fails (missing keys, network error),
+    // we issue locally so the course flow is never broken.
+    console.warn('[certificate] external provider failed, using local:', err);
     return new LocalProvider().issue(input);
   }
 }

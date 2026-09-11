@@ -64,7 +64,7 @@ export default function UsersPage() {
       const result = await response.json();
 
       if (!response.ok) {
-        alert(result.error || 'Error al crear usuario');
+        alert(result.error || 'Error creating user');
         setSubmitting(false);
         return;
       }
@@ -73,14 +73,14 @@ export default function UsersPage() {
       setFormData({ email: '', password: '', role: 'student' });
       fetchUsers();
     } catch {
-      alert('Error de conexion al crear usuario');
+      alert('Connection error while creating the user');
     } finally {
       setSubmitting(false);
     }
   }
 
   async function handleDelete(userId: string) {
-    if (!confirm('¿Estas seguro de eliminar este usuario?')) return;
+    if (!confirm('Are you sure you want to delete this user?')) return;
 
     try {
       const response = await fetch(`/api/admin/users?id=${userId}`, {
@@ -89,19 +89,19 @@ export default function UsersPage() {
 
       if (!response.ok) {
         const result = await response.json();
-        alert(result.error || 'Error al eliminar usuario');
+        alert(result.error || 'Error deleting user');
         return;
       }
 
       fetchUsers();
     } catch {
-      alert('Error de conexion al eliminar usuario');
+      alert('Connection error while deleting the user');
     }
   }
 
   function handleCopy() {
     if (!createdCredentials) return;
-    const text = `Email: ${createdCredentials.email}\nContrasena: ${createdCredentials.password}`;
+    const text = `Email: ${createdCredentials.email}\nPassword: ${createdCredentials.password}`;
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -129,7 +129,7 @@ export default function UsersPage() {
         <div className="flex items-center gap-3">
           <Users size={24} className="text-[#FF6D5A]" />
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Usuarios
+            Users
           </h1>
         </div>
         <button
@@ -137,7 +137,7 @@ export default function UsersPage() {
           className="flex items-center gap-2 rounded-xl bg-[#FF6D5A] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#FF6D5A]/90"
         >
           <Plus size={18} />
-          Nuevo Usuario
+          New user
         </button>
       </div>
 
@@ -150,13 +150,13 @@ export default function UsersPage() {
                   Email
                 </th>
                 <th className="pb-3 text-left text-xs font-medium text-gray-600 dark:text-gray-400">
-                  Rol
+                  Role
                 </th>
                 <th className="pb-3 text-left text-xs font-medium text-gray-600 dark:text-gray-400">
-                  Registrado
+                  Registered
                 </th>
                 <th className="pb-3 text-right text-xs font-medium text-gray-600 dark:text-gray-400">
-                  Acciones
+                  Actions
                 </th>
               </tr>
             </thead>
@@ -172,7 +172,7 @@ export default function UsersPage() {
                     </span>
                   </td>
                   <td className="py-3 text-sm text-gray-600 dark:text-gray-400">
-                    {new Date(user.created_at).toLocaleDateString('es-ES')}
+                    {new Date(user.created_at).toLocaleDateString('en-US')}
                   </td>
                   <td className="py-3 text-right">
                     <button
@@ -190,7 +190,7 @@ export default function UsersPage() {
                     colSpan={4}
                     className="py-6 text-center text-sm text-gray-500 dark:text-gray-400"
                   >
-                    No hay usuarios registrados
+                    No registered users
                   </td>
                 </tr>
               )}
@@ -204,7 +204,7 @@ export default function UsersPage() {
           <div className="w-full max-w-md rounded-2xl p-6 backdrop-blur-xl bg-white/90 border border-gray-200/50 shadow-2xl dark:bg-gray-900/90 dark:border-white/10">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Nuevo Usuario
+                New user
               </h2>
               <button
                 onClick={handleCloseModal}
@@ -231,7 +231,7 @@ export default function UsersPage() {
                 </div>
                 <div>
                   <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Contrasena
+                    Password
                   </label>
                   <div className="flex gap-2">
                     <div className="relative flex-1">
@@ -256,11 +256,11 @@ export default function UsersPage() {
                     <button
                       type="button"
                       onClick={handleGeneratePassword}
-                      title="Generar contrasena segura"
+                      title="Generate a secure password"
                       className="flex shrink-0 items-center gap-1.5 rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-xs font-medium text-gray-700 transition hover:border-[#FF6D5A] hover:text-[#FF6D5A] dark:border-white/20 dark:bg-white/5 dark:text-gray-300 dark:hover:border-[#FF6D5A]"
                     >
                       <KeyRound size={14} />
-                      Generar
+                      Generate
                     </button>
                   </div>
                   {formData.password && (
@@ -278,7 +278,7 @@ export default function UsersPage() {
                     }
                     className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 outline-none transition focus:border-[#FF6D5A] dark:border-white/20 dark:bg-white/5 dark:text-white"
                   >
-                    <option value="student">Estudiante</option>
+                    <option value="student">Student</option>
                     <option value="instructor">Instructor</option>
                     <option value="admin">Admin</option>
                   </select>
@@ -288,14 +288,14 @@ export default function UsersPage() {
                   disabled={submitting}
                   className="w-full rounded-xl bg-[#FF6D5A] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-[#FF6D5A]/90 disabled:opacity-50"
                 >
-                  {submitting ? 'Creando...' : 'Crear Usuario'}
+                  {submitting ? 'Creating...' : 'Create user'}
                 </button>
               </form>
             ) : (
               <div className="space-y-4">
                 <div className="rounded-xl bg-green-50 p-4 dark:bg-green-900/20">
                   <p className="text-sm font-medium text-green-800 dark:text-green-300">
-                    Usuario creado exitosamente. Comparte estas credenciales con el usuario.
+                    User created successfully. Share these credentials with the user.
                   </p>
                 </div>
                 <div className="space-y-3">
@@ -311,7 +311,7 @@ export default function UsersPage() {
                   </div>
                   <div>
                     <label className="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">
-                      Contrasena
+                      Password
                     </label>
                     <div className="rounded-xl border border-gray-300 bg-white p-3 dark:border-white/20 dark:bg-white/5">
                       <p className="break-all font-mono text-sm font-medium text-gray-900 dark:text-white">
@@ -328,12 +328,12 @@ export default function UsersPage() {
                     {copied ? (
                       <>
                         <Check size={16} className="text-green-500" />
-                        Copiado
+                        Copied
                       </>
                     ) : (
                       <>
                         <Copy size={16} />
-                        Copiar Credenciales
+                        Copy credentials
                       </>
                     )}
                   </button>
@@ -341,7 +341,7 @@ export default function UsersPage() {
                     onClick={handleCloseModal}
                     className="flex-1 rounded-xl bg-[#FF6D5A] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-[#FF6D5A]/90"
                   >
-                    Cerrar
+                    Close
                   </button>
                 </div>
               </div>
@@ -355,11 +355,11 @@ export default function UsersPage() {
 
 function PasswordStrength({ password }: { password: string }) {
   const checks = [
-    { label: '8+ caracteres', ok: password.length >= 8 },
-    { label: 'Mayuscula', ok: /[A-Z]/.test(password) },
-    { label: 'Minuscula', ok: /[a-z]/.test(password) },
-    { label: 'Numero', ok: /\d/.test(password) },
-    { label: 'Simbolo', ok: /[^A-Za-z0-9]/.test(password) },
+    { label: '8+ characters', ok: password.length >= 8 },
+    { label: 'Uppercase', ok: /[A-Z]/.test(password) },
+    { label: 'Lowercase', ok: /[a-z]/.test(password) },
+    { label: 'Number', ok: /\d/.test(password) },
+    { label: 'Symbol', ok: /[^A-Za-z0-9]/.test(password) },
   ];
   const score = checks.filter((c) => c.ok).length;
 

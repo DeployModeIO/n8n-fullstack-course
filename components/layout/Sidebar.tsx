@@ -89,7 +89,7 @@ export default function Sidebar({
       )}
     >
       <div className="flex items-center justify-between border-b px-4 py-3 border-gray-200/50 dark:border-white/15">
-        <h2 className="text-sm font-semibold text-gray-900 dark:text-white/90">Contenido del Curso</h2>
+        <h2 className="text-sm font-semibold text-gray-900 dark:text-white/90">Course Content</h2>
         <button
           onClick={() => setCollapsed(true)}
           className="rounded-lg p-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-white/60 dark:hover:bg-white/10 dark:hover:text-white transition-all lg:hidden"

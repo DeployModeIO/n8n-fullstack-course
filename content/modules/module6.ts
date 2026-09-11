@@ -2,38 +2,38 @@ import { Module } from "../../types/course";
 
 export const module6: Module = {
   id: "mod-06",
-  slug: "escalabilidad-seguridad",
-  title: "Escalabilidad y Seguridad",
-  description: "Escala N8N para produccion: error handling, Docker con workers, Kubernetes y hardening de seguridad.",
+  slug: "scalability-security",
+  title: "Scalability and Security",
+  description: "Scale N8N for production: error handling, Docker with workers, Kubernetes and security hardening.",
   icon: "Shield",
   sortOrder: 6,
   lessons: [
     {
       id: "les-06-01",
-      moduleSlug: "escalabilidad-seguridad",
+      moduleSlug: "scalability-security",
       slug: "error-handling",
-      title: "Error Handling y Alertas",
-      description: "Implementa manejo global de errores, patrones try-catch, logica de retry y alertas con Slack y email.",
+      title: "Error Handling and Alerts",
+      description: "Implement global error handling, try-catch patterns, retry logic and alerts with Slack and email.",
       estimatedMinutes: 22,
-      content: `## Error Handling y Alertas
+      content: `## Error Handling and Alerts
 
-El manejo robusto de errores es esencial para workflows de produccion. Un error no manejado puede detener procesos criticos de negocio.
+Robust error handling is essential for production workflows. An unhandled error can halt critical business processes.
 
-### Tipos de errores en N8N
+### Error Types in N8N
 
-| Tipo | Causa | Ejemplo |
+| Type | Cause | Example |
 |---|---|---|
-| **Node error** | Fallo en un nodo especifico | API timeout, credenciales invalidas |
-| **Expression error** | Expresion invalida | Campo no existe, tipo incorrecto |
-| **Workflow error** | Error de logica del flujo | Datos faltantes, formato inesperado |
-| **System error** | Fallo de infraestructura | OOM, disco lleno, red caida |
+| **Node error** | Failure in a specific node | API timeout, invalid credentials |
+| **Expression error** | Invalid expression | Field does not exist, wrong type |
+| **Workflow error** | Flow logic error | Missing data, unexpected format |
+| **System error** | Infrastructure failure | OOM, full disk, network down |
 
 ### Error Workflow (Global)
 
-El Error Workflow se ejecuta automaticamente cuando cualquier workflow falla:
+The Error Workflow runs automatically whenever any workflow fails:
 
-1. Crea un nuevo workflow con un **Error Trigger** node
-2. En Settings -> Workflow Settings -> Error Workflow, selecciona este workflow
+1. Create a new workflow with an **Error Trigger** node
+2. In Settings -> Workflow Settings -> Error Workflow, select this workflow
 
 \`\`\`json
 {
@@ -50,7 +50,7 @@ El Error Workflow se ejecuta automaticamente cuando cualquier workflow falla:
 }
 \`\`\`
 
-El Error Trigger proporciona:
+The Error Trigger provides:
 
 \`\`\`json
 {
@@ -69,16 +69,16 @@ El Error Trigger proporciona:
 }
 \`\`\`
 
-### Patron: Alerta en Slack
+### Pattern: Slack Alert
 
 \`\`\`
 [Error Trigger]
-  -> [Code: Formatear mensaje]
-  -> [Slack: Enviar a #alerts]
-  -> [Supabase: Registrar error]
+  -> [Code: Format message]
+  -> [Slack: Send to #alerts]
+  -> [Supabase: Log error]
 \`\`\`
 
-#### Formatear mensaje de error
+#### Formatting the error message
 
 \`\`\`javascript
 const { execution, workflow } = $input.first().json;
@@ -112,13 +112,13 @@ const blocks = [
 return [{ json: { blocks } }];
 \`\`\`
 
-### Patron: Retry con backoff exponencial
+### Pattern: Retry with exponential backoff
 
 \`\`\`
-[HTTP Request] -> (error) -> [Code: Calcular delay] -> [Wait] -> [HTTP Request (retry)]
+[HTTP Request] -> (error) -> [Code: Calculate delay] -> [Wait] -> [HTTP Request (retry)]
 \`\`\`
 
-#### Implementacion
+#### Implementation
 
 \`\`\`javascript
 const maxRetries = 3;
@@ -143,7 +143,7 @@ return [{
 
 ### Continue On Fail
 
-Configura nodos individuales para continuar en caso de error:
+Configure individual nodes to continue when an error occurs:
 
 \`\`\`json
 {
@@ -153,7 +153,7 @@ Configura nodos individuales para continuar en caso de error:
 }
 \`\`\`
 
-Luego verifica si hubo error:
+Then check whether an error occurred:
 
 \`\`\`javascript
 if ($json.error) {
@@ -162,12 +162,12 @@ if ($json.error) {
 return [{ json: $json }];
 \`\`\`
 
-### Patron: Circuit Breaker
+### Pattern: Circuit Breaker
 
-Evita saturar servicios que estan fallando:
+Prevents overwhelming services that are already failing:
 
 \`\`\`javascript
-const serviceKey = 'api-externa';
+const serviceKey = 'external-api';
 const failureThreshold = 5;
 const resetTimeout = 60000;
 
@@ -189,20 +189,20 @@ if (circuitState.state === 'open') {
 return [{ json: { ...$json, _circuitState: circuitState } }];
 \`\`\`
 
-### Patron: Dead Letter Queue
+### Pattern: Dead Letter Queue
 
-Guarda items fallidos para reprocesamiento posterior:
+Stores failed items for later reprocessing:
 
 \`\`\`
-[Cualquier nodo] -> (error) -> [Code: Formatear DLQ item]
-  -> [Supabase: Insertar en dead_letter_queue]
-  -> [Slack: Alertar]
+[Any node] -> (error) -> [Code: Format DLQ item]
+  -> [Supabase: Insert into dead_letter_queue]
+  -> [Slack: Alert]
 
-[Schedule cada hora] -> [Supabase: Leer DLQ]
-  -> [SplitInBatches] -> [Reintentar] -> (success) -> [Supabase: Eliminar de DLQ]
+[Schedule every hour] -> [Supabase: Read DLQ]
+  -> [SplitInBatches] -> [Retry] -> (success) -> [Supabase: Remove from DLQ]
 \`\`\`
 
-#### Estructura de DLQ en Supabase
+#### DLQ Structure in Supabase
 
 \`\`\`sql
 CREATE TABLE dead_letter_queue (
@@ -222,40 +222,40 @@ CREATE TABLE dead_letter_queue (
 );
 \`\`\`
 
-### Alertas por email
+### Email alerts
 
 \`\`\`json
 {
-  "fromEmail": "n8n-alerts@tuempresa.com",
-  "toEmail": "devops@tuempresa.com",
+  "fromEmail": "n8n-alerts@yourcompany.com",
+  "toEmail": "devops@yourcompany.com",
   "subject": "=ALERT: {{ $json.workflow.name }} failed",
   "emailType": "html",
   "message": "=<h2>Workflow Error</h2><p><strong>Workflow:</strong> {{ $json.workflow.name }}</p><p><strong>Error:</strong> {{ $json.execution.error.message }}</p><p><a href='{{ $json.execution.url }}'>View Execution</a></p>"
 }
 \`\`\`
 
-### Dashboard de errores
+### Error dashboard
 
-Crea un workflow que genere un dashboard de salud:
+Create a workflow that generates a health dashboard:
 
 \`\`\`
-[Schedule: cada hora]
-  -> [Supabase: Contar errores ultimas 24h]
-  -> [Supabase: Contar ejecuciones exitosas]
-  -> [Code: Calcular metricas]
-  -> [Google Sheets: Actualizar dashboard]
-  -> [IF: error rate > 5%] -> [Slack: Alerta critica]
+[Schedule: every hour]
+  -> [Supabase: Count errors in the last 24h]
+  -> [Supabase: Count successful executions]
+  -> [Code: Calculate metrics]
+  -> [Google Sheets: Update dashboard]
+  -> [IF: error rate > 5%] -> [Slack: Critical alert]
 \`\`\`
 
-### Mejores practicas
+### Best practices
 
-- **Siempre configura un Error Workflow global** en produccion
-- **Usa Continue On Fail** en nodos que pueden fallar sin ser criticos
-- **Implementa retry con backoff** para APIs inestables
-- **Monitorea la tasa de errores** y configura alertas proactivas
-- **Usa Dead Letter Queue** para reprocesamiento automatico
-- **Loggea todos los errores** en una base de datos para analisis posterior
-- **Configura alertas en Slack** para errores criticos en tiempo real`,
+- **Always configure a global Error Workflow** in production
+- **Use Continue On Fail** on nodes that can fail without being critical
+- **Implement retry with backoff** for unstable APIs
+- **Monitor the error rate** and configure proactive alerts
+- **Use a Dead Letter Queue** for automatic reprocessing
+- **Log every error** in a database for later analysis
+- **Configure Slack alerts** for critical errors in real time`,
       n8nWorkflowJson: {
         name: "Global Error Handler",
         nodes: [
@@ -289,7 +289,7 @@ Crea un workflow que genere un dashboard de salud:
       quiz: [
         {
           id: "q-06-01-1",
-          question: "Que nodo se usa como trigger para el Error Workflow global?",
+          question: "Which node is used as the trigger for the global Error Workflow?",
           options: [
             "Webhook Trigger",
             "Error Trigger",
@@ -297,46 +297,46 @@ Crea un workflow que genere un dashboard de salud:
             "Workflow Error Trigger"
           ],
           correctIndex: 1,
-          explanation: "El Error Trigger es un nodo especial que se activa automaticamente cuando cualquier workflow del sistema falla, permitiendo manejar errores globalmente."
+          explanation: "The Error Trigger is a special node that fires automatically when any workflow in the system fails, allowing errors to be handled globally."
         },
         {
           id: "q-06-01-2",
-          question: "Que patron evita saturar un servicio que esta fallando repetidamente?",
+          question: "Which pattern prevents overwhelming a service that is failing repeatedly?",
           options: [
             "Dead Letter Queue",
-            "Retry con backoff",
+            "Retry with backoff",
             "Circuit Breaker",
             "Fan-out / Fan-in"
           ],
           correctIndex: 2,
-          explanation: "El Circuit Breaker detecta fallos repetidos y 'abre el circuito' para dejar de enviar peticiones al servicio fallido temporalmente."
+          explanation: "The Circuit Breaker detects repeated failures and 'opens the circuit' to stop sending requests to the failing service temporarily."
         },
         {
           id: "q-06-01-3",
-          question: "Que es una Dead Letter Queue (DLQ)?",
+          question: "What is a Dead Letter Queue (DLQ)?",
           options: [
-            "Una cola de emails no entregados",
-            "Un almacenamiento de items fallidos para reprocesamiento posterior",
-            "Un log de errores del sistema",
-            "Una lista de workflows desactivados"
+            "A queue of undelivered emails",
+            "A store of failed items for later reprocessing",
+            "A system error log",
+            "A list of disabled workflows"
           ],
           correctIndex: 1,
-          explanation: "Una Dead Letter Queue almacena items que fallaron en su procesamiento para poder reintentarlos posteriormente de forma automatica o manual."
+          explanation: "A Dead Letter Queue stores items whose processing failed so they can be retried later, either automatically or manually."
         }
       ]
     },
     {
       id: "les-06-02",
-      moduleSlug: "escalabilidad-seguridad",
+      moduleSlug: "scalability-security",
       slug: "docker-scaling",
-      title: "Escalado con Docker",
-      description: "Configura Docker Compose con multiples workers, queue mode, PostgreSQL scaling y Redis para alta disponibilidad.",
+      title: "Scaling with Docker",
+      description: "Configure Docker Compose with multiple workers, queue mode, PostgreSQL scaling and Redis for high availability.",
       estimatedMinutes: 25,
-      content: `## Escalado con Docker
+      content: `## Scaling with Docker
 
-Cuando N8N crece en uso, necesitas escalar horizontalmente. El queue mode con multiples workers es la estrategia principal.
+When N8N grows in usage, you need to scale horizontally. Queue mode with multiple workers is the main strategy.
 
-### Arquitectura de escalado
+### Scaling architecture
 
 \`\`\`
                     ┌─ Worker 1 ─┐
@@ -347,7 +347,7 @@ Load Balancer ──-> ──┤─ Worker 2 ──┤──> PostgreSQL
                        Redis
 \`\`\`
 
-### Docker Compose con Queue Mode
+### Docker Compose with Queue Mode
 
 \`\`\`yaml
 version: '3.8'
@@ -358,10 +358,10 @@ services:
     ports:
       - "5678:5678"
     environment:
-      - N8N_HOST=n8n.tu-dominio.com
+      - N8N_HOST=n8n.your-domain.com
       - N8N_PORT=5678
       - N8N_PROTOCOL=https
-      - WEBHOOK_URL=https://n8n.tu-dominio.com/
+      - WEBHOOK_URL=https://n8n.your-domain.com/
       - EXECUTIONS_MODE=queue
       - QUEUE_BULL_REDIS_HOST=redis
       - QUEUE_BULL_REDIS_PORT=6379
@@ -501,10 +501,10 @@ upstream n8n_ui {
 
 server {
     listen 443 ssl http2;
-    server_name n8n.tu-dominio.com;
+    server_name n8n.your-domain.com;
 
-    ssl_certificate /etc/letsencrypt/live/n8n.tu-dominio.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/n8n.tu-dominio.com/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/n8n.your-domain.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/n8n.your-domain.com/privkey.pem;
 
     location /webhook/ {
         proxy_pass http://n8n_webhook;
@@ -530,7 +530,7 @@ server {
 
 ### PostgreSQL Read Replicas
 
-Para lecturas pesadas, configura read replicas:
+For heavy read workloads, configure read replicas:
 
 \`\`\`yaml
 postgres-replica:
@@ -547,7 +547,7 @@ postgres-replica:
     - postgres
 \`\`\`
 
-### Monitoreo de workers
+### Monitoring workers
 
 \`\`\`bash
 docker compose ps
@@ -555,7 +555,7 @@ docker compose logs -f n8n-worker-1
 docker compose top n8n-worker-1
 \`\`\`
 
-### Escalado automatico con Docker Swarm
+### Automatic scaling with Docker Swarm
 
 \`\`\`yaml
 services:
@@ -580,31 +580,31 @@ services:
           memory: 1G
 \`\`\`
 
-### Metricas de escalado
+### Scaling metrics
 
-Monitorea estas metricas para decidir cuando escalar:
+Monitor these metrics to decide when to scale:
 
-| Metrica | Umbral | Accion |
+| Metric | Threshold | Action |
 |---|---|---|
-| Queue depth | > 100 jobs | Añadir workers |
-| Worker CPU | > 80% sostenido | Añadir workers |
-| Worker memory | > 85% | Aumentar recursos o workers |
-| PostgreSQL connections | > 80% max | Aumentar max_connections |
-| Redis memory | > 70% | Aumentar maxmemory |
-| Response time | > 5s p95 | Revisar workers y DB |
+| Queue depth | > 100 jobs | Add workers |
+| Worker CPU | > 80% sustained | Add workers |
+| Worker memory | > 85% | Increase resources or workers |
+| PostgreSQL connections | > 80% max | Increase max_connections |
+| Redis memory | > 70% | Increase maxmemory |
+| Response time | > 5s p95 | Review workers and DB |
 
-### Tips de escalado
+### Scaling tips
 
-- **Empieza con 2 workers** y escala segun demanda
-- **Usa \`least_conn\`** en nginx para balancear webhooks
-- **Separa webhook handler** del UI para mejor rendimiento
-- **Monitorea queue depth** en Redis: \`redis-cli LLEN bull:workflow:wait\`
-- **Ajusta concurrency** por worker segun recursos disponibles
-- **Usa healthchecks** en todos los servicios para failover automatico`,
+- **Start with 2 workers** and scale as demand grows
+- **Use \`least_conn\`** in nginx to balance webhooks
+- **Separate the webhook handler** from the UI for better performance
+- **Monitor queue depth** in Redis: \`redis-cli LLEN bull:workflow:wait\`
+- **Tune concurrency** per worker according to the available resources
+- **Use healthchecks** on every service for automatic failover`,
       quiz: [
         {
           id: "q-06-02-1",
-          question: "Que comando se usa para iniciar un worker de N8N?",
+          question: "Which command starts an N8N worker?",
           options: [
             "n8n start --worker",
             "n8n worker",
@@ -612,11 +612,11 @@ Monitorea estas metricas para decidir cuando escalar:
             "n8n execute --mode worker"
           ],
           correctIndex: 1,
-          explanation: "El comando 'n8n worker' (o 'worker' como argumento en Docker) inicia N8N en modo worker, que procesa jobs de la cola Redis sin exponer la UI."
+          explanation: "The 'n8n worker' command (or 'worker' as the Docker argument) starts N8N in worker mode, which processes Redis queue jobs without exposing the UI."
         },
         {
           id: "q-06-02-2",
-          question: "Que estrategia de load balancing se recomienda para webhooks?",
+          question: "Which load balancing strategy is recommended for webhooks?",
           options: [
             "round-robin",
             "least_conn",
@@ -624,34 +624,34 @@ Monitorea estas metricas para decidir cuando escalar:
             "random"
           ],
           correctIndex: 1,
-          explanation: "least_conn distribuye las peticiones al servidor con menos conexiones activas, ideal para webhooks que pueden tener tiempos de procesamiento variables."
+          explanation: "least_conn distributes requests to the server with the fewest active connections, which is ideal for webhooks whose processing time can vary."
         },
         {
           id: "q-06-02-3",
-          question: "Que metrica indica que necesitas mas workers?",
+          question: "Which metric indicates that you need more workers?",
           options: [
-            "Alto uso de disco",
-            "Queue depth mayor a 100 jobs pendientes",
-            "Muchos workflows activos",
-            "Alto trafico en la UI"
+            "High disk usage",
+            "Queue depth above 100 pending jobs",
+            "Many active workflows",
+            "High UI traffic"
           ],
           correctIndex: 1,
-          explanation: "Un queue depth alto (>100 jobs pendientes) indica que los workers actuales no pueden procesar el volumen de trabajo, y necesitas añadir mas workers."
+          explanation: "A high queue depth (>100 pending jobs) means the current workers cannot handle the workload, so you need to add more workers."
         }
       ]
     },
     {
       id: "les-06-03",
-      moduleSlug: "escalabilidad-seguridad",
+      moduleSlug: "scalability-security",
       slug: "kubernetes-deployment",
-      title: "Despliegue en Kubernetes",
-      description: "Despliega N8N en Kubernetes: pods, services, horizontal pod autoscaling, resource limits y configuracion production-ready.",
+      title: "Deploying on Kubernetes",
+      description: "Deploy N8N on Kubernetes: pods, services, horizontal pod autoscaling, resource limits and production-ready configuration.",
       estimatedMinutes: 25,
-      content: `## Despliegue en Kubernetes
+      content: `## Deploying on Kubernetes
 
-Kubernetes (K8s) proporciona orquestacion avanzada para N8N en produccion, con auto-scaling, self-healing y gestion de recursos.
+Kubernetes (K8s) provides advanced orchestration for N8N in production, with auto-scaling, self-healing and resource management.
 
-### Arquitectura en K8s
+### K8s architecture
 
 \`\`\`
 ┌─ Ingress Controller ─┐
@@ -673,7 +673,7 @@ metadata:
     app: n8n
 \`\`\`
 
-### ConfigMap y Secrets
+### ConfigMap and Secrets
 
 \`\`\`yaml
 apiVersion: v1
@@ -682,10 +682,10 @@ metadata:
   name: n8n-config
   namespace: n8n
 data:
-  N8N_HOST: "n8n.tu-dominio.com"
+  N8N_HOST: "n8n.your-domain.com"
   N8N_PORT: "5678"
   N8N_PROTOCOL: "https"
-  WEBHOOK_URL: "https://n8n.tu-dominio.com/"
+  WEBHOOK_URL: "https://n8n.your-domain.com/"
   EXECUTIONS_MODE: "queue"
   QUEUE_BULL_REDIS_HOST: "redis-svc"
   QUEUE_BULL_REDIS_PORT: "6379"
@@ -693,7 +693,7 @@ data:
   DB_POSTGRESDB_HOST: "postgres-svc"
   DB_POSTGRESDB_PORT: "5432"
   DB_POSTGRESDB_DATABASE: "n8n"
-  GENERIC_TIMEZONE: "America/Mexico_City"
+  GENERIC_TIMEZONE: "UTC"
 ---
 apiVersion: v1
 kind: Secret
@@ -899,10 +899,10 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - n8n.tu-dominio.com
+        - n8n.your-domain.com
       secretName: n8n-tls
   rules:
-    - host: n8n.tu-dominio.com
+    - host: n8n.your-domain.com
       http:
         paths:
           - path: /webhook
@@ -979,7 +979,7 @@ spec:
             storage: 20Gi
 \`\`\`
 
-### Comandos K8s
+### K8s Commands
 
 \`\`\`bash
 kubectl apply -f k8s/
@@ -990,18 +990,18 @@ kubectl top pods -n n8n
 kubectl describe hpa n8n-worker-hpa -n n8n
 \`\`\`
 
-### Tips de Kubernetes
+### Kubernetes Tips
 
-- **Usa resource limits** siempre para evitar que un pod consuma todos los recursos
-- **Configura probes** (readiness + liveness) para health checking
-- **Usa StatefulSets** para PostgreSQL y Redis (persistent storage)
-- **HPA con stabilization window** evita scaling oscilante
-- **Usa PodDisruptionBudgets** para mantener disponibilidad durante updates
-- **Configura NetworkPolicies** para aislar trafico entre componentes`,
+- **Always use resource limits** so a single pod cannot consume all resources
+- **Configure probes** (readiness + liveness) for health checking
+- **Use StatefulSets** for PostgreSQL and Redis (persistent storage)
+- **HPA with a stabilization window** avoids oscillating scaling
+- **Use PodDisruptionBudgets** to keep availability during updates
+- **Configure NetworkPolicies** to isolate traffic between components`,
       quiz: [
         {
           id: "q-06-03-1",
-          question: "Que recurso de K8s escala automaticamente el numero de pods?",
+          question: "Which K8s resource automatically scales the number of pods?",
           options: [
             "Deployment",
             "ReplicaSet",
@@ -1009,11 +1009,11 @@ kubectl describe hpa n8n-worker-hpa -n n8n
             "StatefulSet"
           ],
           correctIndex: 2,
-          explanation: "HorizontalPodAutoscaler (HPA) ajusta automaticamente el numero de replicas de un Deployment basandose en metricas como CPU y memoria."
+          explanation: "HorizontalPodAutoscaler (HPA) automatically adjusts the number of replicas of a Deployment based on metrics such as CPU and memory."
         },
         {
           id: "q-06-03-2",
-          question: "Que tipo de recurso K8s se usa para PostgreSQL con almacenamiento persistente?",
+          question: "Which type of K8s resource is used for PostgreSQL with persistent storage?",
           options: [
             "Deployment",
             "DaemonSet",
@@ -1021,11 +1021,11 @@ kubectl describe hpa n8n-worker-hpa -n n8n
             "Job"
           ],
           correctIndex: 2,
-          explanation: "StatefulSet es ideal para bases de datos como PostgreSQL porque garantiza almacenamiento persistente y nombres de pods estables."
+          explanation: "StatefulSet is ideal for databases such as PostgreSQL because it guarantees persistent storage and stable pod names."
         },
         {
           id: "q-06-03-3",
-          question: "Que probe de K8s verifica que un pod esta listo para recibir trafico?",
+          question: "Which K8s probe checks that a pod is ready to receive traffic?",
           options: [
             "livenessProbe",
             "readinessProbe",
@@ -1033,33 +1033,33 @@ kubectl describe hpa n8n-worker-hpa -n n8n
             "healthProbe"
           ],
           correctIndex: 1,
-          explanation: "readinessProbe verifica que el pod esta listo para recibir trafico. Si falla, K8s deja de enviar peticiones al pod hasta que se recupere."
+          explanation: "readinessProbe checks that the pod is ready to receive traffic. If it fails, K8s stops sending requests to the pod until it recovers."
         }
       ]
     },
     {
       id: "les-06-04",
-      moduleSlug: "escalabilidad-seguridad",
+      moduleSlug: "scalability-security",
       slug: "security-hardening",
       title: "Security Hardening",
-      description: "Fortalece la seguridad de N8N: autenticacion, politicas de red, gestion de secretos, audit logging y mejores practicas.",
+      description: "Strengthen N8N security: authentication, network policies, secret management, audit logging and best practices.",
       estimatedMinutes: 22,
       content: `## Security Hardening
 
-La seguridad en N8N es critica porque maneja datos sensibles, credenciales de APIs y logica de negocio. Un N8N comprometido puede exponer toda tu infraestructura.
+Security in N8N is critical because it handles sensitive data, API credentials and business logic. A compromised N8N can expose your entire infrastructure.
 
-### Autenticacion y acceso
+### Authentication and access
 
 #### User Management
 
-N8N soporta multiples metodos de autenticacion:
+N8N supports multiple authentication methods:
 
 \`\`\`yaml
 environment:
   - N8N_USER_MANAGEMENT_JWT_SECRET=super-secret-jwt-key
   - N8N_USER_MANAGEMENT_SMTP_HOST=smtp.gmail.com
   - N8N_USER_MANAGEMENT_SMTP_PORT=587
-  - N8N_USER_MANAGEMENT_SMTP_USER=n8n@tuempresa.com
+  - N8N_USER_MANAGEMENT_SMTP_USER=n8n@yourcompany.com
   - N8N_USER_MANAGEMENT_SMTP_PASS=smtp-password
 \`\`\`
 
@@ -1068,15 +1068,15 @@ environment:
 \`\`\`yaml
 environment:
   - N8N_USER_MANAGEMENT_AUTHENTICATION_METHOD=ldap
-  - N8N_USER_MANAGEMENT_LDAP_URL=ldap://ldap.empresa.com:389
-  - N8N_USER_MANAGEMENT_LDAP_BASE_DN=dc=empresa,dc=com
-  - N8N_USER_MANAGEMENT_LDAP_BIND_DN=cn=admin,dc=empresa,dc=com
+  - N8N_USER_MANAGEMENT_LDAP_URL=ldap://ldap.company.com:389
+  - N8N_USER_MANAGEMENT_LDAP_BASE_DN=dc=company,dc=com
+  - N8N_USER_MANAGEMENT_LDAP_BIND_DN=cn=admin,dc=company,dc=com
   - N8N_USER_MANAGEMENT_LDAP_BIND_PASSWORD=ldap-password
 \`\`\`
 
-### Gestion de secretos
+### Secret management
 
-#### Nunca hardcodees secretos en workflows
+#### Never hardcode secrets in workflows
 
 \`\`\`javascript
 const apiKey = $env.STRIPE_API_KEY;
@@ -1084,14 +1084,14 @@ const webhookSecret = $env.WEBHOOK_SECRET;
 const dbPassword = $env.DB_PASSWORD;
 \`\`\`
 
-#### Usa N8N Secrets (v1.42+)
+#### Use N8N Secrets (v1.42+)
 
 \`\`\`javascript
 const secret = $secrets.stripe.apiKey;
 const token = $secrets.github.token;
 \`\`\`
 
-#### Variables de entorno en Docker
+#### Environment variables in Docker
 
 \`\`\`yaml
 services:
@@ -1102,7 +1102,7 @@ services:
       - N8N_ENCRYPTION_KEY=\${N8N_ENCRYPTION_KEY}
 \`\`\`
 
-#### Archivo .env.production
+#### The .env.production file
 
 \`\`\`bash
 N8N_ENCRYPTION_KEY=random-256-bit-key
@@ -1173,7 +1173,7 @@ ufw enable
 
 ### Audit Logging
 
-Configura logging detallado de todas las acciones:
+Configure detailed logging of every action:
 
 \`\`\`yaml
 environment:
@@ -1184,19 +1184,19 @@ environment:
   - N8N_LOG_FILE_MAX_COUNT=10
 \`\`\`
 
-#### Workflow de audit log
+#### Audit log workflow
 
 \`\`\`
-[Schedule: cada 5min]
-  -> [PostgreSQL: Obtener ejecuciones recientes]
-  -> [Code: Filtrar acciones sensibles]
-  -> [Supabase: Guardar audit log]
-  -> [IF: accion sospechosa] -> [Slack: Alertar al equipo de seguridad]
+[Schedule: every 5min]
+  -> [PostgreSQL: Get recent executions]
+  -> [Code: Filter sensitive actions]
+  -> [Supabase: Save audit log]
+  -> [IF: suspicious action] -> [Slack: Alert the security team]
 \`\`\`
 
-### Proteccion de Webhooks
+### Webhook Protection
 
-#### Verificacion HMAC
+#### HMAC Verification
 
 \`\`\`javascript
 const crypto = require('crypto');
@@ -1213,7 +1213,7 @@ if (signature !== expected) {
 return $input.all();
 \`\`\`
 
-#### Rate Limiting por IP
+#### Rate Limiting by IP
 
 \`\`\`javascript
 const ip = $input.first().json.headers['x-forwarded-for'];
@@ -1233,43 +1233,43 @@ if (parseInt(count.body || '0') >= MAX) {
 return $input.all();
 \`\`\`
 
-### Seguridad de credenciales en N8N
+### Credential security in N8N
 
-- **Encripta credenciales**: N8N encripta credenciales con \`N8N_ENCRYPTION_KEY\`
-- **Rota la encryption key** periodicamente
-- **Limita acceso** a credenciales por usuario y workflow
-- **Audita uso** de credenciales regularmente
-- **Usa credenciales separadas** para desarrollo y produccion
+- **Encrypt credentials**: N8N encrypts credentials with \`N8N_ENCRYPTION_KEY\`
+- **Rotate the encryption key** periodically
+- **Limit access** to credentials per user and per workflow
+- **Audit the usage** of credentials regularly
+- **Use separate credentials** for development and production
 
-### Checklist de seguridad
+### Security checklist
 
-- [ ] N8N accesible solo por HTTPS
-- [ ] Autenticacion de usuarios configurada
-- [ ] \`N8N_ENCRYPTION_KEY\` generada aleatoriamente
-- [ ] Credenciales en variables de entorno o secrets manager
-- [ ] Firewall configurado (solo 80, 443)
-- [ ] Network policies en Kubernetes
-- [ ] Audit logging activo
-- [ ] Backups encriptados
-- [ ] Actualizaciones de N8N al dia
-- [ ] Webhooks protegidos con HMAC
-- [ ] Rate limiting implementado
-- [ ] Acceso a PostgreSQL y Redis restringido por red
-- [ ] Ejecucion de workflows sandboxed (no acceso a filesystem del host)
+- [ ] N8N reachable only over HTTPS
+- [ ] User authentication configured
+- [ ] \`N8N_ENCRYPTION_KEY\` generated randomly
+- [ ] Credentials in environment variables or a secrets manager
+- [ ] Firewall configured (only 80, 443)
+- [ ] Network policies in Kubernetes
+- [ ] Audit logging enabled
+- [ ] Encrypted backups
+- [ ] N8N updates up to date
+- [ ] Webhooks protected with HMAC
+- [ ] Rate limiting implemented
+- [ ] Network-restricted access to PostgreSQL and Redis
+- [ ] Sandboxed workflow execution (no access to the host filesystem)
 
-### Mejores practicas
+### Best practices
 
-- **Actualiza N8N** regularmente para parches de seguridad
-- **Usa HTTPS** siempre, incluso en desarrollo
-- **Principio de menor privilegio**: Cada credencial solo tiene los permisos necesarios
-- **Separa ambientes**: Dev, staging y produccion con credenciales diferentes
-- **Monitorea accesos**: Loggea todos los logins y cambios de configuracion
-- **Backup encriptado**: Los backups contienen credenciales; encripta siempre
-- **Revision periodica**: Audita workflows y credenciales cada trimestre`,
+- **Update N8N** regularly for security patches
+- **Always use HTTPS**, even in development
+- **Principle of least privilege**: Each credential has only the permissions it needs
+- **Separate environments**: Dev, staging and production with different credentials
+- **Monitor access**: Log all logins and configuration changes
+- **Encrypted backups**: Backups contain credentials; always encrypt them
+- **Regular review**: Audit workflows and credentials every quarter`,
       quiz: [
         {
           id: "q-06-04-1",
-          question: "Que variable de entorno encripta las credenciales almacenadas en N8N?",
+          question: "Which environment variable encrypts the credentials stored in N8N?",
           options: [
             "N8N_SECRET_KEY",
             "N8N_ENCRYPTION_KEY",
@@ -1277,31 +1277,31 @@ return $input.all();
             "N8N_SECURITY_KEY"
           ],
           correctIndex: 1,
-          explanation: "N8N_ENCRYPTION_KEY es la clave que N8N usa para encriptar todas las credenciales almacenadas. Debe ser aleatoria y mantenerse segura."
+          explanation: "N8N_ENCRYPTION_KEY is the key N8N uses to encrypt all stored credentials. It must be random and kept secure."
         },
         {
           id: "q-06-04-2",
-          question: "Que metodo se usa para verificar la autenticidad de un webhook entrante?",
+          question: "Which method is used to verify the authenticity of an incoming webhook?",
           options: [
-            "API Key en query string",
-            "Verificacion HMAC de la firma del body",
-            "IP whitelist unicamente",
+            "API Key in the query string",
+            "HMAC verification of the body signature",
+            "IP whitelist only",
             "Basic Auth"
           ],
           correctIndex: 1,
-          explanation: "La verificacion HMAC calcula un hash del body con un secreto compartido y lo compara con la firma enviada en el header, verificando autenticidad e integridad."
+          explanation: "HMAC verification computes a hash of the body with a shared secret and compares it with the signature sent in the header, verifying authenticity and integrity."
         },
         {
           id: "q-06-04-3",
-          question: "Por que no se debe permitir acceso directo al puerto 5678 en produccion?",
+          question: "Why should direct access to port 5678 not be allowed in production?",
           options: [
-            "Porque es un puerto reservado",
-            "Porque N8N no funciona en ese puerto",
-            "Porque debe estar detras de un reverse proxy con HTTPS y autenticacion",
-            "Porque causa conflictos con otros servicios"
+            "Because it is a reserved port",
+            "Because N8N does not work on that port",
+            "Because it must sit behind a reverse proxy with HTTPS and authentication",
+            "Because it conflicts with other services"
           ],
           correctIndex: 2,
-          explanation: "El puerto 5678 debe estar detras de un reverse proxy (nginx) que proporciona HTTPS, autenticacion, rate limiting y proteccion contra ataques directos."
+          explanation: "Port 5678 must sit behind a reverse proxy (nginx) that provides HTTPS, authentication, rate limiting and protection against direct attacks."
         }
       ]
     }

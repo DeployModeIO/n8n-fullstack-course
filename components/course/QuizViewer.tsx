@@ -84,16 +84,16 @@ export default function QuizViewer({ questions, lessonId }: QuizViewerProps) {
             <XCircle size={56} className="mb-4 text-red-400" />
           )}
           <h3 className="text-2xl font-bold text-white/90">
-            {passed ? "¡Aprobado!" : "No aprobado"}
+            {passed ? "Passed!" : "Not passed"}
           </h3>
           <p className="mt-2 text-lg text-white/60">
-            Puntuación: <span className="font-bold text-white/90">{score}%</span>
+            Score: <span className="font-bold text-white/90">{score}%</span>
           </p>
           <div className="mt-4 w-full max-w-xs">
             <ProgressBar value={score} showLabel />
           </div>
           <p className="mt-3 text-xs text-white/40">
-            Se requiere 70% para aprobar
+            70% is required to pass
           </p>
           {!passed && (
             <button
@@ -105,11 +105,11 @@ export default function QuizViewer({ questions, lessonId }: QuizViewerProps) {
               )}
             >
               <RotateCcw size={16} />
-              Reintentar
+              Retry
             </button>
           )}
           {saving && (
-            <p className="mt-3 text-xs text-white/30">Guardando resultado...</p>
+            <p className="mt-3 text-xs text-white/30">Saving result...</p>
           )}
         </div>
       </GlassCard>
@@ -120,10 +120,10 @@ export default function QuizViewer({ questions, lessonId }: QuizViewerProps) {
     <GlassCard className="mt-6" padding="lg">
       <div className="mb-4 flex items-center justify-between">
         <span className="text-xs font-medium text-white/50">
-          Pregunta {currentIndex + 1} de {questions.length}
+          Question {currentIndex + 1} of {questions.length}
         </span>
         <span className="text-xs text-white/30">
-          {Object.keys(answers).length}/{questions.length} respondidas
+          {Object.keys(answers).length}/{questions.length} answered
         </span>
       </div>
 
@@ -173,7 +173,7 @@ export default function QuizViewer({ questions, lessonId }: QuizViewerProps) {
           )}
         >
           <ChevronLeft size={16} />
-          Anterior
+          Previous
         </button>
 
         {currentIndex === questions.length - 1 ? (
@@ -187,7 +187,7 @@ export default function QuizViewer({ questions, lessonId }: QuizViewerProps) {
               "disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0"
             )}
           >
-            Enviar Respuestas
+            Submit Answers
           </button>
         ) : (
           <button
@@ -200,7 +200,7 @@ export default function QuizViewer({ questions, lessonId }: QuizViewerProps) {
               "hover:bg-white/10"
             )}
           >
-            Siguiente
+            Next
             <ChevronRight size={16} />
           </button>
         )}

@@ -34,18 +34,17 @@ export default function CookieConsent() {
           <Cookie className="mt-0.5 h-5 w-5 text-[#FF6D5A]" />
           <div className="flex-1">
             <p className="text-sm font-semibold text-gray-900 dark:text-white">
-              Usamos cookies
+              We use cookies
             </p>
             <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
-              Utilizamos cookies necesarias para el funcionamiento y, con tu
-              consentimiento, cookies de analítica para mejorar el curso. Lee
-              nuestra{' '}
+              We use necessary cookies to make the site work and, with your
+              consent, analytics cookies to improve the course. Read our{' '}
               <Link href="/cookies" className="text-[#1E90FF] underline">
-                Política de Cookies
+                Cookie Policy
               </Link>{' '}
-              y{' '}
+              and{' '}
               <Link href="/privacy" className="text-[#1E90FF] underline">
-                Privacidad
+                Privacy
               </Link>
               .
             </p>
@@ -54,13 +53,13 @@ export default function CookieConsent() {
               <div className="mt-3 space-y-2 rounded-xl border border-gray-200/50 p-3 text-sm dark:border-white/10">
                 <label className="flex items-center justify-between">
                   <span className="text-gray-700 dark:text-white/80">
-                    Necesarias (siempre activas)
+                    Necessary (always active)
                   </span>
-                  <span className="text-xs text-gray-400">Obligatorio</span>
+                  <span className="text-xs text-gray-400">Required</span>
                 </label>
                 <label className="flex items-center justify-between">
                   <span className="text-gray-700 dark:text-white/80">
-                    Analítica
+                    Analytics
                   </span>
                   <input
                     type="checkbox"
@@ -78,19 +77,19 @@ export default function CookieConsent() {
             onClick={() => persist(analytics ? 'all' : 'necessary')}
             className="flex items-center gap-1 rounded-xl bg-gradient-to-r from-[#FF6D5A] to-[#EA4B71] px-4 py-2 text-sm font-medium text-white"
           >
-            <Check size={14} /> Aceptar
+            <Check size={14} /> Accept
           </button>
           <button
             onClick={() => persist('necessary')}
             className="flex items-center gap-1 rounded-xl border border-gray-300/50 px-4 py-2 text-sm text-gray-700 dark:border-white/15 dark:text-white/80"
           >
-            <X size={14} /> Rechazar
+            <X size={14} /> Reject
           </button>
           <button
             onClick={() => setShowPrefs((s) => !s)}
             className="text-sm text-[#1E90FF] underline"
           >
-            Configurar
+            Configure
           </button>
         </div>
       </div>

@@ -35,7 +35,7 @@ export default function ContentProtection({
     };
   }, []);
 
-  const label = watermarkLabel || user?.email || 'Curso N8N';
+  const label = watermarkLabel || user?.email || 'N8N Course';
 
   return (
     <div ref={ref} className="no-select relative">

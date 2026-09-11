@@ -31,14 +31,14 @@ export async function POST(request: NextRequest) {
 
   if (!email || !password) {
     return NextResponse.json(
-      { error: 'email y password son requeridos' },
+      { error: 'email and password are required' },
       { status: 400 }
     );
   }
 
   if (password.length < 6) {
     return NextResponse.json(
-      { error: 'La contraseña debe tener al menos 6 caracteres' },
+      { error: 'Password must be at least 6 characters long' },
       { status: 400 }
     );
   }

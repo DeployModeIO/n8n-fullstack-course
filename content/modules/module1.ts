@@ -2,114 +2,114 @@ import { Module } from "../../types/course";
 
 export const module1: Module = {
   id: "mod-01",
-  slug: "fundamentos-infraestructura",
-  title: "Fundamentos e Infraestructura",
-  description: "Aprende los conceptos básicos de N8N y cómo desplegarlo en diferentes entornos, desde local hasta producción.",
+  slug: "infrastructure-fundamentals",
+  title: "Fundamentals and Infrastructure",
+  description: "Learn the core concepts of N8N and how to deploy it in different environments, from local to production.",
   icon: "Server",
   sortOrder: 1,
   lessons: [
     {
       id: "les-01-01",
-      moduleSlug: "fundamentos-infraestructura",
-      slug: "introduccion-n8n",
-      title: "Introducción a N8N",
-      description: "Descubre qué es N8N y por qué es la herramienta líder en automatización de workflows.",
+      moduleSlug: "infrastructure-fundamentals",
+      slug: "intro-to-n8n",
+      title: "Introduction to N8N",
+      description: "Discover what N8N is and why it is a leading tool for workflow automation.",
       estimatedMinutes: 15,
-      content: `## Introducción a N8N
+      content: `## Introduction to N8N
 
-### ¿Qué es N8N?
+### What is N8N?
 
-N8N es una plataforma de automatización de workflows **open-source** que te permite conectar diferentes aplicaciones y servicios para automatizar tareas repetitivas.
+N8N is an **open-source** workflow automation platform that lets you connect different applications and services to automate repetitive tasks.
 
-### Características principales:
+### Key features:
 
-- **Open Source**: Código abierto y auto-hospedable
-- **Visual**: Editor visual de workflows con nodos arrastrables
-- **Flexible**: Más de 300 integraciones nativas
-- **Extensible**: Puedes crear nodos personalizados
-- **Escalable**: Desde uso personal hasta enterprise
+- **Open Source**: open code and self-hostable
+- **Visual**: visual workflow editor with drag-and-drop nodes
+- **Flexible**: more than 300 native integrations
+- **Extensible**: you can build custom nodes
+- **Scalable**: from personal use to enterprise
 
-### ¿Por qué N8N?
+### Why N8N?
 
-#### Ventajas sobre otras herramientas:
+#### Advantages over other tools:
 
-1. **Control total**: Tú controlas tus datos y la infraestructura
-2. **Sin límites artificiales**: No hay límites en ejecuciones o nodos
-3. **Personalizable**: Adapta la herramienta a tus necesidades
-4. **Comunidad activa**: Gran comunidad y documentación extensa
-5. **Costo-efectivo**: Gratis para uso personal, licencias accesibles para empresas
+1. **Full control**: you control your data and your infrastructure
+2. **No artificial limits**: no caps on executions or nodes
+3. **Customizable**: adapt the tool to your needs
+4. **Active community**: large community and extensive documentation
+5. **Cost-effective**: free for personal use, affordable licenses for companies
 
-### Casos de uso comunes
+### Common use cases
 
-#### Automatización de marketing:
-- Sincronizar leads entre CRM y email marketing
-- Publicar contenido en redes sociales automáticamente
-- Generar reportes de campañas
+#### Marketing automation:
+- Sync leads between the CRM and email marketing
+- Publish content on social media automatically
+- Generate campaign reports
 
-#### Operaciones:
-- Procesar pedidos automáticamente
-- Sincronizar inventario entre plataformas
-- Notificaciones de eventos importantes
+#### Operations:
+- Process orders automatically
+- Sync inventory across platforms
+- Send notifications for important events
 
-#### Desarrollo:
+#### Development:
 - CI/CD pipelines
-- Monitoreo de aplicaciones
-- Backup automático de bases de datos
+- Application monitoring
+- Automatic database backups
 
-### Tu primer workflow
+### Your first workflow
 
-En la próxima lección, aprenderás a instalar N8N y crear tu primer workflow automatizado.
+In the next lesson you will learn how to install N8N and create your first automated workflow.
 
-#### Recursos adicionales:
-- [Documentación oficial de N8N](https://docs.n8n.io)
-- [Comunidad de N8N](https://community.n8n.io)
-- [GitHub de N8N](https://github.com/n8n-io/n8n)
+#### Additional resources:
+- [Official N8N documentation](https://docs.n8n.io)
+- [N8N community](https://community.n8n.io)
+- [N8N on GitHub](https://github.com/n8n-io/n8n)
 `,
       labs: [
         {
           id: "lab-01-01",
-          title: "Mapa de valor de N8N para tu empresa",
+          title: "N8N value map for your company",
           objective:
-            "Identificar 3 procesos repetitivos en tu día a día que podrían automatizarse con N8N.",
+            "Identify 3 repetitive processes in your day-to-day that could be automated with N8N.",
           instructions:
-            "1. Lista 5 tareas manuales que realizas cada semana.\n2. Clasifícalas por volumen y dolor (impacto).\n3. Elige las 3 mejor candidatas y describe la entrada, el paso y la salida de cada una.\n4. Señala qué integración nativa de N8N usarías.",
+            "1. List 5 manual tasks you perform every week.\n2. Classify them by volume and pain (impact).\n3. Pick the 3 best candidates and describe the input, the step and the output of each.\n4. State which native N8N integration you would use.",
           deliverable:
-            "Documento de una página con el mapa de automatizaciones priorizado.",
+            "A one-page document with the prioritized automation map.",
           difficulty: "easy",
         },
         {
           id: "lab-01-02",
-          title: "Instala N8N y exponlo de forma segura",
+          title: "Install N8N and expose it safely",
           objective:
-            "Levantar una instancia local de N8N y documentar la configuración de seguridad básica.",
+            "Bring up a local N8N instance and document the basic security configuration.",
           instructions:
-            "1. Ejecuta N8N con Docker o npm.\n2. Configura una variable de entorno para el modo de ejecución (OWN).\n3. Habilita HTTPS con un proxy inverso (ej. Caddy).\n4. Documenta los puertos expuestos y justifica por qué no deben quedar abiertos.",
+            "1. Run N8N with Docker or npm.\n2. Set an environment variable for the execution mode (OWN).\n3. Enable HTTPS with a reverse proxy (e.g. Caddy).\n4. Document the exposed ports and justify why they should not stay open.",
           deliverable:
-            "Captura de la instancia corriendo + diagrama de la capa de proxy.",
+            "Screenshot of the running instance + diagram of the proxy layer.",
           difficulty: "medium",
         },
       ],
     },
     {
       id: "les-01-02",
-      moduleSlug: "fundamentos-infraestructura",
-      slug: "instalacion-local",
-      title: "Instalación Local",
-      description: "Aprende a instalar N8N en tu máquina local usando Docker o npm.",
+      moduleSlug: "infrastructure-fundamentals",
+      slug: "local-installation",
+      title: "Local Installation",
+      description: "Learn how to install N8N on your local machine using Docker or npm.",
       estimatedMinutes: 20,
-      content: `## Instalación Local de N8N
+      content: `## Local Installation of N8N
 
-### Métodos de instalación
+### Installation methods
 
-#### Opción 1: Docker (Recomendado)
+#### Option 1: Docker (recommended)
 
-Docker es la forma más fácil y consistente de ejecutar N8N.
+Docker is the easiest and most consistent way to run N8N.
 
-**Requisitos:**
-- Docker instalado en tu sistema
-- Docker Compose (opcional pero recomendado)
+**Requirements:**
+- Docker installed on your system
+- Docker Compose (optional but recommended)
 
-**Instalación con Docker:**
+**Installing with Docker:**
 
 \`\`\`bash
 docker run -it --rm \\
@@ -119,9 +119,9 @@ docker run -it --rm \\
   n8nio/n8n
 \`\`\`
 
-**Con Docker Compose:**
+**With Docker Compose:**
 
-Crea un archivo \`docker-compose.yml\`:
+Create a \`docker-compose.yml\` file:
 
 \`\`\`yaml
 version: '3.8'
@@ -135,110 +135,110 @@ services:
     environment:
       - N8N_BASIC_AUTH_ACTIVE=true
       - N8N_BASIC_AUTH_USER=admin
-      - N8N_BASIC_AUTH_PASSWORD=tu_password_seguro
+      - N8N_BASIC_AUTH_PASSWORD=your_secure_password
 \`\`\`
 
-Ejecuta:
+Run:
 \`\`\`bash
 docker-compose up -d
 \`\`\`
 
-#### Opción 2: npm
+#### Option 2: npm
 
-Si prefieres instalar N8N globalmente:
+If you prefer to install N8N globally:
 
 \`\`\`bash
 npm install -g n8n
 n8n start
 \`\`\`
 
-#### Opción 3: npx (sin instalación)
+#### Option 3: npx (no installation)
 
 \`\`\`bash
 npx n8n
 \`\`\`
 
-### Acceder a N8N
+### Accessing N8N
 
-Una vez instalado, abre tu navegador y ve a:
+Once installed, open your browser and go to:
 \`\`\`
 http://localhost:5678
 \`\`\`
 
-### Configuración inicial
+### Initial setup
 
-1. **Crear cuenta de administrador**
-2. **Configurar zona horaria**
-3. **Explorar la interfaz**
+1. **Create the administrator account**
+2. **Set the time zone**
+3. **Explore the interface**
 
-### Solución de problemas
+### Troubleshooting
 
-#### Puerto ocupado:
-Si el puerto 5678 está en uso, cambia el mapeo:
+#### Port in use:
+If port 5678 is already in use, change the mapping:
 \`\`\`bash
 docker run -p 8080:5678 n8nio/n8n
 \`\`\`
 
-#### Permisos de volumen:
+#### Volume permissions:
 \`\`\`bash
 chmod -R 755 ~/.n8n
 \`\`\`
 
-### Próximos pasos
+### Next steps
 
-En la siguiente lección aprenderás a configurar N8N para producción.
+In the next lesson you will learn how to configure N8N for production.
 `,
     },
     {
       id: "les-01-03",
-      moduleSlug: "fundamentos-infraestructura",
-      slug: "configuracion-produccion",
-      title: "Configuración para Producción",
-      description: "Configura N8N para entornos de producción con seguridad y escalabilidad.",
+      moduleSlug: "infrastructure-fundamentals",
+      slug: "production-setup",
+      title: "Production Setup",
+      description: "Configure N8N for production environments with security and scalability in mind.",
       estimatedMinutes: 25,
-      content: `## Configuración para Producción
+      content: `## Production Setup
 
-### Consideraciones importantes
+### Important considerations
 
-Antes de desplegar N8N en producción, considera:
+Before deploying N8N to production, consider:
 
-1. **Seguridad**: Autenticación, HTTPS, firewalls
-2. **Persistencia**: Base de datos externa (PostgreSQL)
-3. **Escalabilidad**: Workers múltiples para alta carga
-4. **Monitoreo**: Logs y métricas
-5. **Backup**: Estrategia de respaldo de datos
+1. **Security**: authentication, HTTPS, firewalls
+2. **Persistence**: external database (PostgreSQL)
+3. **Scalability**: multiple workers for heavy load
+4. **Monitoring**: logs and metrics
+5. **Backups**: data backup strategy
 
-### Variables de entorno esenciales
+### Essential environment variables
 
-#### Base de datos:
+#### Database:
 \`\`\`bash
 DB_TYPE=postgresdb
 DB_POSTGRESDB_HOST=localhost
 DB_POSTGRESDB_PORT=5432
 DB_POSTGRESDB_DATABASE=n8n
 DB_POSTGRESDB_USER=n8n_user
-DB_POSTGRESDB_PASSWORD=tu_password_seguro
+DB_POSTGRESDB_PASSWORD=your_secure_password
 \`\`\`
 
-#### Seguridad:
+#### Security:
 \`\`\`bash
 N8N_BASIC_AUTH_ACTIVE=true
 N8N_BASIC_AUTH_USER=admin
-N8N_BASIC_AUTH_PASSWORD=password_seguro
-N8N_HOST=tu-dominio.com
+N8N_BASIC_AUTH_PASSWORD=secure_password
+N8N_HOST=your-domain.com
 N8N_PORT=5678
 N8N_PROTOCOL=https
-WEBHOOK_URL=https://tu-dominio.com/
+WEBHOOK_URL=https://your-domain.com/
 \`\`\`
 
-#### Ejecución:
+#### Execution:
 \`\`\`bash
 EXECUTIONS_MODE=queue
 QUEUE_BULL_REDIS_HOST=localhost
 QUEUE_BULL_REDIS_PORT=6379
 \`\`\`
 
-### Docker Compose para producción
+### Docker Compose for production
 
 \`\`\`yaml
 version: '3.8'
@@ -247,7 +247,7 @@ services:
     image: postgres:13
     environment:
       POSTGRES_USER: n8n_user
-      POSTGRES_PASSWORD: password_seguro
+      POSTGRES_PASSWORD: secure_password
       POSTGRES_DB: n8n
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -267,12 +267,12 @@ services:
       - DB_POSTGRESDB_PORT=5432
       - DB_POSTGRESDB_DATABASE=n8n
       - DB_POSTGRESDB_USER=n8n_user
-      - DB_POSTGRESDB_PASSWORD=password_seguro
+      - DB_POSTGRESDB_PASSWORD=secure_password
       - EXECUTIONS_MODE=queue
       - QUEUE_BULL_REDIS_HOST=redis
-      - N8N_HOST=tu-dominio.com
+      - N8N_HOST=your-domain.com
       - N8N_PROTOCOL=https
-      - WEBHOOK_URL=https://tu-dominio.com/
+      - WEBHOOK_URL=https://your-domain.com/
     depends_on:
       - postgres
       - redis
@@ -285,18 +285,18 @@ volumes:
   n8n_data:
 \`\`\`
 
-### Nginx como proxy reverso
+### Nginx as a reverse proxy
 
 \`\`\`nginx
 server {
     listen 80;
-    server_name tu-dominio.com;
+    server_name your-domain.com;
     return 301 https://$server_name$request_uri;
 }
 
 server {
     listen 443 ssl;
-    server_name tu-dominio.com;
+    server_name your-domain.com;
 
     ssl_certificate /path/to/cert.pem;
     ssl_certificate_key /path/to/key.pem;
@@ -312,247 +312,247 @@ server {
 }
 \`\`\`
 
-### SSL con Let's Encrypt
+### SSL with Let's Encrypt
 
 \`\`\`bash
-certbot --nginx -d tu-dominio.com
+certbot --nginx -d your-domain.com
 \`\`\`
 
-### Monitoreo y logs
+### Monitoring and logs
 
-#### Ver logs en tiempo real:
+#### Tail the logs:
 \`\`\`bash
 docker-compose logs -f n8n
 \`\`\`
 
-#### Métricas con Prometheus:
-Habilita el endpoint de métricas:
+#### Metrics with Prometheus:
+Enable the metrics endpoint:
 \`\`\`bash
 N8N_METRICS=true
 \`\`\`
 
-### Backup automático
+### Automatic backup
 
-Script de backup diario:
+Daily backup script:
 \`\`\`bash
 #!/bin/bash
 docker exec postgres pg_dump -U n8n_user n8n > backup_$(date +%Y%m%d).sql
 \`\`\`
 
-### Checklist de producción
+### Production checklist
 
-- [ ] Base de datos PostgreSQL configurada
-- [ ] Redis para cola de ejecución
-- [ ] HTTPS habilitado
-- [ ] Autenticación configurada
-- [ ] Variables de entorno seguras
-- [ ] Backup automático configurado
-- [ ] Monitoreo habilitado
-- [ ] Firewall configurado
-- [ ] Logs centralizados
+- [ ] PostgreSQL database configured
+- [ ] Redis for the execution queue
+- [ ] HTTPS enabled
+- [ ] Authentication configured
+- [ ] Secure environment variables
+- [ ] Automatic backups configured
+- [ ] Monitoring enabled
+- [ ] Firewall configured
+- [ ] Centralized logs
 `,
     },
     {
       id: "les-01-04",
-      moduleSlug: "fundamentos-infraestructura",
-      slug: "interfaz-n8n",
-      title: "Conociendo la Interfaz",
-      description: "Explora la interfaz de N8N y aprende a navegar por sus diferentes secciones.",
+      moduleSlug: "infrastructure-fundamentals",
+      slug: "n8n-interface",
+      title: "Getting to Know the Interface",
+      description: "Explore the N8N interface and learn how to navigate its different sections.",
       estimatedMinutes: 20,
-      content: `## Conociendo la Interfaz de N8N
+      content: `## Getting to Know the N8N Interface
 
-### Vista general
+### Overview
 
-La interfaz de N8N se divide en varias secciones principales:
+The N8N interface is divided into several main sections:
 
-#### 1. Dashboard principal
-- Lista de workflows
-- Botón para crear nuevo workflow
-- Filtros y búsqueda
-- Estadísticas de ejecución
+#### 1. Main dashboard
+- List of workflows
+- Button to create a new workflow
+- Filters and search
+- Execution statistics
 
-#### 2. Editor de workflows
-- Canvas principal para diseñar workflows
-- Panel de nodos (izquierda)
-- Panel de configuración (derecha)
-- Barra de herramientas superior
+#### 2. Workflow editor
+- Main canvas for designing workflows
+- Node panel (left)
+- Configuration panel (right)
+- Top toolbar
 
-#### 3. Ejecuciones
-- Historial de ejecuciones
-- Logs detallados
-- Reintentos manuales
+#### 3. Executions
+- Execution history
+- Detailed logs
+- Manual retries
 
-#### 4. Credenciales
-- Gestión de credenciales de APIs
-- Conexiones OAuth
-- Tokens de acceso
+#### 4. Credentials
+- API credential management
+- OAuth connections
+- Access tokens
 
-### El editor de workflows
+### The workflow editor
 
-#### Canvas principal
-El área central donde construyes tu workflow arrastrando y conectando nodos.
+#### Main canvas
+The central area where you build your workflow by dragging and connecting nodes.
 
-#### Panel de nodos
-- **Trigger nodes**: Inician el workflow
-- **Regular nodes**: Procesan datos
-- **Flow nodes**: Controlan el flujo
+#### Node panel
+- **Trigger nodes**: start the workflow
+- **Regular nodes**: process data
+- **Flow nodes**: control the flow
 
-#### Barra de herramientas
-- **Save**: Guardar workflow
-- **Execute**: Ejecutar workflow manualmente
-- **Active**: Activar/desactivar workflow
-- **Settings**: Configuración del workflow
+#### Toolbar
+- **Save**: save the workflow
+- **Execute**: run the workflow manually
+- **Active**: enable/disable the workflow
+- **Settings**: workflow configuration
 
-### Tipos de nodos
+### Node types
 
-#### Trigger nodes (Disparadores)
+#### Trigger nodes
 - Webhook
 - Schedule (Cron)
 - Email triggers
 - Database triggers
 
-#### Action nodes (Acciones)
+#### Action nodes
 - HTTP Request
 - Email
 - Database queries
 - File operations
 
-#### Flow nodes (Control de flujo)
-- IF (condicional)
-- Switch (múltiples caminos)
-- Merge (combinar datos)
-- Wait (esperar)
+#### Flow nodes (flow control)
+- IF (conditional)
+- Switch (multiple paths)
+- Merge (combine data)
+- Wait (pause)
 
-### Navegación rápida
+### Fast navigation
 
-#### Atajos de teclado:
-- \`Ctrl + S\`: Guardar
-- \`Ctrl + Enter\`: Ejecutar
-- \`Ctrl + Z\`: Deshacer
-- \`Ctrl + Y\`: Rehacer
-- \`Delete\`: Eliminar nodo seleccionado
+#### Keyboard shortcuts:
+- \`Ctrl + S\`: save
+- \`Ctrl + Enter\`: execute
+- \`Ctrl + Z\`: undo
+- \`Ctrl + Y\`: redo
+- \`Delete\`: remove the selected node
 
-#### Zoom y navegación:
-- Scroll del mouse: Zoom
-- Click + arrastrar: Mover canvas
-- Doble click en nodo: Editar
+#### Zoom and navigation:
+- Mouse wheel: zoom
+- Click + drag: move the canvas
+- Double click on a node: edit
 
-### Configuración del workflow
+### Workflow configuration
 
-#### Settings importantes:
-- **Name**: Nombre del workflow
-- **Timezone**: Zona horaria para schedules
-- **Error workflow**: Workflow a ejecutar en caso de error
-- **Save execution progress**: Guardar progreso de ejecución
+#### Important settings:
+- **Name**: the workflow name
+- **Timezone**: time zone used by schedules
+- **Error workflow**: workflow to run when an error occurs
+- **Save execution progress**: store execution progress
 
-### Ejecuciones
+### Executions
 
-#### Ver ejecuciones:
-1. Click en "Executions" en el menú
-2. Filtra por workflow, estado o fecha
-3. Click en una ejecución para ver detalles
+#### Viewing executions:
+1. Click "Executions" in the menu
+2. Filter by workflow, status or date
+3. Click an execution to see the details
 
-#### Detalles de ejecución:
+#### Execution details:
 - Input data
 - Output data
-- Tiempo de ejecución
-- Logs completos
-- Errores (si los hay)
+- Execution time
+- Full logs
+- Errors (if any)
 
-### Credenciales
+### Credentials
 
-#### Crear credenciales:
-1. Ve a "Credentials"
-2. Click en "New"
-3. Selecciona el tipo (OAuth2, API Key, etc.)
-4. Completa los campos requeridos
-5. Guarda
+#### Creating credentials:
+1. Go to "Credentials"
+2. Click "New"
+3. Select the type (OAuth2, API Key, etc.)
+4. Fill in the required fields
+5. Save
 
-#### Tipos comunes:
-- **OAuth2**: Para Google, GitHub, etc.
-- **Header Auth**: API keys en headers
-- **Basic Auth**: Usuario y contraseña
-- **Query Auth**: API keys en query params
+#### Common types:
+- **OAuth2**: for Google, GitHub, etc.
+- **Header Auth**: API keys in headers
+- **Basic Auth**: user and password
+- **Query Auth**: API keys in query params
 
-### Tips y trucos
+### Tips and tricks
 
-#### Organización:
-- Usa nombres descriptivos para nodos
-- Agrupa nodos relacionados con notas
-- Usa colores para identificar tipos de nodos
+#### Organization:
+- Use descriptive node names
+- Group related nodes with notes
+- Use colors to identify node types
 
 #### Debugging:
-- Ejecuta nodo por nodo
-- Inspecciona datos en cada paso
-- Usa el nodo "No Operation" para debuggear
+- Execute node by node
+- Inspect the data at each step
+- Use the "No Operation" node while debugging
 
 #### Performance:
-- Evita loops innecesarios
-- Usa batch processing cuando sea posible
-- Limita la cantidad de datos procesados
+- Avoid unnecessary loops
+- Use batch processing when possible
+- Limit the amount of data processed
 
-### Próximos pasos
+### Next steps
 
-Ahora que conoces la interfaz, en la siguiente lección crearás tu primer workflow completo.
+Now that you know the interface, in the next lesson you will build your first complete workflow.
 `,
     },
     {
       id: "les-01-05",
-      moduleSlug: "fundamentos-infraestructura",
-      slug: "primer-workflow",
-      title: "Tu Primer Workflow",
-      description: "Crea tu primer workflow completo: desde un trigger hasta la acción final.",
+      moduleSlug: "infrastructure-fundamentals",
+      slug: "first-workflow",
+      title: "Your First Workflow",
+      description: "Build your first complete workflow: from a trigger to the final action.",
       estimatedMinutes: 30,
-      content: `## Tu Primer Workflow
+      content: `## Your First Workflow
 
-### Objetivo
+### Objective
 
-Crear un workflow que:
-1. Reciba datos de un webhook
-2. Procese la información
-3. Envíe un email de confirmación
+Create a workflow that:
+1. Receives data from a webhook
+2. Processes the information
+3. Sends a confirmation email
 
-### Paso 1: Crear el workflow
+### Step 1: Create the workflow
 
-1. Click en "New Workflow"
-2. Nombra tu workflow: "Mi Primer Workflow"
-3. Guarda con Ctrl + S
+1. Click "New Workflow"
+2. Name your workflow: "My First Workflow"
+3. Save with Ctrl + S
 
-### Paso 2: Agregar trigger
+### Step 2: Add the trigger
 
 #### Webhook node:
-1. Click en el botón "+" para agregar un nodo
-2. Busca "Webhook"
-3. Configura:
+1. Click the "+" button to add a node
+2. Search for "Webhook"
+3. Configure:
    - **HTTP Method**: POST
-   - **Path**: mi-primer-webhook
+   - **Path**: my-first-webhook
    - **Response Mode**: When Last Node Finishes
 
-#### URL del webhook:
+#### Webhook URL:
 \`\`\`
-https://tu-instancia.com/webhook/mi-primer-webhook
+https://your-instance.com/webhook/my-first-webhook
 \`\`\`
 
-### Paso 3: Procesar datos
+### Step 3: Process data
 
 #### Function node:
-1. Agrega un nodo "Function"
-2. Conecta el webhook al function
-3. Código:
+1. Add a "Function" node
+2. Connect the webhook to the function
+3. Code:
 
 \`\`\`javascript
 const items = $input.all();
 const results = [];
 
 for (const item of items) {
-  const nombre = item.json.nombre || 'Usuario';
+  const name = item.json.name || 'User';
   const email = item.json.email;
   
   results.push({
     json: {
-      nombre,
+      name,
       email,
-      mensaje: \`Hola \${nombre}, gracias por contactarnos!\`,
+      message: \`Hello \${name}, thanks for reaching out!\`,
       timestamp: new Date().toISOString()
     }
   });
@@ -561,92 +561,94 @@ for (const item of items) {
 return results;
 \`\`\`
 
-### Paso 4: Enviar email
+### Step 4: Send the email
 
 #### Email node (Gmail):
-1. Agrega un nodo "Gmail"
-2. Configura credenciales OAuth2
-3. Configura:
+1. Add a "Gmail" node
+2. Set up OAuth2 credentials
+3. Configure:
    - **To**: \`={{ $json.email }}\`
-   - **Subject**: "Confirmación de contacto"
-   - **Body**: \`={{ $json.mensaje }}\`
+   - **Subject**: "Contact confirmation"
+   - **Body**: \`={{ $json.message }}\`
 
-### Paso 5: Probar el workflow
+### Step 5: Test the workflow
 
-#### Ejecución manual:
-1. Click en "Execute Workflow"
-2. Envía datos de prueba al webhook:
+#### Manual run:
+1. Click "Execute Workflow"
+2. Send test data to the webhook:
 
 \`\`\`bash
-curl -X POST https://tu-instancia.com/webhook/mi-primer-webhook \\
+curl -X POST https://your-instance.com/webhook/my-first-webhook \\
   -H "Content-Type: application/json" \\
-  -d '{"nombre": "Juan", "email": "juan@example.com"}'
+  -d '{"name": "John", "email": "john@example.com"}'
 \`\`\`
 
-#### Ver resultados:
-- Revisa la ejecución en "Executions"
-- Verifica que el email fue enviado
-- Inspecciona los datos en cada nodo
+#### Check the results:
+- Review the run in "Executions"
+- Make sure the email was sent
+- Inspect the data on each node
 
-### Paso 6: Activar el workflow
+### Step 6: Activate the workflow
 
-1. Toggle "Active" en la barra superior
-2. El webhook ahora está escuchando
-3. Prueba con datos reales
+1. Toggle "Active" in the top bar
+2. The webhook is now listening
+3. Test with real data
 
-### Workflow completo
+### The complete workflow
 
 \`\`\`
 [Webhook] → [Function] → [Gmail]
 \`\`\`
 
-### Mejoras posibles
+### Possible improvements
 
-#### Agregar validación:
+#### Add validation:
 \`\`\`javascript
 if (!item.json.email) {
-  throw new Error('Email es requerido');
+  throw new Error('Email is required');
 }
 \`\`\`
 
-#### Agregar error handling:
-- Crea un "Error Workflow"
-- Configúralo en Settings
-- Envía notificaciones de error
+#### Add error handling:
+- Create an "Error Workflow"
+- Configure it in Settings
+- Send error notifications
 
-#### Agregar base de datos:
-- Guarda los contactos en una BD
-- Usa el nodo "PostgreSQL" o "MySQL"
+#### Add a database:
+- Store the contacts in a DB
+- Use the "PostgreSQL" or "MySQL" node
 
 ### Debugging
 
-#### Problemas comunes:
+#### Common problems:
 
-**Webhook no responde:**
-- Verifica que el workflow esté activo
-- Revisa la URL del webhook
-- Comprueba los logs
+**The webhook does not respond:**
+- Make sure the workflow is active
+- Check the webhook URL
+- Review the logs
 
-**Email no se envía:**
-- Verifica credenciales OAuth2
-- Revisa permisos de Gmail
-- Inspecciona el nodo de email
+**The email is not sent:**
+- Verify the OAuth2 credentials
+- Check the Gmail permissions
+- Inspect the email node
 
-**Datos incorrectos:**
-- Usa "Execute Node" en cada paso
-- Inspecciona los datos de entrada/salida
-- Verifica las expresiones
+**Incorrect data:**
+- Use "Execute Node" on each step
+- Inspect the input/output data
+- Check the expressions
 
-### Recursos adicionales
+### Additional resources
 
-- [Documentación de Webhooks](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.webhook/)
-- [Expresiones en N8N](https://docs.n8n.io/code/expressions/)
-- [Manejo de errores](https://docs.n8n.io/flow-logic/error-handling/)
+- [Webhook documentation](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.webhook/)
+- [Expressions in N8N](https://docs.n8n.io/code/expressions/)
+- [Error handling](https://docs.n8n.io/flow-logic/error-handling/)
 
-### ¡Felicidades!
+### Congratulations!
 
-Has creado tu primer workflow funcional. En los próximos módulos aprenderás técnicas avanzadas para workflows más complejos.
+You have created your first working workflow. In the upcoming modules you will learn advanced techniques for more complex workflows.
 `,
     },
   ],
 };
+
+

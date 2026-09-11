@@ -193,10 +193,10 @@ export default function LessonContent({
         >
           <CheckCircle2 size={16} />
           {isCompleted
-            ? "Completada"
+            ? "Completed"
             : markingComplete
-            ? "Guardando..."
-            : "Marcar como completada"}
+            ? "Saving..."
+            : "Mark as complete"}
         </button>
 
         <div className="flex items-center gap-3">
@@ -211,7 +211,7 @@ export default function LessonContent({
               )}
             >
               <ChevronLeft size={16} />
-              Anterior
+              Previous
             </button>
           )}
           {nextLessonId && (
@@ -224,7 +224,7 @@ export default function LessonContent({
                 "dark:border-white/10 dark:bg-white/5 dark:text-white/60 dark:hover:bg-white/10 dark:hover:text-white"
               )}
             >
-              Siguiente
+              Next
               <ChevronRight size={16} />
             </button>
           )}

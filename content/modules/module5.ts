@@ -3,65 +3,65 @@ import { Module } from "../../types/course";
 export const module5: Module = {
   id: "mod-05",
   slug: "custom-nodes",
-  title: "Custom Nodes y Desarrollo",
-  description: "Aprende a crear nodos personalizados para N8N usando TypeScript y el SDK oficial.",
+  title: "Custom Nodes and Development",
+  description: "Learn to build custom nodes for N8N using TypeScript and the official SDK.",
   icon: "Code",
   sortOrder: 5,
   lessons: [
     {
       id: "les-05-01",
       moduleSlug: "custom-nodes",
-      slug: "introduccion-custom-nodes",
-      title: "Introducción a Custom Nodes",
-      description: "Entiende cuándo y por qué crear nodos personalizados para N8N.",
+      slug: "intro-to-custom-nodes",
+      title: "Introduction to Custom Nodes",
+      description: "Understand when and why to build custom nodes for N8N.",
       estimatedMinutes: 15,
-      content: `## Introducción a Custom Nodes
+      content: `## Introduction to Custom Nodes
 
-Los custom nodes te permiten extender N8N con funcionalidad específica para tu caso de uso.
+Custom nodes let you extend N8N with functionality tailored to your use case.
 
-### ¿Cuándo Crear un Custom Node?
+### When Should You Create a Custom Node?
 
-#### Razones válidas:
-1. **API no soportada**: La API que necesitas no tiene un nodo nativo
-2. **Lógica de negocio específica**: Necesitas encapsular lógica compleja reutilizable
-3. **Integración interna**: Conectar con sistemas internos de tu empresa
-4. **Performance**: Optimizar operaciones que haces frecuentemente
-5. **Comunidad**: Contribuir nodos útiles para otros usuarios
+#### Valid reasons:
+1. **Unsupported API**: The API you need has no native node
+2. **Specific business logic**: You need to encapsulate complex, reusable logic
+3. **Internal integration**: Connect to your company internal systems
+4. **Performance**: Optimize operations you run frequently
+5. **Community**: Contribute useful nodes for other users
 
-#### Cuándo NO crear un custom node:
-1. **Uso único**: Si solo lo usarás una vez, usa Code node
-2. **HTTP Request suficiente**: Si la API es REST estándar, usa HTTP Request
-3. **Func node resuelve**: Si puedes resolverlo con JavaScript en Function node
+#### When NOT to create a custom node:
+1. **One-off use**: If you will only use it once, use the Code node
+2. **HTTP Request is enough**: If the API is a standard REST API, use HTTP Request
+3. **A Function node is enough**: If you can solve it with JavaScript in a Function node
 
-### Arquitectura de un Custom Node
+### Anatomy of a Custom Node
 
-#### Estructura Básica
+#### Basic Structure
 
 \`\`\`
 my-custom-node/
 ├── nodes/
 │   └── MyCustomNode/
-│       ├── MyCustomNode.node.ts      # Definición del nodo
-│       └── MyCustomNode.node.json    # Metadata (opcional)
+│       ├── MyCustomNode.node.ts      # Node definition
+│       └── MyCustomNode.node.json    # Metadata (optional)
 ├── credentials/
-│   └── MyCustomNodeApi.credentials.ts # Credenciales
+│   └── MyCustomNodeApi.credentials.ts # Credentials
 ├── package.json
 ├── tsconfig.json
 └── README.md
 \`\`\`
 
-#### Componentes Principales
+#### Main Components
 
-1. **Node Class**: Define el comportamiento del nodo
-2. **Properties**: Configuración visible en la UI
-3. **Execute Method**: Lógica de ejecución
-4. **Credentials**: Manejo de autenticación
+1. **Node Class**: Defines the node behavior
+2. **Properties**: Configuration visible in the UI
+3. **Execute Method**: Execution logic
+4. **Credentials**: Authentication handling
 
-### Tipos de Nodos
+### Node Types
 
 #### 1. Regular Node
 
-Ejecuta una acción y retorna datos.
+Runs an action and returns data.
 
 \`\`\`typescript
 import {
@@ -78,14 +78,14 @@ export class MyCustomNode implements INodeType {
     icon: 'file:myCustomNode.svg',
     group: ['transform'],
     version: 1,
-    description: 'Descripción de mi nodo personalizado',
+    description: 'Description of my custom node',
     defaults: {
       name: 'My Custom Node',
     },
     inputs: ['main'],
     outputs: ['main'],
     properties: [
-      // Definición de propiedades
+      // Property definitions
     ],
   };
 
@@ -94,7 +94,7 @@ export class MyCustomNode implements INodeType {
     const returnData: INodeExecutionData[] = [];
 
     for (let i = 0; i < items.length; i++) {
-      // Lógica del nodo
+      // Node logic
       returnData.push({
         json: {
           result: 'processed'
@@ -109,7 +109,7 @@ export class MyCustomNode implements INodeType {
 
 #### 2. Trigger Node
 
-Inicia workflows basándose en eventos.
+Starts workflows based on events.
 
 \`\`\`typescript
 import {
@@ -126,7 +126,7 @@ export class MyTriggerNode implements INodeType {
     icon: 'file:myTrigger.svg',
     group: ['trigger'],
     version: 1,
-    description: 'Trigger personalizado',
+    description: 'Custom trigger',
     defaults: {
       name: 'My Trigger',
     },
@@ -138,7 +138,7 @@ export class MyTriggerNode implements INodeType {
   async trigger(this: ITriggerFunctions): Promise<ITriggerResponse> {
     const webhookUrl = this.getNodeWebhookUrl('/my-webhook');
     
-    // Configurar webhook o polling
+    // Configure the webhook or polling
     const webhookData = this.getWorkflowStaticData('node');
     
     return {
@@ -153,9 +153,9 @@ export class MyTriggerNode implements INodeType {
 }
 \`\`\`
 
-### Propiedades del Nodo
+### Node Properties
 
-#### Tipos de Propiedades Comunes
+#### Common Property Types
 
 **String:**
 \`\`\`typescript
@@ -165,7 +165,7 @@ export class MyTriggerNode implements INodeType {
   type: 'string',
   default: '',
   required: true,
-  description: 'Tu API key',
+  description: 'Your API key',
 }
 \`\`\`
 
@@ -176,7 +176,7 @@ export class MyTriggerNode implements INodeType {
   name: 'limit',
   type: 'number',
   default: 50,
-  description: 'Número máximo de resultados',
+  description: 'Maximum number of results',
 }
 \`\`\`
 
@@ -187,7 +187,7 @@ export class MyTriggerNode implements INodeType {
   name: 'includeMetadata',
   type: 'boolean',
   default: false,
-  description: 'Incluir metadata en la respuesta',
+  description: 'Include metadata in the response',
 }
 \`\`\`
 
@@ -216,7 +216,7 @@ export class MyTriggerNode implements INodeType {
     },
   ],
   default: 'create',
-  description: 'Operación a realizar',
+  description: 'Operation to perform',
 }
 \`\`\`
 
@@ -245,9 +245,9 @@ export class MyTriggerNode implements INodeType {
 }
 \`\`\`
 
-### Credenciales
+### Credentials
 
-#### Definición de Credenciales
+#### Credential Definition
 
 \`\`\`typescript
 import {
@@ -279,7 +279,7 @@ export class MyCustomNodeApi implements ICredentialType {
 }
 \`\`\`
 
-#### Uso de Credenciales en el Nodo
+#### Using Credentials in the Node
 
 \`\`\`typescript
 async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
@@ -300,7 +300,7 @@ async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 }
 \`\`\`
 
-### Ejemplo Completo: Nodo de Notificación
+### Complete Example: Notification Node
 
 \`\`\`typescript
 import {
@@ -317,7 +317,7 @@ export class NotificationNode implements INodeType {
     icon: 'file:notification.svg',
     group: ['output'],
     version: 1,
-    description: 'Envía notificaciones a múltiples canales',
+    description: 'Sends notifications to multiple channels',
     defaults: {
       name: 'Send Notification',
     },
@@ -349,7 +349,7 @@ export class NotificationNode implements INodeType {
           },
         ],
         default: 'email',
-        description: 'Canal de notificación',
+        description: 'Notification channel',
       },
       {
         displayName: 'Recipient',
@@ -357,7 +357,7 @@ export class NotificationNode implements INodeType {
         type: 'string',
         default: '',
         required: true,
-        description: 'Email, webhook URL o número de teléfono',
+        description: 'Email address, webhook URL or phone number',
       },
       {
         displayName: 'Message',
@@ -368,7 +368,7 @@ export class NotificationNode implements INodeType {
         },
         default: '',
         required: true,
-        description: 'Mensaje a enviar',
+        description: 'Message to send',
       },
       {
         displayName: 'Subject',
@@ -380,7 +380,7 @@ export class NotificationNode implements INodeType {
             channel: ['email'],
           },
         },
-        description: 'Asunto del email',
+        description: 'Email subject',
       },
     ],
   };
@@ -458,23 +458,23 @@ export class NotificationNode implements INodeType {
 }
 \`\`\`
 
-### Testing de Custom Nodes
+### Testing Custom Nodes
 
-#### Testing Local
+#### Local Testing
 
 \`\`\`bash
-# Link el nodo a tu instalación de N8N
+# Link the node into your N8N installation
 cd my-custom-node
 npm link
 
 cd ~/.n8n
 npm link my-custom-node
 
-# Reiniciar N8N
+# Restart N8N
 n8n start
 \`\`\`
 
-#### Testing con Docker
+#### Testing with Docker
 
 \`\`\`dockerfile
 FROM n8nio/n8n
@@ -485,9 +485,9 @@ RUN cd /custom-nodes/my-custom-node && npm install
 ENV N8N_CUSTOM_EXTENSIONS=/custom-nodes
 \`\`\`
 
-### Publicación en npm
+### Publishing to npm
 
-#### Preparar para Publicación
+#### Preparing for Publication
 
 \`\`\`json
 {
@@ -516,25 +516,25 @@ ENV N8N_CUSTOM_EXTENSIONS=/custom-nodes
 }
 \`\`\`
 
-#### Publicar
+#### Publishing
 
 \`\`\`bash
 npm run build
 npm publish
 \`\`\`
 
-### Mejores Prácticas
+### Best Practices
 
-1. **Naming**: Usa nombres descriptivos y únicos
-2. **Documentation**: Documenta todas las propiedades
-3. **Error handling**: Maneja errores gracefully
-4. **Type safety**: Usa TypeScript estrictamente
-5. **Testing**: Prueba con diferentes inputs
-6. **Versioning**: Usa semantic versioning
-7. **Icons**: Proporciona iconos SVG de alta calidad
-8. **Examples**: Incluye ejemplos de uso
+1. **Naming**: Use descriptive, unique names
+2. **Documentation**: Document every property
+3. **Error handling**: Handle errors gracefully
+4. **Type safety**: Use TypeScript strictly
+5. **Testing**: Test with different inputs
+6. **Versioning**: Use semantic versioning
+7. **Icons**: Provide high-quality SVG icons
+8. **Examples**: Include usage examples
 
-### Recursos Adicionales
+### Additional Resources
 
 - [N8N Custom Nodes Documentation](https://docs.n8n.io/integrations/creating-nodes/)
 - [N8N Node Starter Kit](https://github.com/n8n-io/n8n-nodes-starter)
@@ -545,17 +545,17 @@ npm publish
     {
       id: "les-05-02",
       moduleSlug: "custom-nodes",
-      slug: "desarrollo-node-avanzado",
-      title: "Desarrollo Avanzado de Nodos",
-      description: "Técnicas avanzadas para crear nodos complejos con autenticación OAuth2 y webhooks.",
+      slug: "advanced-node-development",
+      title: "Advanced Node Development",
+      description: "Advanced techniques for building complex nodes with OAuth2 authentication and webhooks.",
       estimatedMinutes: 30,
-      content: `## Desarrollo Avanzado de Nodos
+      content: `## Advanced Node Development
 
-Aprende técnicas avanzadas para crear nodos complejos con autenticación OAuth2, webhooks y manejo de datos binarios.
+Learn advanced techniques for building complex nodes with OAuth2 authentication, webhooks and binary data handling.
 
-### Autenticación OAuth2
+### OAuth2 Authentication
 
-#### Credenciales OAuth2
+#### OAuth2 Credentials
 
 \`\`\`typescript
 import {
@@ -604,7 +604,7 @@ export class MyServiceOAuth2Api implements ICredentialType {
 }
 \`\`\`
 
-#### Uso de OAuth2 en el Nodo
+#### Using OAuth2 in the Node
 
 \`\`\`typescript
 async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
@@ -618,7 +618,7 @@ async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
       json: true,
     };
 
-    // N8N maneja automáticamente el refresh del token
+    // N8N refreshes the token automatically
     const response = await this.helpers.requestOAuth2.call(
       this,
       'myServiceOAuth2Api',
@@ -634,7 +634,7 @@ async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 }
 \`\`\`
 
-### Trigger Nodes con Webhooks
+### Trigger Nodes with Webhooks
 
 #### Webhook Trigger Node
 
@@ -655,7 +655,7 @@ export class MyWebhookTrigger implements INodeType {
     icon: 'file:webhook.svg',
     group: ['trigger'],
     version: 1,
-    description: 'Trigger basado en webhooks',
+    description: 'Webhook-based trigger',
     defaults: {
       name: 'My Webhook Trigger',
     },
@@ -695,7 +695,7 @@ export class MyWebhookTrigger implements INodeType {
           },
         ],
         default: [],
-        description: 'Eventos a escuchar',
+        description: 'Events to listen for',
       },
     ],
   };
@@ -777,7 +777,7 @@ export class MyWebhookTrigger implements INodeType {
     const headerData = this.getHeaderData();
     const queryData = this.getQueryData();
 
-    // Validar webhook (ejemplo: verificar firma)
+    // Validate the webhook (example: verify the signature)
     const credentials = await this.getCredentials('myServiceApi');
     const signature = headerData['x-signature'] as string;
     
@@ -807,9 +807,9 @@ export class MyWebhookTrigger implements INodeType {
 }
 \`\`\`
 
-### Manejo de Datos Binarios
+### Handling Binary Data
 
-#### Descargar Archivos
+#### Downloading Files
 
 \`\`\`typescript
 async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
@@ -826,7 +826,7 @@ async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
       headers: {
         'Authorization': \`Bearer \${credentials.apiKey}\`,
       },
-      encoding: null, // Importante para datos binarios
+      encoding: null, // Important for binary data
       returnFullResponse: true,
     });
 
@@ -866,7 +866,7 @@ private getFileNameFromHeaders(headers: any): string {
 }
 \`\`\`
 
-#### Subir Archivos
+#### Uploading Files
 
 \`\`\`typescript
 async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
@@ -915,9 +915,9 @@ async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 }
 \`\`\`
 
-### Nodos con Múltiples Operaciones
+### Nodes with Multiple Operations
 
-#### Patrón CRUD Completo
+#### Complete CRUD Pattern
 
 \`\`\`typescript
 import {
@@ -934,7 +934,7 @@ export class MyCRUDNode implements INodeType {
     icon: 'file:crud.svg',
     group: ['transform'],
     version: 1,
-    description: 'Operaciones CRUD completas',
+    description: 'Full CRUD operations',
     defaults: {
       name: 'My CRUD Node',
     },
@@ -955,27 +955,27 @@ export class MyCRUDNode implements INodeType {
           {
             name: 'Create',
             value: 'create',
-            description: 'Crear un nuevo recurso',
+            description: 'Create a new resource',
           },
           {
             name: 'Get',
             value: 'get',
-            description: 'Obtener un recurso',
+            description: 'Get a resource',
           },
           {
             name: 'Get All',
             value: 'getAll',
-            description: 'Obtener todos los recursos',
+            description: 'Get all resources',
           },
           {
             name: 'Update',
             value: 'update',
-            description: 'Actualizar un recurso',
+            description: 'Update a resource',
           },
           {
             name: 'Delete',
             value: 'delete',
-            description: 'Eliminar un recurso',
+            description: 'Delete a resource',
           },
         ],
         default: 'create',
@@ -1170,9 +1170,9 @@ export class MyCRUDNode implements INodeType {
 }
 \`\`\`
 
-### Manejo de Errores
+### Error Handling
 
-#### Error Handling Robusto
+#### Robust Error Handling
 
 \`\`\`typescript
 async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
@@ -1216,7 +1216,7 @@ private async processItem(index: number) {
 
     return response;
   } catch (error) {
-    // Manejo específico de errores
+    // Specific error handling
     if (error.statusCode === 401) {
       throw new Error('Authentication failed. Please check your credentials.');
     } else if (error.statusCode === 429) {
@@ -1230,9 +1230,9 @@ private async processItem(index: number) {
 }
 \`\`\`
 
-### Testing Avanzado
+### Advanced Testing
 
-#### Unit Tests con Jest
+#### Unit Tests with Jest
 
 \`\`\`typescript
 import { MyCustomNode } from '../nodes/MyCustomNode/MyCustomNode.node';
@@ -1287,18 +1287,18 @@ describe('MyCustomNode', () => {
 });
 \`\`\`
 
-### Mejores Prácticas
+### Best Practices
 
-1. **Type safety**: Usa TypeScript estrictamente
-2. **Error messages**: Proporciona mensajes de error claros
-3. **Validation**: Valida inputs antes de procesar
-4. **Pagination**: Implementa paginación para listas grandes
-5. **Rate limiting**: Respeta límites de API
-6. **Caching**: Cachea respuestas cuando sea apropiado
-7. **Logging**: Log información útil para debugging
-8. **Documentation**: Documenta todos los parámetros
+1. **Type safety**: Use TypeScript strictly
+2. **Error messages**: Provide clear error messages
+3. **Validation**: Validate inputs before processing
+4. **Pagination**: Implement pagination for large lists
+5. **Rate limiting**: Respect the API limits
+6. **Caching**: Cache responses when appropriate
+7. **Logging**: Log useful information for debugging
+8. **Documentation**: Document every parameter
 
-### Recursos Adicionales
+### Additional Resources
 
 - [N8N Node Development Guide](https://docs.n8n.io/integrations/creating-nodes/)
 - [N8N Node UI Elements](https://docs.n8n.io/integrations/creating-nodes/build/reference/node-ui-elements/)
@@ -1309,17 +1309,17 @@ describe('MyCustomNode', () => {
     {
       id: "les-05-03",
       moduleSlug: "custom-nodes",
-      slug: "publicacion-distribucion",
-      title: "Publicación y Distribución de Nodos",
-      description: "Publica tus nodos en npm y compártelos con la comunidad de N8N.",
+      slug: "publishing-distribution",
+      title: "Publishing and Distributing Nodes",
+      description: "Publish your nodes to npm and share them with the N8N community.",
       estimatedMinutes: 20,
-      content: `## Publicación y Distribución de Nodos
+      content: `## Publishing and Distributing Nodes
 
-Aprende a publicar tus custom nodes en npm y distribuirlos a la comunidad de N8N.
+Learn how to publish your custom nodes to npm and distribute them to the N8N community.
 
-### Preparación para Publicación
+### Preparing for Publication
 
-#### Estructura del Package
+#### Package Structure
 
 \`\`\`
 n8n-nodes-my-custom-node/
@@ -1339,7 +1339,7 @@ n8n-nodes-my-custom-node/
 └── LICENSE
 \`\`\`
 
-#### package.json Completo
+#### Complete package.json
 
 \`\`\`json
 {
@@ -1452,7 +1452,7 @@ coverage/
 
 ### Build Process
 
-#### Gulpfile para Iconos
+#### Gulpfile for Icons
 
 \`\`\`javascript
 const gulp = require('gulp');
@@ -1469,55 +1469,55 @@ gulp.task('build', gulp.series('build:icons'));
 #### Build Script
 
 \`\`\`bash
-# Limpiar directorio dist
+# Clean the dist directory
 rm -rf dist
 
-# Compilar TypeScript
+# Compile TypeScript
 npm run build
 
-# Verificar estructura
+# Verify the structure
 ls -la dist/nodes/MyCustomNode/
 ls -la dist/credentials/
 \`\`\`
 
-### Testing Local
+### Local Testing
 
-#### Link Local
+#### Local Link
 
 \`\`\`bash
-# En el directorio de tu nodo
+# In your node directory
 cd n8n-nodes-my-custom-node
 npm link
 
-# En tu instalación de N8N
+# In your N8N installation
 cd ~/.n8n
 npm link n8n-nodes-my-custom-node
 
-# Reiniciar N8N
+# Restart N8N
 n8n start
 \`\`\`
 
-#### Testing con Docker
+#### Testing with Docker
 
 \`\`\`dockerfile
 FROM n8nio/n8n:latest
 
-# Copiar el nodo
+# Copy the node
 COPY n8n-nodes-my-custom-node /custom-nodes/n8n-nodes-my-custom-node
 
-# Instalar dependencias
+# Install the dependencies
 RUN cd /custom-nodes/n8n-nodes-my-custom-node && npm install --production
 
-# Configurar variable de entorno
+# Configure the environment variable
 ENV N8N_CUSTOM_EXTENSIONS=/custom-nodes
 
-# Exponer puerto
+# Expose the port
 EXPOSE 5678
 
 CMD ["n8n", "start"]
 \`\`\`
 
-#### Docker Compose para Testing
+#### Docker Compose for Testing
 
 \`\`\`yaml
 version: '3.8'
@@ -1539,51 +1539,51 @@ volumes:
   n8n_data:
 \`\`\`
 
-### Publicación en npm
+### Publishing to npm
 
-#### Preparar para Publicación
+#### Preparing for Publication
 
 \`\`\`bash
-# Verificar que estás logueado en npm
+# Check that you are logged in to npm
 npm whoami
 
-# Si no estás logueado
+# If you are not logged in
 npm login
 
-# Verificar package.json
+# Verify package.json
 npm pack --dry-run
 
-# Verificar que todos los archivos necesarios están incluidos
+# Check that all required files are included
 tar -tzf n8n-nodes-my-custom-node-1.0.0.tgz
 \`\`\`
 
-#### Publicar
+#### Publishing
 
 \`\`\`bash
-# Incrementar versión
-npm version patch  # o minor, major
+# Bump the version
+npm version patch  # or minor, major
 
-# Publicar
+# Publish
 npm publish
 
-# Verificar publicación
+# Verify the publication
 npm view n8n-nodes-my-custom-node
 \`\`\`
 
-#### Tags de Versión
+#### Version Tags
 
 \`\`\`bash
-# Publicar como beta
+# Publish as beta
 npm publish --tag beta
 
-# Publicar como next
+# Publish as next
 npm publish --tag next
 
-# Cambiar tag a latest
+# Move the tag to latest
 npm dist-tag add n8n-nodes-my-custom-node@1.0.0-beta.1 latest
 \`\`\`
 
-### Documentación
+### Documentation
 
 #### README.md Template
 
@@ -1760,11 +1760,11 @@ PATCH: Bug fixes
 - OAuth2 authentication
 \`\`\`
 
-### Promoción
+### Promotion
 
 #### N8N Community Forum
 
-Publica en [N8N Community](https://community.n8n.io/c/questions/12):
+Post in the [N8N Community](https://community.n8n.io/c/questions/12):
 
 \`\`\`markdown
 ## 🚀 New Community Node: n8n-nodes-my-custom-node
@@ -1794,7 +1794,7 @@ Feedback and contributions are welcome!
 
 #### Social Media
 
-Comparte en Twitter, LinkedIn, etc.:
+Share on Twitter, LinkedIn, etc.:
 
 \`\`\`
 🚀 Just published n8n-nodes-my-custom-node! 
@@ -1810,25 +1810,25 @@ Install: npm install n8n-nodes-my-custom-node
 #n8n #automation #workflow #opensource
 \`\`\`
 
-### Mantenimiento
+### Maintenance
 
-#### Actualizaciones Regulares
+#### Regular Updates
 
 \`\`\`bash
-# Actualizar dependencias
+# Update the dependencies
 npm update
 
-# Verificar vulnerabilidades
+# Check for vulnerabilities
 npm audit
 
-# Actualizar n8n-workflow y n8n-core
+# Update n8n-workflow and n8n-core
 npm install n8n-workflow@latest n8n-core@latest
 
-# Testear con última versión de N8N
+# Test against the latest version of N8N
 docker run -it --rm -p 5678:5678 n8nio/n8n:latest
 \`\`\`
 
-#### CI/CD con GitHub Actions
+#### CI/CD with GitHub Actions
 
 \`\`\`yaml
 name: CI/CD
@@ -1893,18 +1893,18 @@ jobs:
         NODE_AUTH_TOKEN: \${{ secrets.NPM_TOKEN }}
 \`\`\`
 
-### Mejores Prácticas
+### Best Practices
 
-1. **Versioning**: Usa semantic versioning estrictamente
-2. **Changelog**: Mantén un changelog detallado
-3. **Documentation**: Documenta todas las funcionalidades
-4. **Testing**: Prueba con diferentes versiones de N8N
-5. **Support**: Responde issues y preguntas rápidamente
-6. **Updates**: Mantén dependencias actualizadas
-7. **Security**: Monitorea vulnerabilidades
-8. **Community**: Participa en la comunidad de N8N
+1. **Versioning**: Use semantic versioning strictly
+2. **Changelog**: Keep a detailed changelog
+3. **Documentation**: Document all the functionality
+4. **Testing**: Test against different N8N versions
+5. **Support**: Reply to issues and questions quickly
+6. **Updates**: Keep dependencies up to date
+7. **Security**: Monitor for vulnerabilities
+8. **Community**: Take part in the N8N community
 
-### Recursos Adicionales
+### Additional Resources
 
 - [N8N Community Nodes](https://docs.n8n.io/integrations/community-nodes/)
 - [npm Publishing Guide](https://docs.npmjs.com/packages-and-modules/contributing-packages-to-the-registry)

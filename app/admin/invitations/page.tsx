@@ -67,7 +67,7 @@ export default function InvitationsPage() {
       const result = await response.json();
 
       if (!response.ok) {
-        alert(result.error || 'Error al crear usuario');
+        alert(result.error || 'Error creating user');
         setSubmitting(false);
         return;
       }
@@ -77,13 +77,13 @@ export default function InvitationsPage() {
       setSubmitting(false);
       fetchInvitations();
     } catch (error) {
-      alert('Error al crear usuario');
+      alert('Error creating user');
       setSubmitting(false);
     }
   }
 
   async function handleRevoke(invitationId: string) {
-    if (!confirm('¿Estás seguro de revocar esta invitación?')) return;
+    if (!confirm('Are you sure you want to revoke this invitation?')) return;
 
     await fetch('/api/admin/invitations', {
       method: 'PATCH',
@@ -95,7 +95,7 @@ export default function InvitationsPage() {
 
   function handleCopy() {
     if (!createdCredentials) return;
-    const text = `Email: ${createdCredentials.email}\nContraseña: ${createdCredentials.password}`;
+    const text = `Email: ${createdCredentials.email}\nPassword: ${createdCredentials.password}`;
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -122,7 +122,7 @@ export default function InvitationsPage() {
         <div className="flex items-center gap-3">
           <Mail size={24} className="text-[#FF6D5A]" />
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Usuarios e Invitaciones
+            Users & Invitations
           </h1>
         </div>
         <button
@@ -130,7 +130,7 @@ export default function InvitationsPage() {
           className="flex items-center gap-2 rounded-xl bg-[#FF6D5A] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#FF6D5A]/90"
         >
           <Plus size={18} />
-          Crear Usuario
+          Create user
         </button>
       </div>
 
@@ -143,19 +143,19 @@ export default function InvitationsPage() {
                   Email
                 </th>
                 <th className="pb-3 text-left text-xs font-medium text-gray-600 dark:text-gray-400">
-                  Rol
+                  Role
                 </th>
                 <th className="pb-3 text-left text-xs font-medium text-gray-600 dark:text-gray-400">
-                  Estado
+                  Status
                 </th>
                 <th className="pb-3 text-left text-xs font-medium text-gray-600 dark:text-gray-400">
-                  Creada
+                  Created
                 </th>
                 <th className="pb-3 text-left text-xs font-medium text-gray-600 dark:text-gray-400">
-                  Expira
+                  Expires
                 </th>
                 <th className="pb-3 text-right text-xs font-medium text-gray-600 dark:text-gray-400">
-                  Acciones
+                  Actions
                 </th>
               </tr>
             </thead>
@@ -184,10 +184,10 @@ export default function InvitationsPage() {
                     </span>
                   </td>
                   <td className="py-3 text-sm text-gray-600 dark:text-gray-400">
-                    {new Date(inv.created_at).toLocaleDateString('es-ES')}
+                    {new Date(inv.created_at).toLocaleDateString('en-US')}
                   </td>
                   <td className="py-3 text-sm text-gray-600 dark:text-gray-400">
-                    {new Date(inv.expires_at).toLocaleDateString('es-ES')}
+                    {new Date(inv.expires_at).toLocaleDateString('en-US')}
                   </td>
                   <td className="py-3 text-right">
                     {inv.status === 'pending' && (
@@ -195,7 +195,7 @@ export default function InvitationsPage() {
                         onClick={() => handleRevoke(inv.id)}
                         className="rounded-lg px-3 py-1 text-xs font-medium text-red-500 transition hover:bg-red-500/10"
                       >
-                        Revocar
+                        Revoke
                       </button>
                     )}
                   </td>
@@ -207,7 +207,7 @@ export default function InvitationsPage() {
                     colSpan={6}
                     className="py-6 text-center text-sm text-gray-500 dark:text-gray-400"
                   >
-                    No hay usuarios creados
+                    No users created
                   </td>
                 </tr>
               )}
@@ -221,7 +221,7 @@ export default function InvitationsPage() {
           <div className="w-full max-w-md rounded-2xl p-6 backdrop-blur-xl bg-white/90 border border-gray-200/50 shadow-2xl dark:bg-gray-900/90 dark:border-white/10">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Crear Usuario
+                Create user
               </h2>
               <button
                 onClick={handleCloseModal}
@@ -248,7 +248,7 @@ export default function InvitationsPage() {
                 </div>
                 <div>
                   <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Contraseña
+                    Password
                   </label>
                   <div className="flex gap-2">
                     <div className="relative flex-1">
@@ -272,11 +272,11 @@ export default function InvitationsPage() {
                     <button
                       type="button"
                       onClick={handleGeneratePassword}
-                      title="Generar contraseña segura"
+                      title="Generate a secure password"
                       className="flex shrink-0 items-center gap-1.5 rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-xs font-medium text-gray-700 transition hover:border-[#FF6D5A] hover:text-[#FF6D5A] dark:border-white/20 dark:bg-white/5 dark:text-gray-300 dark:hover:border-[#FF6D5A]"
                     >
                       <KeyRound size={14} />
-                      Generar
+                      Generate
                     </button>
                   </div>
                 </div>
@@ -291,7 +291,7 @@ export default function InvitationsPage() {
                     }
                     className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 outline-none transition focus:border-[#FF6D5A] dark:border-white/20 dark:bg-white/5 dark:text-white"
                   >
-                    <option value="student">Estudiante</option>
+                    <option value="student">Student</option>
                     <option value="instructor">Instructor</option>
                     <option value="admin">Admin</option>
                   </select>
@@ -301,14 +301,14 @@ export default function InvitationsPage() {
                   disabled={submitting}
                   className="w-full rounded-xl bg-[#FF6D5A] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-[#FF6D5A]/90 disabled:opacity-50"
                 >
-                  {submitting ? 'Creando...' : 'Crear Usuario'}
+                  {submitting ? 'Creating...' : 'Create user'}
                 </button>
               </form>
             ) : (
               <div className="space-y-4">
                 <div className="rounded-xl bg-green-50 p-4 dark:bg-green-900/20">
                   <p className="text-sm font-medium text-green-800 dark:text-green-300">
-                    Usuario creado exitosamente
+                    User created successfully
                   </p>
                 </div>
                 <div className="space-y-3">
@@ -324,7 +324,7 @@ export default function InvitationsPage() {
                   </div>
                   <div>
                     <label className="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">
-                      Contraseña
+                      Password
                     </label>
                     <div className="rounded-xl border border-gray-300 bg-white p-3 dark:border-white/20 dark:bg-white/5">
                       <p className="text-sm font-medium text-gray-900 dark:text-white">
@@ -341,12 +341,12 @@ export default function InvitationsPage() {
                     {copied ? (
                       <>
                         <Check size={16} className="text-green-500" />
-                        Copiado
+                        Copied
                       </>
                     ) : (
                       <>
                         <Copy size={16} />
-                        Copiar Credenciales
+                        Copy credentials
                       </>
                     )}
                   </button>
@@ -354,7 +354,7 @@ export default function InvitationsPage() {
                     onClick={handleCloseModal}
                     className="flex-1 rounded-xl bg-[#FF6D5A] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-[#FF6D5A]/90"
                   >
-                    Cerrar
+                    Close
                   </button>
                 </div>
               </div>

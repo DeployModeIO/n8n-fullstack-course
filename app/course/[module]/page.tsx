@@ -59,7 +59,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
             href={`/course/${moduleSlug}/${firstIncomplete.slug}`}
             className="mb-8 inline-block rounded-xl bg-gradient-to-r from-[#FF6D5A] to-[#EA4B71] px-6 py-3 font-semibold text-white shadow-lg shadow-[#FF6D5A]/25 transition hover:shadow-[#FF6D5A]/40 hover:-translate-y-0.5"
           >
-            Comenzar: {firstIncomplete.title}
+            Start: {firstIncomplete.title}
           </Link>
         )}
 
@@ -95,7 +95,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
                     </div>
                     {isCompleted && (
                       <span className="rounded-full bg-green-500/10 px-2 py-0.5 text-xs text-green-400">
-                        Completada
+                        Completed
                       </span>
                     )}
                   </Link>

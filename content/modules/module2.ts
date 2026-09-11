@@ -2,35 +2,35 @@ import { Module } from "../../types/course";
 
 export const module2: Module = {
   id: "mod-02",
-  slug: "core-nodos-esenciales",
-  title: "Core de N8N y Nodos Esenciales",
-  description: "Domina los nodos fundamentales de N8N: triggers, transformación de datos, Code node, sub-workflows y control de flujo.",
+  slug: "n8n-core-essential-nodes",
+  title: "N8N Core and Essential Nodes",
+  description: "Master the fundamental N8N nodes: triggers, data transformation, the Code node, sub-workflows and flow control.",
   icon: "Cpu",
   sortOrder: 2,
   lessons: [
     {
       id: "les-02-01",
-      moduleSlug: "core-nodos-esenciales",
+      moduleSlug: "n8n-core-essential-nodes",
       slug: "triggers-webhooks-cron",
-      title: "Triggers: Webhooks, Schedule y Cron",
-      description: "Aprende los diferentes tipos de triggers en N8N y cómo diseñar arquitecturas event-driven.",
+      title: "Triggers: Webhooks, Schedule and Cron",
+      description: "Learn the different trigger types in N8N and how to design event-driven architectures.",
       estimatedMinutes: 20,
-      content: `## Triggers en N8N
+      content: `## Triggers in N8N
 
-Los triggers son el punto de entrada de todo workflow. Definen cuándo y cómo se ejecuta un flujo de trabajo.
+Triggers are the entry point of every workflow. They define when and how a workflow runs.
 
-### Tipos de Triggers
+### Trigger Types
 
 #### 1. Webhook Trigger
 
-Recibe peticiones HTTP externas. Ideal para integraciones con formularios, APIs de terceros y eventos de servicios.
+Receives external HTTP requests. Ideal for integrations with forms, third-party APIs and service events.
 
-**Configuración básica:**
+**Basic configuration:**
 
 \`\`\`json
 {
   "httpMethod": "POST",
-  "path": "mi-webhook",
+  "path": "my-webhook",
   "responseMode": "responseNode",
   "options": {
     "rawBody": true
@@ -38,64 +38,64 @@ Recibe peticiones HTTP externas. Ideal para integraciones con formularios, APIs 
 }
 \`\`\`
 
-**Patrones comunes:**
-- **Fire-and-forget**: El webhook responde inmediatamente y el workflow procesa en background
-- **Synchronous**: El webhook espera la respuesta del workflow antes de responder
+**Common patterns:**
+- **Fire-and-forget**: The webhook responds immediately and the workflow processes in the background
+- **Synchronous**: The webhook waits for the workflow response before answering
 
-**Ejemplo de uso:**
+**Example usage:**
 
 \`\`\`javascript
-// Enviar datos al webhook
-fetch('https://tu-n8n.com/webhook/mi-webhook', {
+// Send data to the webhook
+fetch('https://your-n8n.com/webhook/my-webhook', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    nombre: 'Juan',
-    email: 'juan@example.com'
+    name: 'John',
+    email: 'john@example.com'
   })
 });
 \`\`\`
 
 #### 2. Schedule Trigger (Cron)
 
-Ejecuta workflows en intervalos regulares. Perfecto para tareas programadas.
+Runs workflows at regular intervals. Perfect for scheduled tasks.
 
-**Sintaxis Cron:**
+**Cron syntax:**
 
 \`\`\`
 * * * * *
 │ │ │ │ │
-│ │ │ │ └─ Día de la semana (0-7, 0 y 7 = domingo)
-│ │ │ └─── Mes (1-12)
-│ │ └───── Día del mes (1-31)
-│ └─────── Hora (0-23)
-└───────── Minuto (0-59)
+│ │ │ │ └─ Day of the week (0-7, 0 and 7 = Sunday)
+│ │ │ └─── Month (1-12)
+│ │ └───── Day of the month (1-31)
+│ └─────── Hour (0-23)
+└───────── Minute (0-59)
 \`\`\`
 
-**Ejemplos comunes:**
+**Common examples:**
 
 \`\`\`bash
-# Cada 5 minutos
+# Every 5 minutes
 */5 * * * *
 
-# Cada hora
+# Every hour
 0 * * * *
 
-# Todos los días a las 9 AM
+# Every day at 9 AM
 0 9 * * *
 
-# Lunes a Viernes a las 8 AM
+# Monday to Friday at 8 AM
 0 8 * * 1-5
 
-# Primer día de cada mes a medianoche
+# First day of each month at midnight
 0 0 1 * *
 \`\`\`
 
 #### 3. Email Trigger
 
-Dispara workflows cuando llegan emails específicos.
+Fires workflows when specific emails arrive.
 
-**Configuración:**
+**Configuration:**
 - **Protocol**: IMAP
 - **Host**: imap.gmail.com
 - **Port**: 993
@@ -103,14 +103,14 @@ Dispara workflows cuando llegan emails específicos.
 - **Mailbox**: INBOX
 - **Action**: Read and mark as read
 
-**Filtros útiles:**
-- From: emails específicos
-- Subject: palabras clave
-- Has attachments: solo con adjuntos
+**Useful filters:**
+- From: specific emails
+- Subject: keywords
+- Has attachments: attachments only
 
 #### 4. Database Trigger
 
-Monitorea cambios en bases de datos.
+Monitors changes in databases.
 
 **PostgreSQL Trigger:**
 
@@ -128,23 +128,23 @@ AFTER INSERT ON orders
 FOR EACH ROW EXECUTE FUNCTION notify_new_order();
 \`\`\`
 
-### Patrones de Diseño Event-Driven
+### Event-Driven Design Patterns
 
-#### Patrón 1: Event Sourcing
-
-\`\`\`
-[Webhook] → [Validar] → [Guardar Evento] → [Procesar] → [Notificar]
-\`\`\`
-
-#### Patrón 2: CQRS (Command Query Responsibility Segregation)
+#### Pattern 1: Event Sourcing
 
 \`\`\`
-[Webhook] → [Command Handler] → [Actualizar BD] → [Publicar Evento]
-                                                              ↓
-                                              [Query Handler] → [Actualizar Vista]
+[Webhook] → [Validate] → [Store Event] → [Process] → [Notify]
 \`\`\`
 
-#### Patrón 3: Saga Pattern
+#### Pattern 2: CQRS (Command Query Responsibility Segregation)
+
+\`\`\`
+[Webhook] → [Command Handler] → [Update DB] → [Publish Event]
+                                                          ↓
+                                            [Query Handler] → [Update View]
+\`\`\`
+
+#### Pattern 3: Saga Pattern
 
 \`\`\`
 [Trigger] → [Step 1] → [Step 2] → [Step 3]
@@ -152,35 +152,35 @@ FOR EACH ROW EXECUTE FUNCTION notify_new_order();
           [Compensate] [Compensate] [Compensate]
 \`\`\`
 
-### Mejores Prácticas
+### Best Practices
 
-1. **Idempotencia**: Diseña workflows que puedan ejecutarse múltiples veces sin efectos secundarios
-2. **Validación temprana**: Valida datos en el primer nodo
-3. **Logs detallados**: Registra información de debugging
-4. **Timeouts**: Configura timeouts apropiados
-5. **Retry logic**: Implementa reintentos para operaciones fallidas
+1. **Idempotency**: Design workflows that can run several times without side effects
+2. **Early validation**: Validate data in the first node
+3. **Detailed logs**: Record debugging information
+4. **Timeouts**: Configure appropriate timeouts
+5. **Retry logic**: Implement retries for failed operations
 
-### Ejemplo Completo: Webhook con Validación
+### Complete Example: Webhook with Validation
 
 \`\`\`javascript
-// Function node para validar webhook
+// Function node to validate the webhook payload
 const body = $input.first().json;
 
-// Validar campos requeridos
-const requiredFields = ['email', 'nombre', 'telefono'];
+// Validate required fields
+const requiredFields = ['email', 'name', 'phone'];
 const missingFields = requiredFields.filter(field => !body[field]);
 
 if (missingFields.length > 0) {
-  throw new Error(\`Campos faltantes: \${missingFields.join(', ')}\`);
+  throw new Error(\`Missing fields: \${missingFields.join(', ')}\`);
 }
 
-// Validar formato de email
+// Validate the email format
 const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
 if (!emailRegex.test(body.email)) {
-  throw new Error('Email inválido');
+  throw new Error('Invalid email');
 }
 
-// Retornar datos validados
+// Return the validated data
 return [{
   json: {
     ...body,
@@ -190,87 +190,87 @@ return [{
 }];
 \`\`\`
 
-### Debugging de Triggers
+### Debugging Triggers
 
-#### Webhook no se dispara:
-1. Verifica que el workflow esté activo
-2. Revisa la URL del webhook
-3. Comprueba los headers y método HTTP
-4. Inspecciona los logs de ejecución
+#### Webhook does not fire:
+1. Check that the workflow is active
+2. Review the webhook URL
+3. Check the headers and HTTP method
+4. Inspect the execution logs
 
-#### Schedule no ejecuta:
-1. Verifica la sintaxis del cron
-2. Comprueba la zona horaria del workflow
-3. Revisa si hay ejecuciones previas fallidas
-4. Asegúrate de que el workflow esté activo
+#### Schedule does not run:
+1. Check the cron syntax
+2. Check the workflow timezone
+3. Check for previous failed executions
+4. Make sure the workflow is active
 
-### Recursos Adicionales
+### Additional Resources
 
-- [Documentación de Triggers](https://docs.n8n.io/integrations/builtin/core-nodes/)
+- [Trigger documentation](https://docs.n8n.io/integrations/builtin/core-nodes/)
 - [Cron Expression Generator](https://crontab.guru/)
-- [Webhook Testing con Postman](https://www.postman.com/)
+- [Webhook Testing with Postman](https://www.postman.com/)
 `,
     },
     {
       id: "les-02-02",
-      moduleSlug: "core-nodos-esenciales",
-      slug: "transformacion-datos",
-      title: "Transformación de Datos JSON y Binarios",
-      description: "Aprende a manipular y transformar datos en N8N usando nodos nativos y código.",
+      moduleSlug: "n8n-core-essential-nodes",
+      slug: "data-transformation",
+      title: "JSON and Binary Data Transformation",
+      description: "Learn how to manipulate and transform data in N8N using native nodes and code.",
       estimatedMinutes: 25,
-      content: `## Transformación de Datos en N8N
+      content: `## Data Transformation in N8N
 
-N8N maneja datos en formato JSON y binario. Aprender a transformarlos es fundamental.
+N8N handles data in JSON and binary format. Learning how to transform it is essential.
 
-### Estructura de Datos en N8N
+### Data Structure in N8N
 
-Cada item en N8N tiene dos propiedades principales:
+Every item in N8N has two main properties:
 
 \`\`\`javascript
 {
   json: {
-    // Datos estructurados
-    nombre: 'Juan',
-    email: 'juan@example.com'
+    // Structured data
+    name: 'John',
+    email: 'john@example.com'
   },
   binary: {
-    // Datos binarios (archivos, imágenes)
+    // Binary data (files, images)
     data: {
       data: 'base64...',
       mimeType: 'image/png',
-      fileName: 'foto.png'
+      fileName: 'photo.png'
     }
   }
 }
 \`\`\`
 
-### Nodos de Transformación
+### Transformation Nodes
 
 #### 1. Set Node
 
-Crea o modifica campos en los items.
+Creates or modifies fields in the items.
 
-**Ejemplo básico:**
+**Basic example:**
 
 \`\`\`javascript
 {
   "values": {
     "string": [
       {
-        "name": "nombreCompleto",
-        "value": "={{ $json.nombre }} {{ $json.apellido }}"
+        "name": "fullName",
+        "value": "={{ $json.name }} {{ $json.lastName }}"
       }
     ],
     "number": [
       {
-        "name": "edad",
-        "value": "={{ new Date().getFullYear() - $json.anioNacimiento }}"
+        "name": "age",
+        "value": "={{ new Date().getFullYear() - $json.birthYear }}"
       }
     ],
     "boolean": [
       {
-        "name": "esMayor",
-        "value": "={{ $json.edad >= 18 }}"
+        "name": "isAdult",
+        "value": "={{ $json.age >= 18 }}"
       }
     ]
   }
@@ -279,33 +279,33 @@ Crea o modifica campos en los items.
 
 #### 2. Rename Keys Node
 
-Renombra campos sin modificar su contenido.
+Renames fields without modifying their content.
 
 \`\`\`javascript
 {
   "currentKey": "user_name",
-  "newKey": "nombre"
+  "newKey": "name"
 }
 \`\`\`
 
 #### 3. Remove Duplicates Node
 
-Elimina items duplicados basándose en campos específicos.
+Removes duplicate items based on specific fields.
 
-**Configuración:**
+**Configuration:**
 - **Compare**: Selected Fields
 - **Options**: Keep First Match
 
 #### 4. Sort Node
 
-Ordena items por uno o más campos.
+Sorts items by one or more fields.
 
 \`\`\`javascript
 {
   "sortFieldsUi": {
     "sortField": [
       {
-        "fieldName": "fecha",
+        "fieldName": "date",
         "order": "descending"
       }
     ]
@@ -313,37 +313,37 @@ Ordena items por uno o más campos.
 }
 \`\`\`
 
-### Manipulación con Code Node
+### Manipulating Data with the Code Node
 
-#### Transformación de Arrays
+#### Array Transformation
 
 \`\`\`javascript
 const items = $input.all();
 
-// Filtrar items
-const activos = items.filter(item => item.json.estado === 'activo');
+// Filter items
+const activeItems = items.filter(item => item.json.status === 'active');
 
-// Mapear y transformar
-const transformados = items.map(item => ({
+// Map and transform
+const transformed = items.map(item => ({
   json: {
     id: item.json.id,
-    nombreCompleto: \`\${item.json.nombre} \${item.json.apellido}\`,
+    fullName: \`\${item.json.firstName} \${item.json.lastName}\`,
     emailLower: item.json.email.toLowerCase(),
-    fechaRegistro: new Date(item.json.createdAt).toLocaleDateString('es-ES')
+    registeredAt: new Date(item.json.createdAt).toLocaleDateString('en-US')
   }
 }));
 
-// Reducir a un solo objeto
-const resumen = items.reduce((acc, item) => {
-  acc.total += item.json.monto;
-  acc.cantidad += 1;
+// Reduce to a single object
+const summary = items.reduce((acc, item) => {
+  acc.total += item.json.amount;
+  acc.count += 1;
   return acc;
-}, { total: 0, cantidad: 0 });
+}, { total: 0, count: 0 });
 
-return transformados;
+return transformed;
 \`\`\`
 
-#### Manipulación de Objetos Anidados
+#### Manipulating Nested Objects
 
 \`\`\`javascript
 const items = $input.all();
@@ -351,40 +351,40 @@ const items = $input.all();
 return items.map(item => {
   const data = item.json;
   
-  // Extraer datos anidados
-  const direccion = data.direccion || {};
-  const contacto = data.contacto || {};
+  // Extract nested data
+  const address = data.address || {};
+  const contact = data.contact || {};
   
   return {
     json: {
-      // Aplanar estructura
-      nombre: data.nombre,
-      calle: direccion.calle,
-      ciudad: direccion.ciudad,
-      pais: direccion.pais,
-      telefono: contacto.telefono,
-      email: contacto.email,
+      // Flatten the structure
+      name: data.name,
+      street: address.street,
+      city: address.city,
+      country: address.country,
+      phone: contact.phone,
+      email: contact.email,
       
-      // Crear campos calculados
-      direccionCompleta: \`\${direccion.calle}, \${direccion.ciudad}, \${direccion.pais}\`,
-      tieneContacto: !!(contacto.telefono || contacto.email)
+      // Create calculated fields
+      fullAddress: \`\${address.street}, \${address.city}, \${address.country}\`,
+      hasContact: !!(contact.phone || contact.email)
     }
   };
 });
 \`\`\`
 
-### Trabajo con Datos Binarios
+### Working with Binary Data
 
-#### Leer archivo CSV
+#### Reading a CSV file
 
 \`\`\`javascript
 const items = $input.all();
 const binaryData = items[0].binary.data;
 
-// Convertir base64 a string
+// Convert base64 to a string
 const csvContent = Buffer.from(binaryData.data, 'base64').toString('utf-8');
 
-// Parsear CSV
+// Parse the CSV
 const lines = csvContent.split('\\n');
 const headers = lines[0].split(',');
 
@@ -400,30 +400,30 @@ const result = lines.slice(1).map(line => {
 return result;
 \`\`\`
 
-#### Convertir JSON a CSV
+#### Converting JSON to CSV
 
 \`\`\`javascript
 const items = $input.all();
 
 if (items.length === 0) return [];
 
-// Extraer headers del primer item
+// Extract the headers from the first item
 const headers = Object.keys(items[0].json);
 
-// Crear contenido CSV
+// Build the CSV content
 const csvContent = [
   headers.join(','),
-  ...items.map(item => 
+  ...items.map(item =>
     headers.map(header => {
       const value = item.json[header];
-      // Escapar comillas y envolver en comillas si contiene coma
+      // Escape quotes and wrap in quotes when the value contains a comma
       const escaped = String(value).replace(/"/g, '""');
       return \`"\${escaped}"\`;
     }).join(',')
   )
 ].join('\\n');
 
-// Convertir a binario
+// Convert to binary
 const binaryData = Buffer.from(csvContent, 'utf-8').toString('base64');
 
 return [{
@@ -438,22 +438,22 @@ return [{
 }];
 \`\`\`
 
-### Funciones Útiles de N8N
+### Useful N8N Functions
 
-#### $() - Acceder a datos de nodos anteriores
+#### $() - Access data from previous nodes
 
 \`\`\`javascript
-// Acceder al primer item del nodo "Webhook"
+// Access the first item of the "Webhook" node
 const webhookData = $('Webhook').first().json;
 
-// Acceder a todos los items del nodo "HTTP Request"
+// Access all items of the "HTTP Request" node
 const allItems = $('HTTP Request').all();
 
-// Acceder al último item
+// Access the last item
 const lastItem = $('HTTP Request').last().json;
 \`\`\`
 
-#### $node - Información del nodo actual
+#### $node - Information about the current node
 
 \`\`\`javascript
 const nodeName = $node.name;
@@ -461,24 +461,24 @@ const executionId = $execution.id;
 const workflowName = $workflow.name;
 \`\`\`
 
-#### DateTime - Manejo de fechas
+#### DateTime - Working with dates
 
 \`\`\`javascript
-const now = $now; // DateTime actual
-const today = $today; // Inicio del día actual
+const now = $now; // Current DateTime
+const today = $today; // Start of the current day
 
-// Formatear fechas
-const formatted = $now.format('dd/MM/yyyy HH:mm');
+// Format dates
+const formatted = $now.format('MM/dd/yyyy HH:mm');
 
-// Manipulación
+// Manipulation
 const nextWeek = $now.plus({ days: 7 });
 const lastMonth = $now.minus({ months: 1 });
 
-// Comparación
+// Comparison
 const isAfter = $now > DateTime.fromISO('2024-01-01');
 \`\`\`
 
-### Patrones Comunes
+### Common Patterns
 
 #### Batch Processing
 
@@ -508,80 +508,80 @@ const items = $input.all();
 return items.map(item => {
   const data = item.json;
   
-  // Enriquecer con datos calculados
+  // Enrich the record with calculated data
   return {
     json: {
       ...data,
-      // Calcular edad desde fecha de nacimiento
-      edad: Math.floor(
-        ($now.diff(DateTime.fromISO(data.fechaNacimiento), 'years')).years
+      // Calculate the age from the birth date
+      age: Math.floor(
+        ($now.diff(DateTime.fromISO(data.birthDate), 'years')).years
       ),
-      // Generar slug desde nombre
-      slug: data.nombre
+      // Generate a slug from the name
+      slug: data.name
         .toLowerCase()
         .normalize('NFD')
         .replace(/[\\u0300-\\u036f]/g, '')
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, ''),
-      // Hash para ID único
+      // Hash for a unique ID
       hash: require('crypto')
         .createHash('md5')
         .update(data.email)
-        .digest('hex')
+        .digest('hex'),
     }
   };
 });
 \`\`\`
 
-### Mejores Prácticas
+### Best Practices
 
-1. **Valida datos temprano**: Usa validaciones antes de transformaciones complejas
-2. **Maneja null/undefined**: Siempre verifica que los campos existan
-3. **Usa tipos correctos**: Convierte strings a números cuando sea necesario
-4. **Documenta transformaciones**: Agrega comentarios en código complejo
-5. **Prueba con datos reales**: Usa datos de muestra representativos
+1. **Validate data early**: Use validations before complex transformations
+2. **Handle null/undefined**: Always check that fields exist
+3. **Use the right types**: Convert strings to numbers when necessary
+4. **Document transformations**: Add comments to complex code
+5. **Test with real data**: Use representative sample data
 
 ### Debugging
 
-#### Inspeccionar datos en cada paso:
+#### Inspecting data at every step:
 
 \`\`\`javascript
-// Log de datos para debugging
+// Log data for debugging
 console.log('Input items:', JSON.stringify($input.all(), null, 2));
 console.log('First item:', $input.first().json);
 
-// Retornar datos sin modificar
+// Return the data unchanged
 return $input.all();
 \`\`\`
 
-### Recursos Adicionales
+### Additional Resources
 
-- [Expresiones en N8N](https://docs.n8n.io/code/expressions/)
+- [Expressions in N8N](https://docs.n8n.io/code/expressions/)
 - [Code Node Documentation](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.code/)
 - [JavaScript Date Methods](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date)
 `,
     },
     {
       id: "les-02-03",
-      moduleSlug: "core-nodos-esenciales",
-      slug: "code-node-avanzado",
-      title: "Code Node Avanzado: JavaScript y Python",
-      description: "Domina el Code node con técnicas avanzadas de programación en JavaScript y Python.",
+      moduleSlug: "n8n-core-essential-nodes",
+      slug: "advanced-code-node",
+      title: "Advanced Code Node: JavaScript and Python",
+      description: "Master the Code node with advanced programming techniques in JavaScript and Python.",
       estimatedMinutes: 30,
-      content: `## Code Node Avanzado
+      content: `## Advanced Code Node
 
-El Code node es el más poderoso de N8N. Permite ejecutar código JavaScript o Python para lógica compleja.
+The Code node is the most powerful node in N8N. It lets you run JavaScript or Python code for complex logic.
 
-### Modos de Ejecución
+### Execution Modes
 
 #### 1. Run Once for All Items
 
-Ejecuta el código una vez con todos los items disponibles.
+Runs the code once with all items available.
 
 \`\`\`javascript
 const items = $input.all();
 
-// Procesar todos los items
+// Process all items
 const processed = items.map(item => ({
   json: {
     ...item.json,
@@ -594,7 +594,7 @@ return processed;
 
 #### 2. Run Once for Each Item
 
-Ejecuta el código para cada item individualmente.
+Runs the code for each individual item.
 
 \`\`\`javascript
 const item = $input.item;
@@ -608,9 +608,9 @@ return {
 };
 \`\`\`
 
-### JavaScript Avanzado
+### Advanced JavaScript
 
-#### Async/Await con APIs Externas
+#### Async/Await with External APIs
 
 \`\`\`javascript
 const items = $input.all();
@@ -618,7 +618,7 @@ const results = [];
 
 for (const item of items) {
   try {
-    // Llamada API asíncrona
+    // Asynchronous API call
     const response = await this.helpers.httpRequest({
       method: 'GET',
       url: \`https://api.example.com/users/\${item.json.userId}\`,
@@ -648,7 +648,7 @@ for (const item of items) {
 return results;
 \`\`\`
 
-#### Manejo de Errores Robusto
+#### Robust Error Handling
 
 \`\`\`javascript
 const items = $input.all();
@@ -657,12 +657,12 @@ const errors = [];
 
 for (const item of items) {
   try {
-    // Validación
+    // Validation
     if (!item.json.email) {
-      throw new Error('Email es requerido');
+      throw new Error('Email is required');
     }
     
-    // Procesamiento
+    // Processing
     const processed = {
       ...item.json,
       emailLower: item.json.email.toLowerCase(),
@@ -682,14 +682,14 @@ for (const item of items) {
   }
 }
 
-// Retornar resultados y errores por separado
+// Return results and errors separately
 return [...results, ...errors];
 \`\`\`
 
-#### Uso de Módulos Externos
+#### Using External Modules
 
 \`\`\`javascript
-// N8N incluye varias librerías útiles
+// N8N ships with several useful libraries
 const crypto = require('crypto');
 const moment = require('moment');
 
@@ -698,36 +698,36 @@ const items = $input.all();
 return items.map(item => {
   const data = item.json;
   
-  // Generar hash
+  // Generate a hash
   const hash = crypto
     .createHash('sha256')
     .update(data.email)
     .digest('hex');
   
-  // Formatear fecha con moment
-  const fechaFormateada = moment(data.createdAt)
-    .locale('es')
-    .format('DD [de] MMMM [de] YYYY');
+  // Format the date with moment
+  const formattedDate = moment(data.createdAt)
+    .locale('en')
+    .format('MMMM Do, YYYY');
   
   return {
     json: {
       ...data,
       hash,
-      fechaFormateada,
-      diasDesdeCreacion: moment().diff(moment(data.createdAt), 'days')
+      formattedDate,
+      daysSinceCreation: moment().diff(moment(data.createdAt), 'days')
     }
   };
 });
 \`\`\`
 
-#### Manipulación de Arrays Compleja
+#### Complex Array Manipulation
 
 \`\`\`javascript
 const items = $input.all();
 
-// Agrupar por categoría
+// Group by category
 const grouped = items.reduce((acc, item) => {
-  const category = item.json.category || 'sin-categoria';
+  const category = item.json.category || 'uncategorized';
   if (!acc[category]) {
     acc[category] = [];
   }
@@ -735,7 +735,7 @@ const grouped = items.reduce((acc, item) => {
   return acc;
 }, {});
 
-// Convertir a formato de salida
+// Convert to the output format
 return Object.entries(grouped).map(([category, items]) => ({
   json: {
     category,
@@ -746,13 +746,13 @@ return Object.entries(grouped).map(([category, items]) => ({
 }));
 \`\`\`
 
-### Python en Code Node
+### Python in the Code Node
 
-#### Configuración
+#### Setup
 
-Para usar Python, selecciona "Python" en el campo "Language" del Code node.
+To use Python, select "Python" in the "Language" field of the Code node.
 
-#### Ejemplo Básico
+#### Basic Example
 
 \`\`\`python
 items = []
@@ -760,19 +760,19 @@ items = []
 for item in _input.all():
     data = item.json
     
-    # Transformación
+    # Transformation
     items.append({
         'json': {
-            'nombre': data.get('nombre', '').upper(),
+            'name': data.get('name', '').upper(),
             'email': data.get('email', '').lower(),
-            'procesado': True
+            'processed': True
         }
     })
 
 return items
 \`\`\`
 
-#### Análisis de Datos con Python
+#### Data Analysis with Python
 
 \`\`\`python
 import json
@@ -784,31 +784,31 @@ results = []
 for item in items:
     data = item.json
     
-    # Calcular métricas
-    fecha_creacion = datetime.fromisoformat(data['createdAt'])
-    dias_activo = (datetime.now() - fecha_creacion).days
+    # Calculate metrics
+    created_at = datetime.fromisoformat(data['createdAt'])
+    days_active = (datetime.now() - created_at).days
     
-    # Clasificar usuario
-    if dias_activo > 365:
-        categoria = 'veterano'
-    elif dias_activo > 90:
-        categoria = 'regular'
+    # Classify the user
+    if days_active > 365:
+        category = 'veteran'
+    elif days_active > 90:
+        category = 'regular'
     else:
-        categoria = 'nuevo'
+        category = 'new'
     
     results.append({
         'json': {
             **data,
-            'diasActivo': dias_activo,
-            'categoria': categoria,
-            'esActivo': dias_activo < 30
+            'daysActive': days_active,
+            'category': category,
+            'isActive': days_active < 30
         }
     })
 
 return results
 \`\`\`
 
-### Patrones Avanzados
+### Advanced Patterns
 
 #### Rate Limiting
 
@@ -833,7 +833,7 @@ for (let i = 0; i < items.length; i++) {
       }
     });
     
-    // Rate limiting: esperar 100ms entre requests
+    // Rate limiting: wait 100ms between requests
     if (i < items.length - 1) {
       await delay(100);
     }
@@ -850,7 +850,7 @@ for (let i = 0; i < items.length; i++) {
 return results;
 \`\`\`
 
-#### Retry con Exponential Backoff
+#### Retry with Exponential Backoff
 
 \`\`\`javascript
 async function fetchWithRetry(url, maxRetries = 3) {
@@ -908,7 +908,7 @@ return results;
 \`\`\`javascript
 const items = $input.all();
 
-// Procesar en paralelo (máximo 5 concurrentes)
+// Process in parallel (up to 5 concurrent requests)
 const concurrency = 5;
 const results = [];
 
@@ -938,7 +938,7 @@ async function processItem(item) {
   }
 }
 
-// Procesar en lotes
+// Process in batches
 for (let i = 0; i < items.length; i += concurrency) {
   const batch = items.slice(i, i + concurrency);
   const batchResults = await Promise.all(
@@ -950,34 +950,34 @@ for (let i = 0; i < items.length; i += concurrency) {
 return results;
 \`\`\`
 
-### Variables de Entorno y Secrets
+### Environment Variables and Secrets
 
 \`\`\`javascript
-// Acceder a variables de entorno
+// Access environment variables
 const apiKey = process.env.API_KEY;
 const dbUrl = process.env.DATABASE_URL;
 
-// Usar credenciales de N8N
+// Use N8N credentials
 const credentials = await this.getCredentials('httpHeaderAuth');
 const token = credentials.value;
 
-// Acceder a variables del workflow
-const workflowVar = $workflow.variables.miVariable;
+// Access workflow variables
+const workflowVar = $workflow.variables.myVariable;
 \`\`\`
 
-### Debugging Avanzado
+### Advanced Debugging
 
 \`\`\`javascript
 const items = $input.all();
 
-// Logging detallado
+// Detailed logging
 console.log('=== DEBUG INFO ===');
 console.log('Total items:', items.length);
 console.log('First item:', JSON.stringify(items[0]?.json, null, 2));
 console.log('Execution ID:', $execution.id);
 console.log('Workflow name:', $workflow.name);
 
-// Inspeccionar estructura de datos
+// Inspect the data structure
 const sampleItem = items[0]?.json;
 if (sampleItem) {
   console.log('Item keys:', Object.keys(sampleItem));
@@ -989,16 +989,16 @@ if (sampleItem) {
 return items;
 \`\`\`
 
-### Mejores Prácticas
+### Best Practices
 
-1. **Usa tipos correctos**: Valida y convierte tipos de datos
-2. **Maneja errores**: Siempre usa try/catch en operaciones asíncronas
-3. **Limita concurrencia**: No hagas demasiadas requests simultáneas
-4. **Usa timeouts**: Configura timeouts para operaciones de red
-5. **Documenta código**: Agrega comentarios para lógica compleja
-6. **Prueba incrementalmente**: Prueba con pocos items primero
+1. **Use the right types**: Validate and convert data types
+2. **Handle errors**: Always use try/catch in asynchronous operations
+3. **Limit concurrency**: Do not fire too many simultaneous requests
+4. **Use timeouts**: Configure timeouts for network operations
+5. **Document your code**: Add comments for complex logic
+6. **Test incrementally**: Test with a few items first
 
-### Recursos Adicionales
+### Additional Resources
 
 - [Code Node Documentation](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.code/)
 - [JavaScript Reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference)
@@ -1007,20 +1007,20 @@ return items;
     },
     {
       id: "les-02-04",
-      moduleSlug: "core-nodos-esenciales",
+      moduleSlug: "n8n-core-essential-nodes",
       slug: "sub-workflows",
-      title: "Sub-Workflows y Modularización",
-      description: "Aprende a crear workflows modulares y reutilizables usando Execute Workflow node.",
+      title: "Sub-Workflows and Modularization",
+      description: "Learn how to build modular, reusable workflows with the Execute Workflow node.",
       estimatedMinutes: 25,
-      content: `## Sub-Workflows y Modularización
+      content: `## Sub-Workflows and Modularization
 
-Los sub-workflows permiten dividir workflows complejos en componentes reutilizables y mantenibles.
+Sub-workflows let you split complex workflows into reusable, maintainable components.
 
 ### Execute Workflow Node
 
-Este nodo ejecuta otro workflow y retorna sus resultados.
+This node runs another workflow and returns its results.
 
-#### Configuración Básica
+#### Basic Configuration
 
 \`\`\`json
 {
@@ -1032,46 +1032,46 @@ Este nodo ejecuta otro workflow y retorna sus resultados.
 }
 \`\`\`
 
-#### Modos de Ejecución
+#### Execution Modes
 
-**1. Once (Por defecto)**
-Ejecuta el sub-workflow una vez con todos los items.
+**1. Once (default)**
+Runs the sub-workflow once with all items.
 
 **2. Each Item**
-Ejecuta el sub-workflow una vez por cada item.
+Runs the sub-workflow once for every item.
 
-### Patrones de Diseño
+### Design Patterns
 
-#### Patrón 1: Pipeline de Procesamiento
+#### Pattern 1: Processing Pipeline
 
 \`\`\`
 [Main Workflow]
     ↓
-[Execute: Validar Datos]
+[Execute: Validate Data]
     ↓
-[Execute: Enriquecer Datos]
+[Execute: Enrich Data]
     ↓
-[Execute: Guardar en BD]
+[Execute: Save to DB]
     ↓
-[Execute: Enviar Notificación]
+[Execute: Send Notification]
 \`\`\`
 
 **Main Workflow:**
 
 \`\`\`javascript
-// Cada Execute Workflow node llama a un sub-workflow específico
-// Los datos fluyen de uno a otro automáticamente
+// Each Execute Workflow node calls a specific sub-workflow
+// Data flows from one to the next automatically
 \`\`\`
 
-#### Patrón 2: Router de Workflows
+#### Pattern 2: Workflow Router
 
 \`\`\`
 [Webhook]
     ↓
-[Switch: Tipo de Evento]
-    ├─→ [Execute: Procesar Orden]
-    ├─→ [Execute: Procesar Pago]
-    └─→ [Execute: Procesar Envío]
+[Switch: Event Type]
+    ├─→ [Execute: Process Order]
+    ├─→ [Execute: Process Payment]
+    └─→ [Execute: Process Shipment]
 \`\`\`
 
 **Switch Node Configuration:**
@@ -1103,12 +1103,12 @@ Ejecuta el sub-workflow una vez por cada item.
 }
 \`\`\`
 
-#### Patrón 3: Error Handler Centralizado
+#### Pattern 3: Centralized Error Handler
 
 \`\`\`
 [Main Workflow]
     ↓
-[Try: Proceso Principal]
+[Try: Main Process]
     ↓ (error)
 [Execute: Error Handler]
     ├─→ Log Error
@@ -1116,9 +1116,9 @@ Ejecuta el sub-workflow una vez por cada item.
     └─→ Retry Logic
 \`\`\`
 
-### Creación de Sub-Workflows Reutilizables
+### Building Reusable Sub-Workflows
 
-#### Sub-Workflow: Validación de Email
+#### Sub-Workflow: Email Validation
 
 \`\`\`javascript
 // Input: { email: "user@example.com" }
@@ -1129,14 +1129,14 @@ const items = $input.all();
 return items.map(item => {
   const email = item.json.email || '';
   
-  // Normalizar
+  // Normalize
   const normalized = email.toLowerCase().trim();
   
-  // Validar formato
+  // Validate the format
   const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
   const valid = emailRegex.test(normalized);
   
-  // Verificar dominio común
+  // Check for common disposable domains
   const disposableDomains = ['tempmail.com', '10minutemail.com'];
   const domain = normalized.split('@')[1];
   const isDisposable = disposableDomains.includes(domain);
@@ -1153,7 +1153,7 @@ return items.map(item => {
 });
 \`\`\`
 
-#### Sub-Workflow: Enriquecimiento de Datos
+#### Sub-Workflow: Data Enrichment
 
 \`\`\`javascript
 // Input: { userId: "123" }
@@ -1164,7 +1164,7 @@ const results = [];
 
 for (const item of items) {
   try {
-    // Obtener datos del usuario
+    // Fetch the user data
     const userResponse = await this.helpers.httpRequest({
       method: 'GET',
       url: \`https://api.example.com/users/\${item.json.userId}\`,
@@ -1173,7 +1173,7 @@ for (const item of items) {
       }
     });
     
-    // Obtener datos adicionales
+    // Fetch additional data
     const profileResponse = await this.helpers.httpRequest({
       method: 'GET',
       url: \`https://api.example.com/users/\${item.json.userId}/profile\`
@@ -1202,10 +1202,10 @@ for (const item of items) {
 return results;
 \`\`\`
 
-#### Sub-Workflow: Notificación Multi-Canal
+#### Sub-Workflow: Multi-Channel Notification
 
 \`\`\`javascript
-// Input: { message: "Alerta", channels: ["email", "slack"], recipients: [...] }
+// Input: { message: "Alert", channels: ["email", "slack"], recipients: [...] }
 
 const items = $input.all();
 const results = [];
@@ -1214,19 +1214,19 @@ for (const item of items) {
   const { message, channels, recipients } = item.json;
   const sentTo = [];
   
-  // Enviar por email
+  // Send by email
   if (channels.includes('email')) {
     for (const recipient of recipients) {
       if (recipient.email) {
-        // Aquí iría el nodo de email
+        // The email node would go here
         sentTo.push({ channel: 'email', recipient: recipient.email });
       }
     }
   }
   
-  // Enviar por Slack
+  // Send by Slack
   if (channels.includes('slack')) {
-    // Aquí iría el nodo de Slack
+    // The Slack node would go here
     sentTo.push({ channel: 'slack', webhook: 'configured' });
   }
   
@@ -1242,12 +1242,12 @@ for (const item of items) {
 return results;
 \`\`\`
 
-### Manejo de Datos entre Workflows
+### Passing Data Between Workflows
 
-#### Pasar Datos al Sub-Workflow
+#### Sending Data to the Sub-Workflow
 
 \`\`\`javascript
-// En el Execute Workflow node
+// In the Execute Workflow node
 {
   "workflowId": "sub-workflow-id",
   "mode": "once",
@@ -1262,11 +1262,11 @@ return results;
 }
 \`\`\`
 
-#### Recibir Datos del Sub-Workflow
+#### Receiving Data from the Sub-Workflow
 
 \`\`\`javascript
-// El sub-workflow retorna items que se convierten en output del Execute Workflow node
-// Puedes acceder a ellos como cualquier otro nodo
+// The sub-workflow returns items that become the output of the Execute Workflow node
+// You can access them like any other node
 
 const subWorkflowOutput = $input.all();
 
@@ -1278,22 +1278,22 @@ return subWorkflowOutput.map(item => ({
 }));
 \`\`\`
 
-### Variables Compartidas
+### Shared Variables
 
-#### Usar Variables del Workflow Principal
+#### Using Variables from the Parent Workflow
 
 \`\`\`javascript
-// En el sub-workflow, puedes acceder a variables del workflow principal
+// Inside the sub-workflow you can access parent workflow variables
 const parentWorkflowId = $workflow.activeWorkflowId;
 const executionId = $execution.id;
 
-// Las variables de entorno son compartidas
+// Environment variables are shared
 const apiKey = process.env.API_KEY;
 \`\`\`
 
-### Error Handling en Sub-Workflows
+### Error Handling in Sub-Workflows
 
-#### Patrón: Try-Catch con Execute Workflow
+#### Pattern: Try-Catch with Execute Workflow
 
 \`\`\`
 [Main Workflow]
@@ -1314,7 +1314,7 @@ const items = $input.all();
 return items.map(item => {
   const error = item.json.error || {};
   
-  // Log detallado
+  // Detailed log
   console.error('Sub-workflow error:', {
     workflowId: error.workflowId,
     nodeId: error.nodeId,
@@ -1322,7 +1322,7 @@ return items.map(item => {
     timestamp: new Date().toISOString()
   });
   
-  // Retornar datos de fallback
+  // Return fallback data
   return {
     json: {
       success: false,
@@ -1334,12 +1334,12 @@ return items.map(item => {
 });
 \`\`\`
 
-### Optimización de Performance
+### Performance Optimization
 
-#### Batch Processing con Sub-Workflows
+#### Batch Processing with Sub-Workflows
 
 \`\`\`javascript
-// Dividir items en lotes y procesar en paralelo
+// Split the items into batches and process them in parallel
 const items = $input.all();
 const batchSize = 50;
 const batches = [];
@@ -1348,7 +1348,7 @@ for (let i = 0; i < items.length; i += batchSize) {
   batches.push(items.slice(i, i + batchSize));
 }
 
-// Cada lote se procesa en un Execute Workflow separado
+// Each batch is processed in a separate Execute Workflow
 return batches.map((batch, index) => ({
   json: {
     batchNumber: index + 1,
@@ -1358,32 +1358,32 @@ return batches.map((batch, index) => ({
 }));
 \`\`\`
 
-### Mejores Prácticas
+### Best Practices
 
-1. **Nombres descriptivos**: Usa nombres claros para sub-workflows
-2. **Documentación**: Documenta inputs y outputs esperados
-3. **Validación**: Valida datos de entrada en sub-workflows
-4. **Error handling**: Siempre maneja errores en sub-workflows
-5. **Testing**: Prueba sub-workflows independientemente
-6. **Versionado**: Mantén versiones de sub-workflows críticos
-7. **Monitoreo**: Log ejecuciones de sub-workflows importantes
+1. **Descriptive names**: Use clear names for sub-workflows
+2. **Documentation**: Document the expected inputs and outputs
+3. **Validation**: Validate incoming data in sub-workflows
+4. **Error handling**: Always handle errors in sub-workflows
+5. **Testing**: Test sub-workflows independently
+6. **Versioning**: Keep versions of critical sub-workflows
+7. **Monitoring**: Log executions of important sub-workflows
 
 ### Debugging
 
-#### Verificar Flujo de Datos
+#### Verifying the Data Flow
 
 \`\`\`javascript
-// En el sub-workflow, log los datos recibidos
+// Inside the sub-workflow, log the incoming data
 console.log('=== SUB-WORKFLOW INPUT ===');
 console.log('Items received:', $input.all().length);
 console.log('First item:', JSON.stringify($input.first().json, null, 2));
 
-// Log los datos antes de retornar
+// Log the data before returning it
 console.log('=== SUB-WORKFLOW OUTPUT ===');
 console.log('Items to return:', results.length);
 \`\`\`
 
-### Recursos Adicionales
+### Additional Resources
 
 - [Execute Workflow Node](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.executeworkflow/)
 - [Workflow Organization](https://docs.n8n.io/flow-logic/subworkflows/)
@@ -1392,27 +1392,27 @@ console.log('Items to return:', results.length);
     },
     {
       id: "les-02-05",
-      moduleSlug: "core-nodos-esenciales",
-      slug: "control-flujo",
-      title: "Control de Flujo: IF, Switch, Merge y Wait",
-      description: "Domina los nodos de control de flujo para crear workflows complejos y condicionales.",
+      moduleSlug: "n8n-core-essential-nodes",
+      slug: "flow-control",
+      title: "Flow Control: IF, Switch, Merge and Wait",
+      description: "Master the flow control nodes to build complex, conditional workflows.",
       estimatedMinutes: 25,
-      content: `## Control de Flujo en N8N
+      content: `## Flow Control in N8N
 
-Los nodos de control de flujo permiten crear lógica condicional, combinar datos y manejar ejecuciones asíncronas.
+Flow control nodes let you build conditional logic, combine data and handle asynchronous executions.
 
 ### IF Node
 
-Ejecuta diferentes ramas basándose en condiciones.
+Runs different branches based on conditions.
 
-#### Configuración Básica
+#### Basic Configuration
 
 \`\`\`json
 {
   "conditions": {
     "conditions": [
       {
-        "leftValue": "={{ $json.edad }}",
+        "leftValue": "={{ $json.age }}",
         "rightValue": 18,
         "operator": {
           "type": "number",
@@ -1424,37 +1424,37 @@ Ejecuta diferentes ramas basándose en condiciones.
 }
 \`\`\`
 
-#### Operadores Disponibles
+#### Available Operators
 
-**Números:**
-- \`equal\`: Igual a
-- \`notEqual\`: Diferente de
-- \`gt\`: Mayor que
-- \`gte\`: Mayor o igual que
-- \`lt\`: Menor que
-- \`lte\`: Menor o igual que
+**Numbers:**
+- \`equal\`: Equal to
+- \`notEqual\`: Not equal to
+- \`gt\`: Greater than
+- \`gte\`: Greater than or equal to
+- \`lt\`: Less than
+- \`lte\`: Less than or equal to
 
 **Strings:**
-- \`equal\`: Igual a
-- \`notEqual\`: Diferente de
-- \`contains\`: Contiene
-- \`notContains\`: No contiene
-- \`startsWith\`: Empieza con
-- \`endsWith\`: Termina con
-- \`regex\`: Coincide con regex
+- \`equal\`: Equal to
+- \`notEqual\`: Not equal to
+- \`contains\`: Contains
+- \`notContains\`: Does not contain
+- \`startsWith\`: Starts with
+- \`endsWith\`: Ends with
+- \`regex\`: Matches a regex
 
 **Boolean:**
-- \`true\`: Es verdadero
-- \`false\`: Es falso
+- \`true\`: Is true
+- \`false\`: Is false
 
 **Arrays:**
-- \`contains\`: Contiene elemento
-- \`lengthEqual\`: Longitud igual a
-- \`lengthGt\`: Longitud mayor que
+- \`contains\`: Contains an element
+- \`lengthEqual\`: Length equal to
+- \`lengthGt\`: Length greater than
 
-#### Ejemplos de Condiciones
+#### Condition Examples
 
-**Condición simple:**
+**Simple condition:**
 
 \`\`\`javascript
 {
@@ -1473,14 +1473,14 @@ Ejecuta diferentes ramas basándose en condiciones.
 }
 \`\`\`
 
-**Múltiples condiciones (AND):**
+**Multiple conditions (AND):**
 
 \`\`\`javascript
 {
   "conditions": {
     "conditions": [
       {
-        "leftValue": "={{ $json.edad }}",
+        "leftValue": "={{ $json.age }}",
         "rightValue": 18,
         "operator": { "type": "number", "operation": "gte" }
       },
@@ -1500,7 +1500,7 @@ Ejecuta diferentes ramas basándose en condiciones.
 }
 \`\`\`
 
-**Múltiples condiciones (OR):**
+**Multiple conditions (OR):**
 
 \`\`\`javascript
 {
@@ -1524,9 +1524,9 @@ Ejecuta diferentes ramas basándose en condiciones.
 
 ### Switch Node
 
-Dirige items a diferentes salidas basándose en condiciones.
+Routes items to different outputs based on conditions.
 
-#### Configuración
+#### Configuration
 
 \`\`\`json
 {
@@ -1538,8 +1538,8 @@ Dirige items a diferentes salidas basándose en condiciones.
         "conditions": {
           "conditions": [
             {
-              "leftValue": "={{ $json.tipo }}",
-              "rightValue": "venta",
+              "leftValue": "={{ $json.type }}",
+              "rightValue": "sale",
               "operator": { "type": "string", "operation": "equal" }
             }
           ]
@@ -1550,8 +1550,8 @@ Dirige items a diferentes salidas basándose en condiciones.
         "conditions": {
           "conditions": [
             {
-              "leftValue": "={{ $json.tipo }}",
-              "rightValue": "devolucion",
+              "leftValue": "={{ $json.type }}",
+              "rightValue": "refund",
               "operator": { "type": "string", "operation": "equal" }
             }
           ]
@@ -1562,8 +1562,8 @@ Dirige items a diferentes salidas basándose en condiciones.
         "conditions": {
           "conditions": [
             {
-              "leftValue": "={{ $json.tipo }}",
-              "rightValue": "consulta",
+              "leftValue": "={{ $json.type }}",
+              "rightValue": "inquiry",
               "operator": { "type": "string", "operation": "equal" }
             }
           ]
@@ -1575,26 +1575,26 @@ Dirige items a diferentes salidas basándose en condiciones.
 }
 \`\`\`
 
-#### Ejemplo: Router de Tickets
+#### Example: Ticket Router
 
 \`\`\`
-[Webhook: Nuevo Ticket]
+[Webhook: New Ticket]
     ↓
-[Switch: Prioridad]
-    ├─ Output 0 (Alta) → [Execute: Proceso Urgente]
-    ├─ Output 1 (Media) → [Execute: Proceso Normal]
-    ├─ Output 2 (Baja) → [Execute: Proceso Batch]
-    └─ Fallback → [Execute: Proceso Default]
+[Switch: Priority]
+    ├─ Output 0 (High) → [Execute: Urgent Process]
+    ├─ Output 1 (Medium) → [Execute: Normal Process]
+    ├─ Output 2 (Low) → [Execute: Batch Process]
+    └─ Fallback → [Execute: Default Process]
 \`\`\`
 
 ### Merge Node
 
-Combina datos de múltiples fuentes.
+Combines data from multiple sources.
 
-#### Modos de Merge
+#### Merge Modes
 
 **1. Append**
-Concatena items de ambas entradas.
+Concatenates the items of both inputs.
 
 \`\`\`
 Input 1: [A, B, C]
@@ -1603,16 +1603,16 @@ Output: [A, B, C, D, E, F]
 \`\`\`
 
 **2. Combine by Position**
-Combina items por posición (índice).
+Combines items by position (index).
 
 \`\`\`
-Input 1: [{id: 1, name: "Juan"}, {id: 2, name: "María"}]
+Input 1: [{id: 1, name: "John"}, {id: 2, name: "Mary"}]
 Input 2: [{age: 25}, {age: 30}]
-Output: [{id: 1, name: "Juan", age: 25}, {id: 2, name: "María", age: 30}]
+Output: [{id: 1, name: "John", age: 25}, {id: 2, name: "Mary", age: 30}]
 \`\`\`
 
 **3. Combine by Fields**
-Combina items basándose en campos coincidentes (como SQL JOIN).
+Combines items based on matching fields (like a SQL JOIN).
 
 \`\`\`javascript
 {
@@ -1649,21 +1649,21 @@ Combina items basándose en campos coincidentes (como SQL JOIN).
 }
 \`\`\`
 
-#### Ejemplo: Combinar Datos de Usuario y Pedidos
+#### Example: Combining User and Order Data
 
 \`\`\`
-[HTTP: Obtener Usuarios] ──┐
-                           ├─→ [Merge: by userId] → [Output: Usuarios con Pedidos]
-[HTTP: Obtener Pedidos] ──┘
+[HTTP: Get Users] ──┐
+                    ├─→ [Merge: by userId] → [Output: Users with Orders]
+[HTTP: Get Orders] ─┘
 \`\`\`
 
 ### Wait Node
 
-Pausa la ejecución del workflow.
+Pauses the workflow execution.
 
-#### Modos de Espera
+#### Wait Modes
 
-**1. Tiempo Fijo**
+**1. Fixed Time**
 
 \`\`\`json
 {
@@ -1673,7 +1673,7 @@ Pausa la ejecución del workflow.
 }
 \`\`\`
 
-**2. Hasta Fecha Específica**
+**2. Until a Specific Date**
 
 \`\`\`json
 {
@@ -1693,7 +1693,7 @@ Pausa la ejecución del workflow.
 }
 \`\`\`
 
-#### Ejemplo: Retry con Espera
+#### Example: Retry with a Wait
 
 \`\`\`
 [HTTP Request]
@@ -1709,9 +1709,9 @@ Pausa la ejecución del workflow.
 
 ### Split In Batches Node
 
-Procesa items en lotes.
+Processes items in batches.
 
-#### Configuración
+#### Configuration
 
 \`\`\`json
 {
@@ -1720,23 +1720,23 @@ Procesa items en lotes.
 }
 \`\`\`
 
-#### Ejemplo: Procesar 1000 Items en Lotes de 50
+#### Example: Processing 1000 Items in Batches of 50
 
 \`\`\`
 [Split In Batches: 50]
     ↓
-[HTTP Request: Procesar Lote]
+[HTTP Request: Process Batch]
     ↓
 [Loop Back to Split In Batches]
-    ↓ (cuando todos los lotes están procesados)
+    ↓ (when all batches have been processed)
 [Continue Workflow]
 \`\`\`
 
 ### Loop Over Items Node
 
-Itera sobre cada item individualmente.
+Iterates over each item individually.
 
-#### Configuración
+#### Configuration
 
 \`\`\`json
 {
@@ -1746,57 +1746,57 @@ Itera sobre cada item individualmente.
 }
 \`\`\`
 
-#### Ejemplo: Procesar Items Uno por Uno
+#### Example: Processing Items One by One
 
 \`\`\`
 [Loop Over Items]
     ↓
-[HTTP Request: Procesar Item]
+[HTTP Request: Process Item]
     ↓
 [IF: Success?]
     ├─ Yes → [Loop Back]
     └─ No → [Error Handler] → [Loop Back]
 \`\`\`
 
-### Patrones Avanzados
+### Advanced Patterns
 
-#### Patrón: State Machine
+#### Pattern: State Machine
 
 \`\`\`
 [Start]
     ↓
-[Switch: Estado Actual]
-    ├─ "nuevo" → [Procesar Nuevo] → [Set: Estado = "procesando"] → [Loop]
-    ├─ "procesando" → [Verificar] → [Set: Estado = "completado"] → [Loop]
-    ├─ "completado" → [Notificar] → [End]
-    └─ "error" → [Manejar Error] → [End]
+[Switch: Current State]
+    ├─ "new" → [Process New] → [Set: State = "processing"] → [Loop]
+    ├─ "processing" → [Verify] → [Set: State = "completed"] → [Loop]
+    ├─ "completed" → [Notify] → [End]
+    └─ "error" → [Handle Error] → [End]
 \`\`\`
 
-#### Patrón: Fan-Out / Fan-In
+#### Pattern: Fan-Out / Fan-In
 
 \`\`\`
-[Webhook: Lista de URLs]
+[Webhook: List of URLs]
     ↓
 [Split In Batches: 5]
     ↓
-[HTTP Request: Fetch URL] (5 en paralelo)
+[HTTP Request: Fetch URL] (5 in parallel)
     ↓
-[Merge: Combinar Resultados]
+[Merge: Combine Results]
     ↓
-[Procesar Todos los Resultados]
+[Process All Results]
 \`\`\`
 
-#### Patrón: Circuit Breaker
+#### Pattern: Circuit Breaker
 
 \`\`\`javascript
-// Code node para implementar circuit breaker
+// Code node to implement a circuit breaker
 const items = $input.all();
 const circuitState = $workflow.variables.circuitState || 'closed';
 const failureCount = $workflow.variables.failureCount || 0;
 const threshold = 5;
 
 if (circuitState === 'open') {
-  // Circuit abierto, no procesar
+  // The circuit is open, skip processing
   return items.map(item => ({
     json: {
       ...item.json,
@@ -1806,13 +1806,13 @@ if (circuitState === 'open') {
   }));
 }
 
-// Procesar normalmente
+// Process normally
 const results = [];
 let newFailureCount = failureCount;
 
 for (const item of items) {
   try {
-    // Intentar procesar
+    // Try to process the item
     const result = await processItem(item);
     results.push({ json: { ...item.json, ...result, success: true } });
     newFailureCount = 0; // Reset on success
@@ -1822,34 +1822,34 @@ for (const item of items) {
   }
 }
 
-// Actualizar estado del circuit
+// Update the circuit state
 const newState = newFailureCount >= threshold ? 'open' : 'closed';
 
 return results;
 \`\`\`
 
-### Mejores Prácticas
+### Best Practices
 
-1. **Usa IF para lógica simple**: Dos caminos (true/false)
-2. **Usa Switch para múltiples caminos**: Más de dos opciones
-3. **Merge con cuidado**: Asegúrate de que los campos de match existan
-4. **Wait con moderación**: No pauses workflows por demasiado tiempo
-5. **Batch processing**: Usa Split In Batches para grandes volúmenes
-6. **Documenta flujos complejos**: Agrega notas explicativas
+1. **Use IF for simple logic**: Two paths (true/false)
+2. **Use Switch for multiple paths**: More than two options
+3. **Merge carefully**: Make sure the match fields exist
+4. **Use Wait sparingly**: Do not pause workflows for too long
+5. **Batch processing**: Use Split In Batches for large volumes
+6. **Document complex flows**: Add explanatory notes
 
 ### Debugging
 
-#### Verificar Flujo de Ejecución
+#### Verifying the Execution Path
 
 \`\`\`javascript
-// En cada nodo de control, log el camino tomado
+// In each control node, log the path that was taken
 console.log('IF Node - Condition result:', conditionResult);
 console.log('Switch Node - Output:', outputIndex);
 console.log('Merge Node - Items from input 1:', input1Count);
 console.log('Merge Node - Items from input 2:', input2Count);
 \`\`\`
 
-### Recursos Adicionales
+### Additional Resources
 
 - [IF Node](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.if/)
 - [Switch Node](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.switch/)

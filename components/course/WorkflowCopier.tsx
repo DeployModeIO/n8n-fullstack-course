@@ -44,12 +44,12 @@ export default function WorkflowCopier({
           {copied ? (
             <>
               <Check size={14} />
-              ¡Copiado!
+              Copied!
             </>
           ) : (
             <>
               <Copy size={14} />
-              Copiar Workflow
+              Copy Workflow
             </>
           )}
         </button>

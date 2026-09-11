@@ -1,23 +1,23 @@
 -- ============================================================
--- MIGRATION: Eliminar Supabase Auth, usar auth propio
--- Ejecutar esto en Supabase SQL Editor (panel existente)
+-- MIGRATION: remove Supabase Auth, use our own auth
+-- Run this in the Supabase SQL Editor (existing project)
 -- ============================================================
 
--- 1. Eliminar trigger y funcion que sincronizaban auth.users
+-- 1. Drop the trigger and function that used to sync auth.users
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 DROP FUNCTION IF EXISTS public.handle_new_user();
 
--- 2. Eliminar FK de public.users.id -> auth.users.id
+-- 2. Drop the FK from public.users.id -> auth.users.id
 ALTER TABLE public.users DROP CONSTRAINT IF EXISTS users_id_fkey;
 
--- 3. Agregar columna password_hash
+-- 3. Add the password_hash column
 ALTER TABLE public.users ADD COLUMN IF NOT EXISTS password_hash TEXT;
 
--- 4. Eliminar funcion RPC auxiliar (ya no se necesita)
+-- 4. Drop the helper RPC function (no longer needed)
 DROP FUNCTION IF EXISTS public.get_user_id_by_email(TEXT);
 
--- 5. Crear o actualizar el usuario admin con contraseña hasheada
--- Contraseña: AdminN8N2026!  (cambiar despues del primer login)
+-- 5. Create or update the admin user with a hashed password
+-- Password: AdminN8N2026!  (change it after the first login)
 INSERT INTO public.users (id, email, role, password_hash, created_at)
 VALUES (
   gen_random_uuid(),
@@ -31,7 +31,7 @@ SET password_hash = EXCLUDED.password_hash,
     role = 'admin';
 
 -- ============================================================
--- SCHEMA COMPLETO (referencia / instalaciones nuevas)
+-- FULL SCHEMA (reference / new installations)
 -- ============================================================
 
 CREATE TABLE IF NOT EXISTS public.users (
@@ -126,7 +126,7 @@ CREATE INDEX IF NOT EXISTS idx_invitations_token ON public.invitations(token);
 CREATE INDEX IF NOT EXISTS idx_invitations_status ON public.invitations(status);
 
 -- ============================================================
--- Intentos del curso (3 intentos, luego bloqueo) + Certificados
+-- Course attempts (3 attempts, then blocked) + Certificates
 -- ============================================================
 
 CREATE TABLE IF NOT EXISTS public.enrollments (

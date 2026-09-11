@@ -9,21 +9,21 @@ function certNo(): string {
 }
 
 /**
- * Adaptador Accredible.
- * Requiere: ACCREDIBLE_API_KEY y ACCREDIBLE_GROUP_ID en el entorno.
+ * Accredible adapter.
+ * Requires: ACCREDIBLE_API_KEY and ACCREDIBLE_GROUP_ID in the environment.
  */
 export class AccredibleProvider implements CertificateProvider {
   name = 'accredible';
 
   private get key(): string {
     const k = process.env.ACCREDIBLE_API_KEY;
-    if (!k) throw new Error('ACCREDIBLE_API_KEY no configurada');
+    if (!k) throw new Error('ACCREDIBLE_API_KEY is not configured');
     return k;
   }
 
   private get groupId(): string {
     const g = process.env.ACCREDIBLE_GROUP_ID;
-    if (!g) throw new Error('ACCREDIBLE_GROUP_ID no configurada');
+    if (!g) throw new Error('ACCREDIBLE_GROUP_ID is not configured');
     return g;
   }
 
@@ -41,7 +41,7 @@ export class AccredibleProvider implements CertificateProvider {
           group_id: this.groupId,
           issued_on: input.completionDate,
           certificate: {
-            name: `Certificado de ${input.courseName}`,
+            name: `Certificate of ${input.courseName}`,
             certificate_number: no,
           },
         },

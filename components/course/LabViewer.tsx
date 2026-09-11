@@ -20,9 +20,9 @@ const difficultyStyle: Record<LabData['difficulty'], string> = {
 };
 
 const difficultyLabel: Record<LabData['difficulty'], string> = {
-  easy: 'Fácil',
-  medium: 'Medio',
-  hard: 'Difícil',
+  easy: 'Easy',
+  medium: 'Medium',
+  hard: 'Hard',
 };
 
 export default function LabViewer({ labs }: { labs: LabData[] }) {
@@ -34,7 +34,7 @@ export default function LabViewer({ labs }: { labs: LabData[] }) {
     <div className="mt-8 space-y-4">
       <h2 className="flex items-center gap-2 text-xl font-bold text-gray-900 dark:text-white/90">
         <FlaskConical size={20} className="text-[#FF6D5A]" />
-        Laboratorios Prácticos
+        Hands-on Labs
       </h2>
 
       {labs.map((lab) => {
@@ -76,7 +76,7 @@ export default function LabViewer({ labs }: { labs: LabData[] }) {
                   <Target size={16} className="mt-0.5 text-[#1E90FF]" />
                   <div>
                     <p className="text-sm font-medium text-gray-900 dark:text-white">
-                      Objetivo
+                      Objective
                     </p>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       {lab.objective}
@@ -87,7 +87,7 @@ export default function LabViewer({ labs }: { labs: LabData[] }) {
                   <ListChecks size={16} className="mt-0.5 text-[#FF6D5A]" />
                   <div>
                     <p className="text-sm font-medium text-gray-900 dark:text-white">
-                      Instrucciones
+                      Instructions
                     </p>
                     <div className="prose prose-sm max-w-none text-gray-600 dark:text-gray-400 dark:prose-p:text-white/70">
                       {lab.instructions}
@@ -98,7 +98,7 @@ export default function LabViewer({ labs }: { labs: LabData[] }) {
                   <Trophy size={16} className="mt-0.5 text-amber-500" />
                   <div>
                     <p className="text-sm font-medium text-gray-900 dark:text-white">
-                      Entregable
+                      Deliverable
                     </p>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       {lab.deliverable}

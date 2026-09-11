@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
 
   if (!email || !password) {
     return NextResponse.json(
-      { error: 'Email y contraseña son requeridos' },
+      { error: 'Email and password are required' },
       { status: 400 }
     );
   }
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
 
   if (!user || !user.password_hash) {
     return NextResponse.json(
-      { error: 'Credenciales inválidas' },
+      { error: 'Invalid credentials' },
       { status: 401 }
     );
   }
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
   const valid = await verifyPassword(password, user.password_hash);
   if (!valid) {
     return NextResponse.json(
-      { error: 'Credenciales inválidas' },
+      { error: 'Invalid credentials' },
       { status: 401 }
     );
   }

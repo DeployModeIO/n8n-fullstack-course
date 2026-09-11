@@ -40,19 +40,19 @@ export default async function AdminDashboardPage() {
 
   const statCards = [
     {
-      label: 'Total Usuarios',
+      label: 'Total Users',
       value: stats.totalUsers,
       icon: Users,
       color: '#FF6D5A',
     },
     {
-      label: 'Total Invitaciones',
+      label: 'Total Invitations',
       value: stats.totalInvitations,
       icon: Mail,
       color: '#EA4B71',
     },
     {
-      label: 'Invitaciones Pendientes',
+      label: 'Pending Invitations',
       value: stats.pendingInvitations,
       icon: Clock,
       color: '#1E90FF',
@@ -96,7 +96,7 @@ export default async function AdminDashboardPage() {
         <div className="mb-4 flex items-center gap-2">
           <UserPlus size={20} className="text-[#FF6D5A]" />
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-            Usuarios Recientes
+            Recent Users
           </h2>
         </div>
         <div className="overflow-x-auto">
@@ -107,10 +107,10 @@ export default async function AdminDashboardPage() {
                   Email
                 </th>
                 <th className="pb-3 text-left text-xs font-medium text-gray-600 dark:text-gray-400">
-                  Rol
+                  Role
                 </th>
                 <th className="pb-3 text-left text-xs font-medium text-gray-600 dark:text-gray-400">
-                  Registrado
+                  Registered
                 </th>
               </tr>
             </thead>
@@ -126,7 +126,7 @@ export default async function AdminDashboardPage() {
                     </span>
                   </td>
                   <td className="py-3 text-sm text-gray-600 dark:text-gray-400">
-                    {new Date(user.created_at).toLocaleDateString('es-ES')}
+                    {new Date(user.created_at).toLocaleDateString('en-US')}
                   </td>
                 </tr>
               ))}
@@ -136,7 +136,7 @@ export default async function AdminDashboardPage() {
                     colSpan={3}
                     className="py-6 text-center text-sm text-gray-500 dark:text-gray-400"
                   >
-                    No hay usuarios registrados
+                    No registered users
                   </td>
                 </tr>
               )}

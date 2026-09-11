@@ -29,7 +29,7 @@ export default function LoginForm() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "Error al iniciar sesión");
+        setError(data.error || "Failed to sign in");
         setLoading(false);
         return;
       }
@@ -38,7 +38,7 @@ export default function LoginForm() {
       router.push("/dashboard");
       router.refresh();
     } catch {
-      setError("Error de conexión");
+      setError("Connection error");
       setLoading(false);
     }
   };
@@ -48,7 +48,7 @@ export default function LoginForm() {
       <div className="space-y-4">
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Correo electrónico
+            Email address
           </label>
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -65,14 +65,14 @@ export default function LoginForm() {
                 "focus:outline-none focus:ring-2 focus:ring-[#FF6D5A] focus:border-transparent",
                 "transition-all duration-200"
               )}
-              placeholder="tu@email.com"
+              placeholder="you@example.com"
             />
           </div>
         </div>
 
         <div>
           <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Contraseña
+            Password
           </label>
           <div className="relative">
             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -116,15 +116,15 @@ export default function LoginForm() {
         {loading ? (
           <>
             <Loader2 className="h-5 w-5 animate-spin" />
-            Iniciando sesión...
+            Signing in...
           </>
         ) : (
-          "Iniciar Sesión"
+          "Sign In"
         )}
       </button>
 
       <p className="text-center text-xs text-gray-500 dark:text-white/40">
-        Solo usuarios creados por el admin pueden acceder al curso.
+        Only users created by the admin can access the course.
       </p>
     </form>
   );

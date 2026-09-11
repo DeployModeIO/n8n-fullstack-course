@@ -45,9 +45,9 @@ export async function getEnrollmentStatus(
 }
 
 /**
- * Registra un intento del examen final.
- * Si se aprueba, no se bloquea. Si se falla y se alcanza el máximo,
- * se marca como bloqueado.
+ * Records a final exam attempt.
+ * When the exam is passed the account is never blocked. When it is failed and
+ * the maximum number of attempts is reached, the account gets blocked.
  */
 export async function recordExamAttempt(
   userId: string,

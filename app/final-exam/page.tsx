@@ -45,7 +45,7 @@ export default function FinalExamPage() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error || 'Error al enviar');
+        setError(data.error || 'Error submitting your exam');
         if (data.status) setStatus(data.status);
         return;
       }
@@ -57,7 +57,7 @@ export default function FinalExamPage() {
       });
       setStatus(data.status);
     } catch {
-      setError('Error de conexión');
+      setError('Connection error');
     } finally {
       setSubmitting(false);
     }
@@ -69,11 +69,11 @@ export default function FinalExamPage() {
         <div className="mx-auto max-w-2xl px-4 py-20 text-center">
           <ShieldAlert className="mx-auto mb-4 h-12 w-12 text-red-500" />
           <h1 className="mb-2 text-2xl font-bold text-gray-900 dark:text-white">
-            Acceso bloqueado
+            Access blocked
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
-            Has agotado los 3 intentos permitidos para rendir el examen final.
-            Contacta al administrador si crees que esto es un error.
+            You have used up the 3 attempts allowed for the final exam. Contact
+            the administrator if you believe this is a mistake.
           </p>
         </div>
       </ContentProtection>
@@ -86,10 +86,10 @@ export default function FinalExamPage() {
         <div className="mx-auto max-w-2xl px-4 py-20 text-center">
           <Award className="mx-auto mb-4 h-12 w-12 text-[#1E90FF]" />
           <h1 className="mb-2 text-2xl font-bold text-gray-900 dark:text-white">
-            ¡Felicitaciones! Aprobaste el curso
+            Congratulations! You passed the course
           </h1>
           <p className="mb-6 text-gray-600 dark:text-gray-400">
-            Tu certificado ha sido emitido. Puntuación: {result.score}/{result.total}
+            Your certificate has been issued. Score: {result.score}/{result.total}
           </p>
           {result.certificate && (
             <a
@@ -98,12 +98,12 @@ export default function FinalExamPage() {
               rel="noreferrer"
               className="inline-block rounded-xl bg-gradient-to-r from-[#FF6D5A] to-[#EA4B71] px-6 py-3 font-medium text-white"
             >
-              Ver / descargar certificado ({result.certificate.certificateNo})
+              View / download certificate ({result.certificate.certificateNo})
             </a>
           )}
           <div className="mt-4">
             <Link href="/dashboard" className="text-sm text-[#1E90FF] underline">
-              Ir al panel
+              Go to dashboard
             </Link>
           </div>
         </div>
@@ -116,7 +116,7 @@ export default function FinalExamPage() {
       <div className="mx-auto max-w-3xl px-4 py-12">
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Examen Final
+            Final Exam
           </h1>
           {status && (
             <span
@@ -127,13 +127,13 @@ export default function FinalExamPage() {
                   : 'bg-red-500/10 text-red-600'
               )}
             >
-              Intentos restantes: {status.attemptsLeft}
+              Attempts left: {status.attemptsLeft}
             </span>
           )}
         </div>
         <p className="mb-8 text-gray-600 dark:text-gray-400">
-          Debes responder correctamente al menos el 70% para obtener tu
-          certificación. Podrás rendirlo hasta 3 veces.
+          You must answer at least 70% correctly to get your certificate. You
+          can take it up to 3 times.
         </p>
 
         {error && (
@@ -181,7 +181,7 @@ export default function FinalExamPage() {
               disabled={submitting}
               className="w-full rounded-xl bg-gradient-to-r from-[#FF6D5A] to-[#EA4B71] py-3 font-medium text-white hover:-translate-y-0.5 transition disabled:opacity-50"
             >
-              {submitting ? 'Enviando...' : 'Enviar examen'}
+              {submitting ? 'Submitting...' : 'Submit exam'}
             </button>
           </div>
         )}
@@ -190,11 +190,11 @@ export default function FinalExamPage() {
           <div className="mt-6 rounded-2xl p-6 text-center backdrop-blur-xl bg-white/70 border border-gray-200/50 dark:bg-white/10 dark:border-white/15">
             <XCircle className="mx-auto mb-3 h-10 w-10 text-red-500" />
             <p className="text-lg font-semibold text-gray-900 dark:text-white">
-              No aprobaste esta vez ({result.score}/{result.total})
+              You did not pass this time ({result.score}/{result.total})
             </p>
             <p className="mt-1 text-gray-600 dark:text-gray-400">
-              {status && `Te quedan ${status.attemptsLeft} intento(s).`} Revisa el
-              material y vuelve a intentarlo.
+              {status && `You have ${status.attemptsLeft} attempt(s) left.`} Review
+              the material and try again.
             </p>
           </div>
         )}

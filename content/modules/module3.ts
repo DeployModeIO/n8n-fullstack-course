@@ -2,36 +2,36 @@ import { Module } from "../../types/course";
 
 export const module3: Module = {
   id: "mod-03",
-  slug: "integraciones-apis",
-  title: "Integraciones, APIs y Autenticación",
-  description: "Conecta N8N con servicios externos usando REST APIs, OAuth2, y autenticación avanzada.",
+  slug: "integrations-apis-auth",
+  title: "Integrations, APIs and Authentication",
+  description: "Connect N8N to external services using REST APIs, OAuth2 and advanced authentication.",
   icon: "Plug",
   sortOrder: 3,
   lessons: [
     {
       id: "les-03-01",
-      moduleSlug: "integraciones-apis",
+      moduleSlug: "integrations-apis-auth",
       slug: "http-request-node",
-      title: "HTTP Request Node: Consumo de APIs REST",
-      description: "Domina el HTTP Request node para consumir cualquier API REST con diferentes métodos y autenticación.",
+      title: "HTTP Request Node: Consuming REST APIs",
+      description: "Master the HTTP Request node to consume any REST API with different methods and authentication.",
       estimatedMinutes: 25,
       content: `## HTTP Request Node
 
-El HTTP Request node es fundamental para integrarar N8N con servicios externos vía APIs REST.
+The HTTP Request node is essential to integrate N8N with external services through REST APIs.
 
-### Métodos HTTP Soportados
+### Supported HTTP Methods
 
-- **GET**: Obtener datos
-- **POST**: Crear recursos
-- **PUT**: Actualizar recursos completos
-- **PATCH**: Actualizar recursos parciales
-- **DELETE**: Eliminar recursos
-- **HEAD**: Obtener headers
-- **OPTIONS**: Obtener métodos permitidos
+- **GET**: Retrieve data
+- **POST**: Create resources
+- **PUT**: Update full resources
+- **PATCH**: Update partial resources
+- **DELETE**: Delete resources
+- **HEAD**: Retrieve headers
+- **OPTIONS**: Retrieve allowed methods
 
-### Configuración Básica
+### Basic Configuration
 
-#### GET Request Simple
+#### Simple GET Request
 
 \`\`\`json
 {
@@ -44,7 +44,7 @@ El HTTP Request node es fundamental para integrarar N8N con servicios externos v
 }
 \`\`\`
 
-#### POST Request con JSON Body
+#### POST Request with a JSON Body
 
 \`\`\`json
 {
@@ -52,7 +52,7 @@ El HTTP Request node es fundamental para integrarar N8N con servicios externos v
   "url": "https://api.example.com/users",
   "sendBody": true,
   "specifyBody": "json",
-  "jsonBody": "={{ JSON.stringify({ name: $json.nombre, email: $json.email }) }}",
+  "jsonBody": "={{ JSON.stringify({ name: $json.name, email: $json.email }) }}",
   "options": {
     "response": {
       "response": {
@@ -63,9 +63,9 @@ El HTTP Request node es fundamental para integrarar N8N con servicios externos v
 }
 \`\`\`
 
-### Autenticación
+### Authentication
 
-#### 1. API Key en Header
+#### 1. API Key in a Header
 
 \`\`\`json
 {
@@ -83,7 +83,7 @@ El HTTP Request node es fundamental para integrarar N8N con servicios externos v
 }
 \`\`\`
 
-#### 2. API Key en Query
+#### 2. API Key in the Query String
 
 \`\`\`json
 {
@@ -137,7 +137,7 @@ El HTTP Request node es fundamental para integrarar N8N con servicios externos v
 }
 \`\`\`
 
-### Headers Personalizados
+### Custom Headers
 
 \`\`\`json
 {
@@ -185,9 +185,9 @@ El HTTP Request node es fundamental para integrarar N8N con servicios externos v
 }
 \`\`\`
 
-### Manejo de Respuestas
+### Handling Responses
 
-#### Respuesta JSON
+#### JSON Response
 
 \`\`\`json
 {
@@ -201,7 +201,7 @@ El HTTP Request node es fundamental para integrarar N8N con servicios externos v
 }
 \`\`\`
 
-#### Respuesta de Texto
+#### Text Response
 
 \`\`\`json
 {
@@ -215,7 +215,7 @@ El HTTP Request node es fundamental para integrarar N8N con servicios externos v
 }
 \`\`\`
 
-#### Respuesta Binaria (Descarga de Archivo)
+#### Binary Response (File Download)
 
 \`\`\`json
 {
@@ -231,7 +231,7 @@ El HTTP Request node es fundamental para integrarar N8N con servicios externos v
 }
 \`\`\`
 
-### Paginación Automática
+### Automatic Pagination
 
 #### Offset-Based Pagination
 
@@ -267,9 +267,9 @@ El HTTP Request node es fundamental para integrarar N8N con servicios externos v
 }
 \`\`\`
 
-### Ejemplos Prácticos
+### Practical Examples
 
-#### Ejemplo 1: Consumir API de GitHub
+#### Example 1: Consuming the GitHub API
 
 \`\`\`json
 {
@@ -302,7 +302,7 @@ El HTTP Request node es fundamental para integrarar N8N con servicios externos v
 }
 \`\`\`
 
-#### Ejemplo 2: Crear Registro en Airtable
+#### Example 2: Creating an Airtable Record
 
 \`\`\`json
 {
@@ -321,11 +321,11 @@ El HTTP Request node es fundamental para integrarar N8N con servicios externos v
   },
   "sendBody": true,
   "specifyBody": "json",
-  "jsonBody": "={{ JSON.stringify({ fields: { Name: $json.nombre, Email: $json.email, Phone: $json.telefono } }) }}"
+  "jsonBody": "={{ JSON.stringify({ fields: { Name: $json.name, Email: $json.email, Phone: $json.phone } }) }}"
 }
 \`\`\`
 
-#### Ejemplo 3: Upload de Archivo a S3
+#### Example 3: Uploading a File to S3
 
 \`\`\`json
 {
@@ -345,9 +345,9 @@ El HTTP Request node es fundamental para integrarar N8N con servicios externos v
 }
 \`\`\`
 
-### Manejo de Errores
+### Error Handling
 
-#### Retry Automático
+#### Automatic Retry
 
 \`\`\`json
 {
@@ -362,7 +362,7 @@ El HTTP Request node es fundamental para integrarar N8N con servicios externos v
 }
 \`\`\`
 
-#### Patrón: Retry con Code Node
+#### Pattern: Retry with the Code Node
 
 \`\`\`javascript
 const items = $input.all();
@@ -423,7 +423,7 @@ return results;
 
 ### Rate Limiting
 
-#### Implementar Rate Limiting
+#### Implementing Rate Limiting
 
 \`\`\`javascript
 const items = $input.all();
@@ -464,9 +464,9 @@ for (let i = 0; i < items.length; i++) {
 return results;
 \`\`\`
 
-### Webhooks y Callbacks
+### Webhooks and Callbacks
 
-#### Crear Webhook Endpoint
+#### Creating a Webhook Endpoint
 
 \`\`\`json
 {
@@ -479,34 +479,34 @@ return results;
 }
 \`\`\`
 
-#### Enviar Webhook con Datos
+#### Sending a Webhook with Data
 
 \`\`\`json
 {
   "method": "POST",
-  "url": "https://tu-n8n.com/webhook/webhook-callback",
+  "url": "https://your-n8n.com/webhook/webhook-callback",
   "sendBody": true,
   "specifyBody": "json",
   "jsonBody": "={{ JSON.stringify({ status: 'completed', data: $json, timestamp: $now.toISO() }) }}"
 }
 \`\`\`
 
-### Mejores Prácticas
+### Best Practices
 
-1. **Usa credenciales**: Nunca hardcodees API keys en el workflow
-2. **Valida respuestas**: Verifica que la respuesta sea válida antes de procesarla
-3. **Maneja errores**: Implementa retry logic para APIs inestables
-4. **Rate limiting**: Respeta los límites de las APIs
-5. **Timeouts**: Configura timeouts apropiados
-6. **Logs**: Registra requests y responses para debugging
-7. **Versionado**: Usa versiones específicas de APIs cuando sea posible
+1. **Use credentials**: Never hardcode API keys in the workflow
+2. **Validate responses**: Check that the response is valid before processing it
+3. **Handle errors**: Implement retry logic for unstable APIs
+4. **Rate limiting**: Respect the API limits
+5. **Timeouts**: Configure appropriate timeouts
+6. **Logs**: Record requests and responses for debugging
+7. **Versioning**: Use specific API versions whenever possible
 
 ### Debugging
 
-#### Inspeccionar Request y Response
+#### Inspecting the Request and Response
 
 \`\`\`javascript
-// Después del HTTP Request node
+// After the HTTP Request node
 const response = $input.first().json;
 
 console.log('=== HTTP REQUEST DEBUG ===');
@@ -518,7 +518,7 @@ console.log('Timing:', $response.timing);
 return $input.all();
 \`\`\`
 
-### Recursos Adicionales
+### Additional Resources
 
 - [HTTP Request Node](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.httprequest/)
 - [REST API Best Practices](https://restfulapi.net/)
@@ -527,29 +527,29 @@ return $input.all();
     },
     {
       id: "les-03-02",
-      moduleSlug: "integraciones-apis",
-      slug: "integracion-supabase",
-      title: "Integración con Supabase",
-      description: "Conecta N8N con Supabase para operaciones CRUD, autenticación y tiempo real.",
+      moduleSlug: "integrations-apis-auth",
+      slug: "supabase-integration",
+      title: "Supabase Integration",
+      description: "Connect N8N to Supabase for CRUD operations, authentication and realtime features.",
       estimatedMinutes: 30,
-      content: `## Integración con Supabase
+      content: `## Supabase Integration
 
-Supabase es una plataforma open-source alternativa a Firebase que proporciona base de datos PostgreSQL, autenticación y APIs en tiempo real.
+Supabase is an open-source platform and an alternative to Firebase that provides a PostgreSQL database, authentication and realtime APIs.
 
-### Configuración de Credenciales
+### Credentials Setup
 
-#### Crear Credenciales en N8N
+#### Creating Credentials in N8N
 
-1. Ve a **Credentials** en N8N
-2. Click en **New**
-3. Selecciona **Supabase API**
-4. Configura:
-   - **Host**: \`https://tu-proyecto.supabase.co\`
-   - **Service Role Key**: Tu service role key (desde Supabase Dashboard)
+1. Go to **Credentials** in N8N
+2. Click **New**
+3. Select **Supabase API**
+4. Configure:
+   - **Host**: \`https://your-project.supabase.co\`
+   - **Service Role Key**: Your service role key (from the Supabase Dashboard)
 
-### Operaciones CRUD
+### CRUD Operations
 
-#### SELECT: Leer Datos
+#### SELECT: Reading Data
 
 \`\`\`json
 {
@@ -568,7 +568,7 @@ Supabase es una plataforma open-source alternativa a Firebase que proporciona ba
 }
 \`\`\`
 
-**Con filtros avanzados:**
+**With advanced filters:**
 
 \`\`\`json
 {
@@ -593,7 +593,7 @@ Supabase es una plataforma open-source alternativa a Firebase que proporciona ba
 }
 \`\`\`
 
-#### INSERT: Crear Registros
+#### INSERT: Creating Records
 
 \`\`\`json
 {
@@ -603,7 +603,7 @@ Supabase es una plataforma open-source alternativa a Firebase que proporciona ba
     "values": [
       {
         "name": "name",
-        "value": "={{ $json.nombre }}"
+        "value": "={{ $json.name }}"
       },
       {
         "name": "email",
@@ -611,30 +611,30 @@ Supabase es una plataforma open-source alternativa a Firebase que proporciona ba
       },
       {
         "name": "phone",
-        "value": "={{ $json.telefono }}"
+        "value": "={{ $json.phone }}"
       }
     ]
   }
 }
 \`\`\`
 
-**Insert múltiple:**
+**Multiple inserts:**
 
 \`\`\`javascript
-// Code node para preparar datos
+// Code node to prepare the data
 const items = $input.all();
 
 return items.map(item => ({
   json: {
-    name: item.json.nombre,
+    name: item.json.name,
     email: item.json.email,
-    phone: item.json.telefono,
+    phone: item.json.phone,
     created_at: new Date().toISOString()
   }
 }));
 \`\`\`
 
-#### UPDATE: Actualizar Registros
+#### UPDATE: Updating Records
 
 \`\`\`json
 {
@@ -645,7 +645,7 @@ return items.map(item => ({
     "values": [
       {
         "name": "status",
-        "value": "={{ $json.nuevoStatus }}"
+        "value": "={{ $json.newStatus }}"
       },
       {
         "name": "updated_at",
@@ -656,7 +656,7 @@ return items.map(item => ({
 }
 \`\`\`
 
-#### DELETE: Eliminar Registros
+#### DELETE: Deleting Records
 
 \`\`\`json
 {
@@ -666,9 +666,9 @@ return items.map(item => ({
 }
 \`\`\`
 
-### Queries Avanzadas
+### Advanced Queries
 
-#### Usar Supabase Client Directamente
+#### Using the Supabase Client Directly
 
 \`\`\`javascript
 const items = $input.all();
@@ -695,7 +695,7 @@ const results = [];
 
 for (const item of items) {
   try {
-    // Query con filtros complejos
+    // Query with complex filters
     const response = await supabaseQuery('orders', {
       qs: {
         select: '*,customer:customers(name,email)',
@@ -725,10 +725,10 @@ for (const item of items) {
 return results;
 \`\`\`
 
-#### Joins y Relaciones
+#### Joins and Relationships
 
 \`\`\`javascript
-// Obtener órdenes con datos de clientes y productos
+// Fetch orders together with customer and product data
 const response = await supabaseQuery('orders', {
   qs: {
     select: \`
@@ -762,9 +762,9 @@ return response.data.map(order => ({
 }));
 \`\`\`
 
-### Autenticación de Usuarios
+### User Authentication
 
-#### Crear Usuario
+#### Creating a User
 
 \`\`\`javascript
 const items = $input.all();
@@ -785,8 +785,8 @@ for (const item of items) {
         password: item.json.password,
         email_confirm: true,
         user_metadata: {
-          full_name: item.json.nombre,
-          phone: item.json.telefono
+          full_name: item.json.name,
+          phone: item.json.phone
         }
       }
     });
@@ -812,7 +812,7 @@ for (const item of items) {
 return results;
 \`\`\`
 
-#### Login de Usuario
+#### User Login
 
 \`\`\`javascript
 const { email, password } = $input.first().json;
@@ -836,32 +836,32 @@ return [{
 }];
 \`\`\`
 
-### Tiempo Real con Webhooks
+### Realtime with Webhooks
 
-#### Configurar Webhook en Supabase
+#### Configuring a Webhook in Supabase
 
-En Supabase Dashboard:
-1. Ve a **Database** → **Webhooks**
-2. Click en **Create a new webhook**
-3. Configura:
+In the Supabase Dashboard:
+1. Go to **Database** → **Webhooks**
+2. Click **Create a new webhook**
+3. Configure:
    - **Name**: \`order_created\`
    - **Table**: \`orders\`
    - **Events**: \`INSERT\`
-   - **URL**: \`https://tu-n8n.com/webhook/supabase-orders\`
+   - **URL**: \`https://your-n8n.com/webhook/supabase-orders\`
 
-#### Procesar Webhook de Supabase
+#### Processing a Supabase Webhook
 
 \`\`\`javascript
-// Webhook node recibe datos de Supabase
+// The Webhook node receives the data sent by Supabase
 const webhookData = $input.first().json;
 
-// Estructura del webhook de Supabase
+// Structure of the Supabase webhook payload
 const {
   type,        // "INSERT", "UPDATE", "DELETE"
-  table,       // Nombre de la tabla
-  record,      // Nuevo registro
-  old_record,  // Registro anterior (para UPDATE)
-  schema       // Schema (usualmente "public")
+  table,       // Table name
+  record,      // New record
+  old_record,  // Previous record (for UPDATE)
+  schema       // Schema (usually "public")
 } = webhookData;
 
 return [{
@@ -877,23 +877,23 @@ return [{
 
 ### Row Level Security (RLS)
 
-#### Crear Políticas RLS
+#### Creating RLS Policies
 
 \`\`\`sql
--- Habilitar RLS en la tabla
+-- Enable RLS on the table
 ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
 
--- Política: Usuarios solo ven sus propias órdenes
+-- Policy: users can only see their own orders
 CREATE POLICY "Users can view own orders"
 ON orders FOR SELECT
 USING (auth.uid() = user_id);
 
--- Política: Usuarios solo pueden crear sus propias órdenes
+-- Policy: users can only create their own orders
 CREATE POLICY "Users can create own orders"
 ON orders FOR INSERT
 WITH CHECK (auth.uid() = user_id);
 
--- Política: Admins pueden ver todas las órdenes
+-- Policy: admins can view all orders
 CREATE POLICY "Admins can view all orders"
 ON orders FOR SELECT
 USING (
@@ -905,9 +905,9 @@ USING (
 );
 \`\`\`
 
-### Funciones RPC
+### RPC Functions
 
-#### Crear Función en Supabase
+#### Creating a Function in Supabase
 
 \`\`\`sql
 CREATE OR REPLACE FUNCTION get_user_orders(user_uuid uuid)
@@ -928,7 +928,7 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 \`\`\`
 
-#### Llamar Función RPC desde N8N
+#### Calling an RPC Function from N8N
 
 \`\`\`javascript
 const userId = $input.first().json.userId;
@@ -954,9 +954,9 @@ return response.data.map(order => ({
 }));
 \`\`\`
 
-### Storage: Manejo de Archivos
+### Storage: File Handling
 
-#### Upload de Archivo
+#### File Upload
 
 \`\`\`javascript
 const item = $input.first();
@@ -964,7 +964,7 @@ const binaryData = item.binary.data;
 const bucket = 'user-uploads';
 const fileName = \`uploads/\${Date.now()}_\${binaryData.fileName}\`;
 
-// Convertir base64 a buffer
+// Convert base64 to a buffer
 const buffer = Buffer.from(binaryData.data, 'base64');
 
 const response = await this.helpers.httpRequest({
@@ -988,7 +988,7 @@ return [{
 }];
 \`\`\`
 
-#### Descargar Archivo
+#### Downloading a File
 
 \`\`\`javascript
 const filePath = $input.first().json.filePath;
@@ -1018,9 +1018,9 @@ return [{
 }];
 \`\`\`
 
-### Patrones Comunes
+### Common Patterns
 
-#### Patrón: Sync Bidireccional
+#### Pattern: Two-Way Sync
 
 \`\`\`
 [Webhook: Supabase Change] → [Process Change] → [Update External System]
@@ -1028,10 +1028,10 @@ return [{
 [Webhook: External Change] → [Process Change] → [Update Supabase]
 \`\`\`
 
-#### Patrón: Data Pipeline
+#### Pattern: Data Pipeline
 
 \`\`\`
-[Schedule: Cada hora]
+[Schedule: Every hour]
     ↓
 [Supabase: Get New Records]
     ↓
@@ -1042,22 +1042,22 @@ return [{
 [Send to External API]
 \`\`\`
 
-### Mejores Prácticas
+### Best Practices
 
-1. **Usa Service Role Key con cuidado**: Solo en server-side, nunca en client-side
-2. **Implementa RLS**: Siempre habilita Row Level Security
-3. **Usa índices**: Crea índices para queries frecuentes
-4. **Batch operations**: Usa bulk insert/update para mejor performance
-5. **Maneja errores**: Implementa retry logic para operaciones críticas
-6. **Monitorea**: Usa logs para trackear operaciones importantes
-7. **Backup**: Configura backups automáticos de tu base de datos
+1. **Use the Service Role Key carefully**: Server-side only, never client-side
+2. **Implement RLS**: Always enable Row Level Security
+3. **Use indexes**: Create indexes for frequent queries
+4. **Batch operations**: Use bulk insert/update for better performance
+5. **Handle errors**: Implement retry logic for critical operations
+6. **Monitor**: Use logs to track important operations
+7. **Backups**: Configure automatic backups of your database
 
 ### Debugging
 
-#### Verificar Conexión
+#### Verifying the Connection
 
 \`\`\`javascript
-// Test de conexión a Supabase
+// Supabase connection test
 try {
   const response = await this.helpers.httpRequest({
     method: 'GET',
@@ -1075,7 +1075,7 @@ try {
 }
 \`\`\`
 
-### Recursos Adicionales
+### Additional Resources
 
 - [Supabase Documentation](https://supabase.com/docs)
 - [Supabase API Reference](https://supabase.com/docs/reference/javascript/introduction)
@@ -1084,64 +1084,64 @@ try {
     },
     {
       id: "les-03-03",
-      moduleSlug: "integraciones-apis",
+      moduleSlug: "integrations-apis-auth",
       slug: "google-workspace",
-      title: "Google Workspace: Gmail, Sheets y Drive",
-      description: "Integra N8N con Google Workspace para automatizar emails, hojas de cálculo y archivos.",
+      title: "Google Workspace: Gmail, Sheets and Drive",
+      description: "Integrate N8N with Google Workspace to automate emails, spreadsheets and files.",
       estimatedMinutes: 30,
       content: `## Google Workspace Integration
 
-Google Workspace (antes G Suite) ofrece Gmail, Google Sheets, Drive y más. N8N puede integrarse con todos estos servicios.
+Google Workspace (formerly G Suite) offers Gmail, Google Sheets, Drive and more. N8N can integrate with all of these services.
 
-### Configuración de OAuth2
+### OAuth2 Setup
 
-#### Crear Credenciales OAuth2
+#### Creating OAuth2 Credentials
 
-1. Ve a [Google Cloud Console](https://console.cloud.google.com/)
-2. Crea un nuevo proyecto o selecciona uno existente
-3. Habilita las APIs necesarias:
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project or select an existing one
+3. Enable the required APIs:
    - Gmail API
    - Google Sheets API
    - Google Drive API
-4. Ve a **Credentials** → **Create Credentials** → **OAuth client ID**
-5. Configura:
+4. Go to **Credentials** → **Create Credentials** → **OAuth client ID**
+5. Configure:
    - **Application type**: Web application
-   - **Authorized redirect URIs**: \`https://tu-n8n.com/rest/oauth2-credential/callback\`
-6. Copia **Client ID** y **Client Secret**
-7. En N8N, crea credenciales **Google OAuth2 API**
+   - **Authorized redirect URIs**: \`https://your-n8n.com/rest/oauth2-credential/callback\`
+6. Copy the **Client ID** and the **Client Secret**
+7. In N8N, create the **Google OAuth2 API** credentials
 
 ### Gmail
 
-#### Enviar Email Simple
+#### Sending a Simple Email
 
 \`\`\`json
 {
   "resource": "message",
   "operation": "send",
   "sendTo": "={{ $json.email }}",
-  "subject": "Bienvenido a nuestro servicio",
+  "subject": "Welcome to our service",
   "emailType": "text",
-  "message": "Hola {{ $json.nombre }},\\n\\nGracias por registrarte.\\n\\nSaludos!"
+  "message": "Hi {{ $json.name }},\\n\\nThanks for signing up.\\n\\nBest regards!"
 }
 \`\`\`
 
-#### Enviar Email HTML
+#### Sending an HTML Email
 
 \`\`\`json
 {
   "resource": "message",
   "operation": "send",
   "sendTo": "={{ $json.email }}",
-  "subject": "Tu reporte mensual",
+  "subject": "Your monthly report",
   "emailType": "html",
   "message": "={{ $json.htmlContent }}"
 }
 \`\`\`
 
-**Ejemplo de HTML dinámico:**
+**Dynamic HTML example:**
 
 \`\`\`javascript
-// Code node para generar HTML
+// Code node to generate the HTML
 const items = $input.all();
 
 return items.map(item => {
@@ -1158,19 +1158,19 @@ return items.map(item => {
     </head>
     <body>
       <div class="header">
-        <h1>Reporte Mensual</h1>
+        <h1>Monthly Report</h1>
       </div>
       <div class="content">
-        <p>Hola \${item.json.nombre},</p>
-        <p>Aquí está tu reporte del mes:</p>
+        <p>Hi \${item.json.name},</p>
+        <p>Here is your report for the month:</p>
         <ul>
-          <li>Ventas: $\${item.json.ventas}</li>
-          <li>Clientes nuevos: \${item.json.clientesNuevos}</li>
-          <li>Satisfacción: \${item.json.satisfaccion}%</li>
+          <li>Sales: $\${item.json.sales}</li>
+          <li>New customers: \${item.json.newCustomers}</li>
+          <li>Satisfaction: \${item.json.satisfaction}%</li>
         </ul>
       </div>
       <div class="footer">
-        <p>Generado automáticamente por N8N</p>
+        <p>Automatically generated by N8N</p>
       </div>
     </body>
     </html>
@@ -1185,23 +1185,23 @@ return items.map(item => {
 });
 \`\`\`
 
-#### Enviar Email con Adjuntos
+#### Sending an Email with Attachments
 
 \`\`\`json
 {
   "resource": "message",
   "operation": "send",
   "sendTo": "={{ $json.email }}",
-  "subject": "Documento adjunto",
+  "subject": "Attached document",
   "emailType": "text",
-  "message": "Adjunto encontrarás el documento solicitado.",
+  "message": "You will find the requested document attached.",
   "options": {
     "attachments": "data"
   }
 }
 \`\`\`
 
-#### Leer Emails
+#### Reading Emails
 
 \`\`\`json
 {
@@ -1217,7 +1217,7 @@ return items.map(item => {
 }
 \`\`\`
 
-#### Buscar Emails Específicos
+#### Searching for Specific Emails
 
 \`\`\`json
 {
@@ -1226,29 +1226,29 @@ return items.map(item => {
   "returnAll": false,
   "limit": 10,
   "filters": {
-    "q": "from:cliente@example.com subject:pedido newer_than:7d"
+    "q": "from:customer@example.com subject:order newer_than:7d"
   }
 }
 \`\`\`
 
-**Operadores de búsqueda Gmail:**
-- \`from:email@ejemplo.com\`: De un remitente específico
-- \`subject:palabra\`: En el asunto
-- \`newer_than:7d\`: Más reciente que 7 días
-- \`older_than:1m\`: Más antiguo que 1 mes
-- \`has:attachment\`: Con adjuntos
-- \`is:unread\`: No leídos
-- \`label:importante\`: Con etiqueta específica
+**Gmail search operators:**
+- \`from:email@example.com\`: From a specific sender
+- \`subject:word\`: In the subject
+- \`newer_than:7d\`: Newer than 7 days
+- \`older_than:1m\`: Older than 1 month
+- \`has:attachment\`: With attachments
+- \`is:unread\`: Unread
+- \`label:important\`: With a specific label
 
 ### Google Sheets
 
-#### Leer Datos de Sheet
+#### Reading Data from a Sheet
 
 \`\`\`json
 {
   "operation": "getData",
   "documentId": "={{ $json.sheetId }}",
-  "sheetName": "Hoja 1",
+  "sheetName": "Sheet1",
   "range": "A1:Z1000",
   "options": {
     "valueInputMode": "USER_ENTERED"
@@ -1256,13 +1256,13 @@ return items.map(item => {
 }
 \`\`\`
 
-#### Escribir Datos en Sheet
+#### Writing Data to a Sheet
 
 \`\`\`json
 {
   "operation": "append",
   "documentId": "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms",
-  "sheetName": "Datos",
+  "sheetName": "Data",
   "dataMode": "autoMap",
   "options": {
     "valueInputMode": "USER_ENTERED"
@@ -1270,34 +1270,34 @@ return items.map(item => {
 }
 \`\`\`
 
-#### Actualizar Celdas Específicas
+#### Updating Specific Cells
 
 \`\`\`json
 {
   "operation": "update",
   "documentId": "={{ $json.sheetId }}",
-  "sheetName": "Hoja 1",
+  "sheetName": "Sheet1",
   "range": "A2:B2",
   "dataMode": "defineBelow",
   "fieldsValues": {
     "values": [
       {
-        "lookupValue": "={{ $json.nombre }}",
-        "lookupColumn": "Nombre",
+        "lookupValue": "={{ $json.name }}",
+        "lookupColumn": "Name",
         "newColumn": "Status",
-        "newValue": "Procesado"
+        "newValue": "Processed"
       }
     ]
   }
 }
 \`\`\`
 
-#### Crear Nuevo Sheet
+#### Creating a New Sheet
 
 \`\`\`javascript
-const sheetName = \`Reporte_\${$now.toFormat('yyyy-MM-dd')}\`;
+const sheetName = \`Report_\${$now.toFormat('yyyy-MM-dd')}\`;
 
-// Crear nuevo spreadsheet
+// Create the new spreadsheet
 const createResponse = await this.helpers.httpRequest({
   method: 'POST',
   url: 'https://sheets.googleapis.com/v4/spreadsheets',
@@ -1312,7 +1312,7 @@ const createResponse = await this.helpers.httpRequest({
     sheets: [
       {
         properties: {
-          title: 'Datos',
+          title: 'Data',
           gridProperties: {
             rowCount: 1000,
             columnCount: 26
@@ -1334,7 +1334,7 @@ return [{
 
 ### Google Drive
 
-#### Listar Archivos
+#### Listing Files
 
 \`\`\`json
 {
@@ -1348,7 +1348,7 @@ return [{
 }
 \`\`\`
 
-#### Upload de Archivo
+#### File Upload
 
 \`\`\`json
 {
@@ -1362,7 +1362,7 @@ return [{
 }
 \`\`\`
 
-#### Descargar Archivo
+#### Downloading a File
 
 \`\`\`json
 {
@@ -1372,7 +1372,7 @@ return [{
 }
 \`\`\`
 
-#### Compartir Archivo
+#### Sharing a File
 
 \`\`\`json
 {
@@ -1384,23 +1384,23 @@ return [{
       {
         "role": "reader",
         "type": "user",
-        "emailAddress": "usuario@example.com"
+        "emailAddress": "user@example.com"
       }
     ]
   }
 }
 \`\`\`
 
-### Patrones de Automatización
+### Automation Patterns
 
-#### Patrón 1: Email Processing Pipeline
+#### Pattern 1: Email Processing Pipeline
 
 \`\`\`
-[Schedule: Cada 5 min]
+[Schedule: Every 5 min]
     ↓
 [Gmail: Get Unread Emails]
     ↓
-[IF: Tiene adjunto?]
+[IF: Has an attachment?]
     ├─ Yes → [Drive: Download Attachment]
     │           ↓
     │         [Process Attachment]
@@ -1410,10 +1410,10 @@ return [{
     └─→ [Gmail: Mark as Read]
 \`\`\`
 
-#### Patrón 2: Report Generator
+#### Pattern 2: Report Generator
 
 \`\`\`
-[Schedule: Lunes 9 AM]
+[Schedule: Monday 9 AM]
     ↓
 [Supabase: Get Weekly Data]
     ↓
@@ -1426,7 +1426,7 @@ return [{
 [Gmail: Send Report Email]
 \`\`\`
 
-#### Patrón 3: Form to Sheet Automation
+#### Pattern 3: Form to Sheet Automation
 
 \`\`\`
 [Webhook: Form Submission]
@@ -1440,9 +1440,9 @@ return [{
 [Gmail: Send Confirmation]
 \`\`\`
 
-### Ejemplos Avanzados
+### Advanced Examples
 
-#### Procesar Emails con Attachments
+#### Processing Emails with Attachments
 
 \`\`\`javascript
 const items = $input.all();
@@ -1451,10 +1451,10 @@ const results = [];
 for (const item of items) {
   const email = item.json;
   
-  // Verificar si tiene attachments
+  // Check whether the email has attachments
   if (email.attachments && email.attachments.length > 0) {
     for (const attachment of email.attachments) {
-      // Descargar attachment
+      // Download the attachment
       const fileData = await this.helpers.httpRequest({
         method: 'GET',
         url: \`https://www.googleapis.com/gmail/v1/users/me/messages/\${email.id}/attachments/\${attachment.attachmentId}\`,
@@ -1463,7 +1463,7 @@ for (const item of items) {
         }
       });
 
-      // Upload a Drive
+      // Upload it to Drive
       const driveResponse = await this.helpers.httpRequest({
         method: 'POST',
         url: 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',
@@ -1500,26 +1500,26 @@ for (const item of items) {
 return results;
 \`\`\`
 
-#### Generar Reporte Dinámico en Sheets
+#### Generating a Dynamic Report in Sheets
 
 \`\`\`javascript
 const items = $input.all();
 
-// Preparar datos para Sheets
-const headers = ['Fecha', 'Cliente', 'Producto', 'Cantidad', 'Total'];
+// Prepare the data for Sheets
+const headers = ['Date', 'Customer', 'Product', 'Quantity', 'Total'];
 const rows = items.map(item => [
-  item.json.fecha,
-  item.json.cliente,
-  item.json.producto,
-  item.json.cantidad,
+  item.json.date,
+  item.json.customer,
+  item.json.product,
+  item.json.quantity,
   \`$\${item.json.total}\`
 ]);
 
-// Calcular totales
-const totalGeneral = items.reduce((sum, item) => sum + item.json.total, 0);
-rows.push(['', '', '', 'TOTAL:', \`$\${totalGeneral}\`]);
+// Calculate the totals
+const grandTotal = items.reduce((sum, item) => sum + item.json.total, 0);
+rows.push(['', '', '', 'TOTAL:', \`$\${grandTotal}\`]);
 
-// Combinar headers y datos
+// Combine the headers and the data
 const allData = [headers, ...rows];
 
 return [{
@@ -1531,26 +1531,26 @@ return [{
 }];
 \`\`\`
 
-### Mejores Prácticas
+### Best Practices
 
-1. **Rate limiting**: Respeta los límites de la API de Google
-2. **Batch operations**: Usa batch requests cuando sea posible
-3. **Error handling**: Maneja errores de autenticación y permisos
-4. **Scopes mínimos**: Solicita solo los permisos necesarios
-5. **Token refresh**: Implementa refresh automático de tokens
-6. **Logs**: Registra operaciones importantes para auditoría
-7. **Backup**: Mantén backups de datos críticos en Sheets
+1. **Rate limiting**: Respect the Google API limits
+2. **Batch operations**: Use batch requests whenever possible
+3. **Error handling**: Handle authentication and permission errors
+4. **Minimal scopes**: Request only the permissions you need
+5. **Token refresh**: Implement automatic token refresh
+6. **Logs**: Record important operations for auditing
+7. **Backup**: Keep backups of critical data in Sheets
 
 ### Debugging
 
-#### Verificar Permisos
+#### Verifying Permissions
 
 \`\`\`javascript
-// Verificar scopes disponibles
+// Check the available scopes
 const scopes = $credentials.scope;
 console.log('Available scopes:', scopes);
 
-// Test de conexión
+// Connection test
 try {
   const profile = await this.helpers.httpRequest({
     method: 'GET',
@@ -1565,7 +1565,7 @@ try {
 }
 \`\`\`
 
-### Recursos Adicionales
+### Additional Resources
 
 - [Gmail API Documentation](https://developers.google.com/gmail/api)
 - [Google Sheets API](https://developers.google.com/sheets/api)
@@ -1575,29 +1575,29 @@ try {
     },
     {
       id: "les-03-04",
-      moduleSlug: "integraciones-apis",
+      moduleSlug: "integrations-apis-auth",
       slug: "notion-airtable",
-      title: "Notion y Airtable como CMS",
-      description: "Usa Notion y Airtable como sistemas de gestión de contenido para tus workflows.",
+      title: "Notion and Airtable as a CMS",
+      description: "Use Notion and Airtable as content management systems for your workflows.",
       estimatedMinutes: 25,
-      content: `## Notion y Airtable como CMS
+      content: `## Notion and Airtable as a CMS
 
-Notion y Airtable son herramientas poderosas que pueden funcionar como CMS (Content Management System) para tus automatizaciones.
+Notion and Airtable are powerful tools that can work as a CMS (Content Management System) for your automations.
 
 ### Notion Integration
 
-#### Configuración
+#### Setup
 
-1. Ve a [Notion Integrations](https://www.notion.so/my-integrations)
-2. Click en **New integration**
-3. Configura:
+1. Go to [Notion Integrations](https://www.notion.so/my-integrations)
+2. Click **New integration**
+3. Configure:
    - **Name**: N8N Integration
-   - **Associated workspace**: Tu workspace
-4. Copia el **Internal Integration Token**
-5. En Notion, comparte la base de datos con la integración
-6. En N8N, crea credenciales **Notion API**
+   - **Associated workspace**: Your workspace
+4. Copy the **Internal Integration Token**
+5. In Notion, share the database with the integration
+6. In N8N, create the **Notion API** credentials
 
-#### Leer Base de Datos
+#### Reading a Database
 
 \`\`\`json
 {
@@ -1616,7 +1616,7 @@ Notion y Airtable son herramientas poderosas que pueden funcionar como CMS (Cont
 }
 \`\`\`
 
-#### Crear Página
+#### Creating a Page
 
 \`\`\`json
 {
@@ -1627,7 +1627,7 @@ Notion y Airtable son herramientas poderosas que pueden funcionar como CMS (Cont
       {
         "key": "Name",
         "type": "title",
-        "title": "={{ $json.titulo }}"
+        "title": "={{ $json.title }}"
       },
       {
         "key": "Status",
@@ -1637,14 +1637,14 @@ Notion y Airtable son herramientas poderosas que pueden funcionar como CMS (Cont
       {
         "key": "Author",
         "type": "rich_text",
-        "rich_text": "={{ $json.autor }}"
+        "rich_text": "={{ $json.author }}"
       }
     ]
   }
 }
 \`\`\`
 
-#### Actualizar Página
+#### Updating a Page
 
 \`\`\`json
 {
@@ -1667,7 +1667,7 @@ Notion y Airtable son herramientas poderosas que pueden funcionar como CMS (Cont
 }
 \`\`\`
 
-#### Agregar Contenido a Página
+#### Adding Content to a Page
 
 \`\`\`javascript
 const items = $input.all();
@@ -1675,15 +1675,15 @@ const results = [];
 
 for (const item of items) {
   const pageId = item.json.pageId;
-  const content = item.json.contenido;
+  const content = item.json.content;
 
-  // Crear bloques de contenido
+  // Create the content blocks
   const blocks = [
     {
       object: 'block',
       type: 'heading_2',
       heading_2: {
-        rich_text: [{ type: 'text', text: { content: item.json.subtitulo } }]
+        rich_text: [{ type: 'text', text: { content: item.json.subtitle } }]
       }
     },
     {
@@ -1697,14 +1697,14 @@ for (const item of items) {
       object: 'block',
       type: 'bulleted_list_item',
       bulleted_list_item: {
-        rich_text: [{ type: 'text', text: { content: 'Punto 1' } }]
+        rich_text: [{ type: 'text', text: { content: 'Point 1' } }]
       }
     },
     {
       object: 'block',
       type: 'code',
       code: {
-        rich_text: [{ type: 'text', text: { content: item.json.codigo } }],
+        rich_text: [{ type: 'text', text: { content: item.json.code } }],
         language: 'javascript'
       }
     }
@@ -1735,14 +1735,14 @@ return results;
 
 ### Airtable Integration
 
-#### Configuración
+#### Setup
 
-1. Ve a [Airtable API](https://airtable.com/api)
-2. Selecciona tu base
-3. Genera un **API Key**
-4. En N8N, crea credenciales **Airtable API**
+1. Go to [Airtable API](https://airtable.com/api)
+2. Select your base
+3. Generate an **API Key**
+4. In N8N, create the **Airtable API** credentials
 
-#### Leer Registros
+#### Reading Records
 
 \`\`\`json
 {
@@ -1763,7 +1763,7 @@ return results;
 }
 \`\`\`
 
-#### Crear Registro
+#### Creating a Record
 
 \`\`\`json
 {
@@ -1774,7 +1774,7 @@ return results;
     "values": [
       {
         "name": "Name",
-        "value": "={{ $json.nombre }}"
+        "value": "={{ $json.name }}"
       },
       {
         "name": "Email",
@@ -1782,7 +1782,7 @@ return results;
       },
       {
         "name": "Phone",
-        "value": "={{ $json.telefono }}"
+        "value": "={{ $json.phone }}"
       },
       {
         "name": "Status",
@@ -1793,7 +1793,7 @@ return results;
 }
 \`\`\`
 
-#### Actualizar Registro
+#### Updating a Record
 
 \`\`\`json
 {
@@ -1821,18 +1821,18 @@ return results;
 \`\`\`javascript
 const items = $input.all();
 
-// Preparar para bulk create
+// Prepare the bulk create
 const records = items.map(item => ({
   fields: {
-    Name: item.json.nombre,
+    Name: item.json.name,
     Email: item.json.email,
-    Phone: item.json.telefono,
+    Phone: item.json.phone,
     Status: 'New',
     Source: 'N8N Automation'
   }
 }));
 
-// Airtable permite máximo 10 registros por request
+// Airtable allows a maximum of 10 records per request
 const batchSize = 10;
 const results = [];
 
@@ -1851,7 +1851,7 @@ for (let i = 0; i < records.length; i += batchSize) {
 
   results.push(...response.data.records);
   
-  // Rate limiting: Airtable permite 5 requests por segundo
+  // Rate limiting: Airtable allows 5 requests per second
   if (i + batchSize < records.length) {
     await new Promise(resolve => setTimeout(resolve, 200));
   }
@@ -1866,9 +1866,9 @@ return results.map(record => ({
 }));
 \`\`\`
 
-### Patrones de CMS
+### CMS Patterns
 
-#### Patrón 1: Content Publishing Pipeline
+#### Pattern 1: Content Publishing Pipeline
 
 \`\`\`
 [Webhook: New Content]
@@ -1890,7 +1890,7 @@ return results.map(record => ({
 [Post to Social Media]
 \`\`\`
 
-#### Patrón 2: CRM con Airtable
+#### Pattern 2: CRM with Airtable
 
 \`\`\`
 [Webhook: New Lead]
@@ -1906,10 +1906,10 @@ return results.map(record => ({
 [Schedule Follow-up]
 \`\`\`
 
-#### Patrón 3: Knowledge Base Sync
+#### Pattern 3: Knowledge Base Sync
 
 \`\`\`
-[Schedule: Diario]
+[Schedule: Daily]
     ↓
 [Notion: Get Updated Pages]
     ↓
@@ -1920,7 +1920,7 @@ return results.map(record => ({
 [Airtable: Log Sync Status]
 \`\`\`
 
-### Ejemplos Avanzados
+### Advanced Examples
 
 #### Content Approval Workflow
 
@@ -1931,7 +1931,7 @@ const results = [];
 for (const item of items) {
   const pageId = item.json.pageId;
   
-  // Obtener página de Notion
+  // Fetch the Notion page
   const page = await this.helpers.httpRequest({
     method: 'GET',
     url: \`https://api.notion.com/v1/pages/\${pageId}\`,
@@ -1941,15 +1941,15 @@ for (const item of items) {
     }
   });
 
-  // Verificar status
+  // Check the status
   const status = page.data.properties.Status.select?.name;
   
   if (status === 'Pending Review') {
-    // Enviar notificación de aprobación
+    // Send the approval notification
     const reviewers = ['editor@example.com', 'manager@example.com'];
     
     for (const reviewer of reviewers) {
-      // Aquí iría el nodo de email
+      // The email node would go here
       console.log(\`Sending approval request to \${reviewer}\`);
     }
 
@@ -1967,10 +1967,10 @@ for (const item of items) {
 return results;
 \`\`\`
 
-#### Sync Bidireccional Notion-Airtable
+#### Two-Way Notion-Airtable Sync
 
 \`\`\`javascript
-// Sincronizar datos entre Notion y Airtable
+// Sync data between Notion and Airtable
 const notionItems = $input.all();
 const results = [];
 
@@ -1978,7 +1978,7 @@ for (const notionItem of notionItems) {
   const notionId = notionItem.json.id;
   const email = notionItem.json.properties.Email.rich_text[0]?.plain_text;
   
-  // Buscar en Airtable por email
+  // Look up the record in Airtable by email
   const airtableSearch = await this.helpers.httpRequest({
     method: 'GET',
     url: \`https://api.airtable.com/v0/appXXX/Contacts?filterByFormula={Email}="\${email}"\`,
@@ -1988,7 +1988,7 @@ for (const notionItem of notionItems) {
   });
 
   if (airtableSearch.data.records.length === 0) {
-    // Crear en Airtable
+    // Create it in Airtable
     const newRecord = await this.helpers.httpRequest({
       method: 'POST',
       url: 'https://api.airtable.com/v0/appXXX/Contacts',
@@ -2014,7 +2014,7 @@ for (const notionItem of notionItems) {
       }
     });
   } else {
-    // Actualizar en Airtable
+    // Update it in Airtable
     const recordId = airtableSearch.data.records[0].id;
     
     await this.helpers.httpRequest({
@@ -2045,27 +2045,27 @@ for (const notionItem of notionItems) {
 return results;
 \`\`\`
 
-### Mejores Prácticas
+### Best Practices
 
 #### Notion
 
-1. **Usa databases**: Prefiere databases sobre pages para datos estructurados
-2. **Propiedades tipadas**: Usa los tipos de propiedad correctos (select, date, etc.)
-3. **Pagination**: Maneja paginación para bases de datos grandes
-4. **Rate limiting**: Notion permite 3 requests por segundo
-5. **Webhooks**: Usa webhooks para cambios en tiempo real
+1. **Use databases**: Prefer databases over pages for structured data
+2. **Typed properties**: Use the right property types (select, date, etc.)
+3. **Pagination**: Handle pagination for large databases
+4. **Rate limiting**: Notion allows 3 requests per second
+5. **Webhooks**: Use webhooks for realtime changes
 
 #### Airtable
 
-1. **Field types**: Usa los tipos de campo apropiados
-2. **Views**: Crea vistas específicas para diferentes workflows
-3. **Formulas**: Usa fórmulas de Airtable para cálculos
-4. **Batch operations**: Usa bulk operations para mejor performance
-5. **API limits**: Airtable permite 5 requests por segundo
+1. **Field types**: Use the appropriate field types
+2. **Views**: Create specific views for different workflows
+3. **Formulas**: Use Airtable formulas for calculations
+4. **Batch operations**: Use bulk operations for better performance
+5. **API limits**: Airtable allows 5 requests per second
 
 ### Debugging
 
-#### Verificar Conexión Notion
+#### Verifying the Notion Connection
 
 \`\`\`javascript
 try {
@@ -2083,7 +2083,7 @@ try {
 }
 \`\`\`
 
-#### Verificar Conexión Airtable
+#### Verifying the Airtable Connection
 
 \`\`\`javascript
 try {
@@ -2100,7 +2100,7 @@ try {
 }
 \`\`\`
 
-### Recursos Adicionales
+### Additional Resources
 
 - [Notion API Documentation](https://developers.notion.com/)
 - [Airtable API Documentation](https://airtable.com/api)
@@ -2110,18 +2110,18 @@ try {
     },
     {
       id: "les-03-05",
-      moduleSlug: "integraciones-apis",
+      moduleSlug: "integrations-apis-auth",
       slug: "api-design-patterns",
-      title: "Diseño de APIs con N8N",
-      description: "Crea APIs RESTful usando webhooks de N8N para exponer tus workflows como servicios.",
+      title: "API Design with N8N",
+      description: "Build RESTful APIs using N8N webhooks to expose your workflows as services.",
       estimatedMinutes: 25,
-      content: `## Diseño de APIs con N8N
+      content: `## API Design with N8N
 
-N8N puede funcionar como backend para APIs RESTful usando webhooks. Esto te permite exponer tus workflows como servicios.
+N8N can act as a backend for RESTful APIs using webhooks. This lets you expose your workflows as services.
 
-### Webhook como API Endpoint
+### Webhook as an API Endpoint
 
-#### Configuración Básica
+#### Basic Configuration
 
 \`\`\`json
 {
@@ -2156,29 +2156,29 @@ N8N puede funcionar como backend para APIs RESTful usando webhooks. Esto te perm
 
 ### REST API Design
 
-#### Estructura de Endpoints
+#### Endpoint Structure
 
 \`\`\`
-GET    /api/v1/users          # Listar usuarios
-POST   /api/v1/users          # Crear usuario
-GET    /api/v1/users/:id      # Obtener usuario específico
-PUT    /api/v1/users/:id      # Actualizar usuario completo
-PATCH  /api/v1/users/:id      # Actualizar usuario parcial
-DELETE /api/v1/users/:id      # Eliminar usuario
+GET    /api/v1/users          # List users
+POST   /api/v1/users          # Create a user
+GET    /api/v1/users/:id      # Get a specific user
+PUT    /api/v1/users/:id      # Update a user completely
+PATCH  /api/v1/users/:id      # Partially update a user
+DELETE /api/v1/users/:id      # Delete a user
 \`\`\`
 
-#### Ejemplo: GET /api/v1/users
+#### Example: GET /api/v1/users
 
 \`\`\`javascript
-// Webhook node recibe request
+// The Webhook node receives the request
 const query = $input.first().json.query || {};
 
-// Parsear query parameters
+// Parse the query parameters
 const page = parseInt(query.page) || 1;
 const limit = parseInt(query.limit) || 50;
 const offset = (page - 1) * limit;
 
-// Obtener datos de la base de datos
+// Fetch the data from the database
 const users = await this.helpers.httpRequest({
   method: 'GET',
   url: \`\${$credentials.supabaseUrl}/rest/v1/users\`,
@@ -2189,7 +2189,7 @@ const users = await this.helpers.httpRequest({
   }
 });
 
-// Preparar respuesta
+// Build the response
 const response = {
   success: true,
   data: users.data,
@@ -2203,16 +2203,16 @@ const response = {
 return [{ json: response }];
 \`\`\`
 
-#### Ejemplo: POST /api/v1/users
+#### Example: POST /api/v1/users
 
 \`\`\`javascript
 const body = $input.first().json.body;
 
-// Validación
+// Validation
 const errors = [];
-if (!body.email) errors.push('Email es requerido');
-if (!body.name) errors.push('Name es requerido');
-if (body.email && !body.email.includes('@')) errors.push('Email inválido');
+if (!body.email) errors.push('Email is required');
+if (!body.name) errors.push('Name is required');
+if (body.email && !body.email.includes('@')) errors.push('Invalid email');
 
 if (errors.length > 0) {
   return [{
@@ -2224,7 +2224,7 @@ if (errors.length > 0) {
   }];
 }
 
-// Crear usuario
+// Create the user
 try {
   const newUser = await this.helpers.httpRequest({
     method: 'POST',
@@ -2260,17 +2260,17 @@ try {
 }
 \`\`\`
 
-### Autenticación de API
+### API Authentication
 
 #### API Key Authentication
 
 \`\`\`javascript
-// Primer nodo después del webhook
+// First node after the webhook
 const headers = $input.first().json.headers;
 const apiKey = headers['x-api-key'];
 
-// Verificar API key
-const validKeys = ['key1', 'key2', 'key3']; // O obtener de base de datos
+// Verify the API key
+const validKeys = ['key1', 'key2', 'key3']; // Or fetch them from a database
 
 if (!apiKey || !validKeys.includes(apiKey)) {
   return [{
@@ -2282,7 +2282,7 @@ if (!apiKey || !validKeys.includes(apiKey)) {
   }];
 }
 
-// Continuar con el workflow
+// Continue with the workflow
 return $input.all();
 \`\`\`
 
@@ -2308,7 +2308,7 @@ const token = authHeader.substring(7);
 try {
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
   
-  // Agregar usuario autenticado al contexto
+  // Add the authenticated user to the context
   const items = $input.all();
   return items.map(item => ({
     json: {
@@ -2327,9 +2327,9 @@ try {
 }
 \`\`\`
 
-### Manejo de Errores
+### Error Handling
 
-#### Error Response Estándar
+#### Standard Error Response
 
 \`\`\`javascript
 function createErrorResponse(statusCode, message, details = null) {
@@ -2347,7 +2347,7 @@ function createErrorResponse(statusCode, message, details = null) {
   };
 }
 
-// Uso
+// Usage
 if (!body.email) {
   return [createErrorResponse(400, 'Validation error', { email: 'Email is required' })];
 }
@@ -2361,7 +2361,7 @@ return [createErrorResponse(500, 'Internal server error', error.message)];
 
 ### Rate Limiting
 
-#### Implementar Rate Limiting
+#### Implementing Rate Limiting
 
 \`\`\`javascript
 const redis = require('redis');
@@ -2370,10 +2370,10 @@ const client = redis.createClient(process.env.REDIS_URL);
 const ip = $input.first().json.headers['x-forwarded-for'] || 
            $input.first().json.headers['x-real-ip'];
 const key = \`rate_limit:\${ip}\`;
-const limit = 100; // requests por hora
-const window = 3600; // segundos
+const limit = 100; // requests per hour
+const window = 3600; // seconds
 
-// Obtener contador actual
+// Get the current counter
 const current = await client.get(key);
 const count = current ? parseInt(current) : 0;
 
@@ -2388,17 +2388,17 @@ if (count >= limit) {
   }];
 }
 
-// Incrementar contador
+// Increment the counter
 await client.incr(key);
 await client.expire(key, window);
 
-// Continuar con el workflow
+// Continue with the workflow
 return $input.all();
 \`\`\`
 
-### Documentación de API
+### API Documentation
 
-#### Generar OpenAPI Spec
+#### Generating an OpenAPI Spec
 
 \`\`\`javascript
 // Endpoint: GET /api/v1/docs
@@ -2407,11 +2407,11 @@ const openApiSpec = {
   info: {
     title: 'N8N API',
     version: '1.0.0',
-    description: 'API generada automáticamente por N8N'
+    description: 'API automatically generated by N8N'
   },
   servers: [
     {
-      url: 'https://tu-n8n.com',
+      url: 'https://your-n8n.com',
       description: 'Production server'
     }
   ],
@@ -2495,9 +2495,9 @@ const openApiSpec = {
 return [{ json: openApiSpec }];
 \`\`\`
 
-### Patrones Avanzados
+### Advanced Patterns
 
-#### Patrón: API Gateway
+#### Pattern: API Gateway
 
 \`\`\`
 [Webhook: /api/*]
@@ -2510,7 +2510,7 @@ return [{ json: openApiSpec }];
     └─ /products → [Products Workflow]
 \`\`\`
 
-#### Patrón: Async Processing
+#### Pattern: Async Processing
 
 \`\`\`
 [Webhook: POST /api/v1/jobs]
@@ -2528,7 +2528,7 @@ return [{ json: openApiSpec }];
 [Return Job Status]
 \`\`\`
 
-#### Patrón: Webhook Callbacks
+#### Pattern: Webhook Callbacks
 
 \`\`\`
 [Webhook: POST /api/v1/process]
@@ -2544,7 +2544,7 @@ return [{ json: openApiSpec }];
 [POST to Callback URL with Result]
 \`\`\`
 
-### Ejemplo Completo: CRUD API
+### Complete Example: CRUD API
 
 \`\`\`javascript
 // Router node
@@ -2553,10 +2553,10 @@ const path = $input.first().json.path;
 const body = $input.first().json.body || {};
 const params = $input.first().json.params || {};
 
-// Parse path: /api/v1/users/:id
+// Parse the path: /api/v1/users/:id
 const pathParts = path.split('/');
 const resource = pathParts[3]; // users
-const id = pathParts[4]; // id (opcional)
+const id = pathParts[4]; // id (optional)
 
 // Routing
 if (resource === 'users') {
@@ -2587,62 +2587,62 @@ return [{
 }];
 
 async function handleListUsers() {
-  // Implementación
+  // Implementation
 }
 
 async function handleGetUser(id) {
-  // Implementación
+  // Implementation
 }
 
 async function handleCreateUser(body) {
-  // Implementación
+  // Implementation
 }
 
 async function handleUpdateUser(id, body) {
-  // Implementación
+  // Implementation
 }
 
 async function handleDeleteUser(id) {
-  // Implementación
+  // Implementation
 }
 \`\`\`
 
-### Mejores Prácticas
+### Best Practices
 
-1. **Versionado**: Usa versiones en URLs (/api/v1/, /api/v2/)
-2. **Validación**: Valida todos los inputs
-3. **Autenticación**: Implementa auth en todos los endpoints
-4. **Rate limiting**: Protege contra abuso
-5. **Logging**: Registra todas las requests
-6. **Error handling**: Usa códigos HTTP apropiados
-7. **Documentation**: Genera OpenAPI specs
-8. **Testing**: Prueba todos los endpoints
-9. **CORS**: Configura CORS apropiadamente
-10. **HTTPS**: Siempre usa HTTPS en producción
+1. **Versioning**: Use versions in the URLs (/api/v1/, /api/v2/)
+2. **Validation**: Validate every input
+3. **Authentication**: Implement auth on every endpoint
+4. **Rate limiting**: Protect against abuse
+5. **Logging**: Log every request
+6. **Error handling**: Use appropriate HTTP status codes
+7. **Documentation**: Generate OpenAPI specs
+8. **Testing**: Test every endpoint
+9. **CORS**: Configure CORS properly
+10. **HTTPS**: Always use HTTPS in production
 
 ### Debugging
 
-#### Test de API con curl
+#### Testing the API with curl
 
 \`\`\`bash
 # GET request
-curl -X GET https://tu-n8n.com/api/v1/users \\
+curl -X GET https://your-n8n.com/api/v1/users \\
   -H "X-API-Key: your-api-key"
 
 # POST request
-curl -X POST https://tu-n8n.com/api/v1/users \\
+curl -X POST https://your-n8n.com/api/v1/users \\
   -H "Content-Type: application/json" \\
   -H "X-API-Key: your-api-key" \\
   -d '{"email": "user@example.com", "name": "John Doe"}'
 
 # PUT request
-curl -X PUT https://tu-n8n.com/api/v1/users/123 \\
+curl -X PUT https://your-n8n.com/api/v1/users/123 \\
   -H "Content-Type: application/json" \\
   -H "X-API-Key: your-api-key" \\
   -d '{"name": "Jane Doe"}'
 \`\`\`
 
-### Recursos Adicionales
+### Additional Resources
 
 - [REST API Design Best Practices](https://restfulapi.net/)
 - [OpenAPI Specification](https://swagger.io/specification/)

@@ -7,7 +7,7 @@ import { BookOpen, Clock, CheckCircle2 } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
-export default async function CursoPage() {
+export default async function CoursesPage() {
   const session = await getSession();
 
   if (!session) {
@@ -29,10 +29,10 @@ export default async function CursoPage() {
     <div className="container mx-auto px-4 py-12 max-w-6xl">
       <div className="mb-12">
         <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-          Curso Completo de N8N
+          The Complete N8N Course
         </h1>
         <p className="text-lg text-gray-600 dark:text-gray-400">
-          Domina la automatización de workflows desde cero hasta nivel experto
+          Master workflow automation from scratch to expert level
         </p>
       </div>
 
@@ -70,7 +70,7 @@ export default async function CursoPage() {
                     {progressPercent}%
                   </div>
                   <div className="text-sm text-gray-500 dark:text-gray-400">
-                    {completedLessons}/{totalLessons} lecciones
+                    {completedLessons}/{totalLessons} lessons
                   </div>
                 </div>
               </div>

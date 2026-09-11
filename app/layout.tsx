@@ -9,9 +9,9 @@ import CookieConsent from '@/components/CookieConsent';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Curso Full Stack N8N | De Cero a Profesional',
+  title: 'N8N Full Stack Course | From Zero to Professional',
   description:
-    'Aprende N8N desde los fundamentos hasta nivel enterprise. Automatización, AI agents, custom nodes, integraciones API, RAG y despliegue profesional.',
+    'Learn N8N from the fundamentals up to enterprise level. Automation, AI agents, custom nodes, API integrations, RAG and professional deployment.',
 };
 
 export default function RootLayout({
@@ -20,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${inter.className} min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 text-gray-900 antialiased dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 dark:text-white`}
       >

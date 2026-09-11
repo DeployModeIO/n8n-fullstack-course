@@ -26,7 +26,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
 
   const enrollment = await getEnrollmentStatus(session.userId);
   if (enrollment.blocked) {
-    redirect('/bloqueado');
+    redirect('/blocked');
   }
 
   const currentModule = modules.find((m) => m.slug === moduleSlug);

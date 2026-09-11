@@ -25,7 +25,7 @@ export default async function VerifyCertificatePage({
     <div className="mx-auto max-w-xl px-4 py-20 text-center">
       <ShieldCheck className="mx-auto mb-4 h-12 w-12 text-[#1E90FF]" />
       <h1 className="mb-4 text-2xl font-bold text-gray-900 dark:text-white">
-        Verificación de Certificado
+        Certificate Verification
       </h1>
 
       <div className="rounded-2xl p-6 backdrop-blur-xl bg-white/70 border border-gray-200/50 dark:bg-white/10 dark:border-white/15">
@@ -33,13 +33,13 @@ export default async function VerifyCertificatePage({
           <div className="space-y-3">
             <CheckCircle2 className="mx-auto h-10 w-10 text-green-500" />
             <p className="font-semibold text-gray-900 dark:text-white">
-              Certificado válido
+              Valid certificate
             </p>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Código: <strong>{cert.certificate_no}</strong>
+              Code: <strong>{cert.certificate_no}</strong>
             </p>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Emitido: {new Date(cert.issued_at).toLocaleDateString('es')}
+              Issued: {new Date(cert.issued_at).toLocaleDateString('en-US')}
             </p>
             {cert.verification_url && (
               <a
@@ -48,7 +48,7 @@ export default async function VerifyCertificatePage({
                 rel="noreferrer"
                 className="text-sm text-[#1E90FF] underline"
               >
-                Abrir credencial verificable
+                Open verifiable credential
               </a>
             )}
           </div>
@@ -56,11 +56,11 @@ export default async function VerifyCertificatePage({
           <div className="space-y-3">
             <XCircle className="mx-auto h-10 w-10 text-red-500" />
             <p className="font-semibold text-gray-900 dark:text-white">
-              Certificado no encontrado
+              Certificate not found
             </p>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              El código <strong>{no}</strong> no corresponde a ninguna
-              credencial emitida por esta plataforma.
+              The code <strong>{no}</strong> does not match any credential
+              issued by this platform.
             </p>
           </div>
         )}

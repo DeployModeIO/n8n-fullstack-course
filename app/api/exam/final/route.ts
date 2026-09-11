@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
   const status = await getEnrollmentStatus(session.userId);
   if (status.blocked) {
     return NextResponse.json(
-      { error: 'Tu acceso al curso está bloqueado.', blocked: true, status },
+      { error: 'Your access to the course is blocked.', blocked: true, status },
       { status: 403 }
     );
   }
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
   const total = finalExam.length;
   const passed = correct / total >= FINAL_EXAM_PASS_RATIO;
 
-  // Registrar intento (incrementa contador / bloquea si corresponde)
+  // Record the attempt (increments the counter / blocks when needed)
   const after = await recordExamAttempt(session.userId, passed);
 
   if (!passed) {
@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  // Aprobar: emitir certificado verificable
+  // Passed: issue a verifiable certificate
   const { data: userRow } = await supabase
     .from('users')
     .select('full_name, email')
@@ -66,13 +66,13 @@ export async function POST(request: NextRequest) {
 
   const name =
     userRow?.full_name ||
-    (userRow?.email ? userRow.email.split('@')[0] : 'Estudiante');
+    (userRow?.email ? userRow.email.split('@')[0] : 'Student');
   const email = userRow?.email || session.email;
 
   const cert = await issueCertificate({
     recipientName: name,
     recipientEmail: email,
-    courseName: 'Curso Full Stack de N8N',
+    courseName: 'N8N Full Stack Course',
     completionDate: new Date().toISOString().slice(0, 10),
   });
 

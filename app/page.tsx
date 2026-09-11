@@ -1,65 +1,65 @@
 import Link from 'next/link';
 
 const stats = [
-  { value: '6', label: 'Módulos' },
-  { value: '30+', label: 'Lecciones' },
-  { value: '12', label: 'Proyectos' },
+  { value: '6', label: 'Modules' },
+  { value: '30+', label: 'Lessons' },
+  { value: '12', label: 'Projects' },
 ];
 
 const features = [
   {
-    title: 'Despliegue Profesional',
+    title: 'Professional Deployment',
     description:
-      'Docker, Kubernetes, CI/CD y monitoreo en producción con las mejores prácticas de la industria.',
+      'Docker, Kubernetes, CI/CD and production monitoring with industry best practices.',
     icon: '🚀',
   },
   {
     title: 'AI Agentic Workflows',
     description:
-      'Construye agentes autónomos con LLMs, tool-calling, memoria y razonamiento multi-paso.',
+      'Build autonomous agents with LLMs, tool-calling, memory and multi-step reasoning.',
     icon: '🤖',
   },
   {
     title: 'Custom Nodes',
     description:
-      'Desarrolla nodos personalizados en TypeScript para extender las capacidades de N8N.',
+      'Develop custom nodes in TypeScript to extend N8N capabilities.',
     icon: '🧩',
   },
   {
-    title: 'Integraciones API',
+    title: 'API Integrations',
     description:
-      'Conecta con REST, GraphQL, webhooks y OAuth2 para orquestar cualquier servicio.',
+      'Connect with REST, GraphQL, webhooks and OAuth2 to orchestrate any service.',
     icon: '🔗',
   },
   {
     title: 'RAG & Vector DBs',
     description:
-      'Implementa retrieval-augmented generation con Pinecone, Weaviate y embeddings avanzados.',
+      'Implement retrieval-augmented generation with Pinecone, Weaviate and advanced embeddings.',
     icon: '🧠',
   },
   {
-    title: 'Seguridad Enterprise',
+    title: 'Enterprise Security',
     description:
-      'RBAC, auditoría, encriptación, secrets management y cumplimiento normativo.',
+      'RBAC, auditing, encryption, secrets management and regulatory compliance.',
     icon: '🔒',
   },
 ];
 
 const testimonials = [
   {
-    name: 'María García',
+    name: 'Sarah Johnson',
     role: 'Automation Engineer',
-    text: 'Este curso transformó mi carrera. Pasé de scripts básicos a diseñar workflows enterprise en semanas.',
+    text: 'This course transformed my career. I went from basic scripts to designing enterprise workflows in weeks.',
   },
   {
-    name: 'Carlos Rodríguez',
-    role: 'CTO en StartupX',
-    text: 'El módulo de AI agents es increíble. Implementamos un sistema completo de atención al cliente automatizado.',
+    name: 'Michael Chen',
+    role: 'CTO at StartupX',
+    text: 'The AI agents module is incredible. We implemented a complete automated customer service system.',
   },
   {
-    name: 'Ana Martínez',
+    name: 'Emily Carter',
     role: 'DevOps Lead',
-    text: 'La sección de despliegue y seguridad es exactamente lo que necesitaba para llevar N8N a producción.',
+    text: 'The deployment and security section is exactly what I needed to take N8N to production.',
   },
 ];
 
@@ -70,25 +70,25 @@ export default function HomePage() {
         <div className="animated-gradient absolute inset-0 opacity-10 dark:opacity-20" />
         <div className="relative mx-auto max-w-5xl text-center">
           <h1 className="bg-gradient-to-r from-gray-900 via-orange-600 to-orange-500 bg-clip-text text-4xl font-extrabold tracking-tight text-transparent sm:text-6xl lg:text-7xl dark:from-white dark:via-orange-200 dark:to-orange-400">
-            Domina N8N: De Cero a Nivel Enterprise
+            Master N8N: From Zero to Enterprise Level
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-600 sm:text-xl dark:text-gray-400">
-            El curso más completo de automatización con N8N. Aprende a construir
-            workflows inteligentes, agentes de IA, integraciones complejas y
-            despliegues profesionales.
+            The most complete N8N automation course. Learn to build intelligent
+            workflows, AI agents, complex integrations and professional
+            deployments.
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <Link
-              href="/course/fundamentos-infraestructura/introduccion-n8n"
+              href="/course/infrastructure-fundamentals/intro-to-n8n"
               className="rounded-xl bg-gradient-to-r from-orange-500 to-red-500 px-8 py-3.5 text-lg font-semibold text-white shadow-lg shadow-orange-500/25 transition hover:shadow-orange-500/40"
             >
-              Comenzar Curso
+              Start the Course
             </Link>
             <Link
               href="/login"
               className="rounded-xl border px-8 py-3.5 text-lg font-semibold transition bg-white/70 border-gray-300 text-gray-900 hover:bg-white dark:bg-white/10 dark:border-white/15 dark:text-white dark:hover:bg-white/10"
             >
-              Iniciar Sesión
+              Log In
             </Link>
           </div>
         </div>
@@ -110,7 +110,7 @@ export default function HomePage() {
       <section className="px-4 py-16">
         <div className="mx-auto max-w-6xl">
           <h2 className="mb-12 text-center text-3xl font-bold text-gray-900 sm:text-4xl dark:text-white">
-            Lo que aprenderás
+            What you will learn
           </h2>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {features.map((feature) => (
@@ -132,17 +132,17 @@ export default function HomePage() {
       <section className="px-4 py-16">
         <div className="mx-auto max-w-4xl text-center">
           <h2 className="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl dark:text-white">
-            Comienza tu viaje hoy
+            Start your journey today
           </h2>
           <p className="mb-8 text-gray-600 dark:text-gray-400">
-            Únete a miles de profesionales que ya están construyendo el futuro de
-            la automatización.
+            Join thousands of professionals who are already building the future
+            of automation.
           </p>
           <Link
-            href="/course/fundamentos-infraestructura/introduccion-n8n"
+            href="/course/infrastructure-fundamentals/intro-to-n8n"
             className="inline-block rounded-xl bg-gradient-to-r from-orange-500 to-red-500 px-10 py-4 text-lg font-semibold text-white shadow-lg shadow-orange-500/25 transition hover:shadow-orange-500/40"
           >
-            Comenzar Curso
+            Start the Course
           </Link>
         </div>
       </section>
@@ -150,7 +150,7 @@ export default function HomePage() {
       <section className="px-4 py-16">
         <div className="mx-auto max-w-6xl">
           <h2 className="mb-12 text-center text-3xl font-bold text-gray-900 sm:text-4xl dark:text-white">
-            Lo que dicen nuestros estudiantes
+            What our students say
           </h2>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {testimonials.map((t) => (
@@ -170,8 +170,8 @@ export default function HomePage() {
 
       <footer className="border-t px-4 py-8 border-gray-200/50 dark:border-white/5">
         <div className="mx-auto max-w-6xl text-center text-sm text-gray-500 dark:text-gray-500">
-          &copy; {new Date().getFullYear()} Curso Full Stack N8N. Todos los
-          derechos reservados.
+          &copy; {new Date().getFullYear()} N8N Full Stack Course. All rights
+          reserved.
         </div>
       </footer>
     </>

@@ -9,8 +9,8 @@ import { Menu, X } from "lucide-react";
 import { useAuth } from "@/lib/auth/context";
 
 const navLinks = [
-  { href: "/", label: "Inicio" },
-  { href: "/curso", label: "Curso" },
+  { href: "/", label: "Home" },
+  { href: "/courses", label: "Courses" },
   { href: "/dashboard", label: "Dashboard" },
 ];
 

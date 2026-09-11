@@ -10,30 +10,30 @@ function certNo(): string {
 }
 
 /**
- * Adaptador Sertifier.
- * Requiere: SERTIFIER_SECRET_KEY y SERTIFIER_DESIGN_ID en el entorno.
- * El flujo real usa Design + Detail + Campaign; este helper asume que ya
- * tienes un Design creado en el dashboard y usamos la API de credenciales.
+ * Sertifier adapter.
+ * Requires: SERTIFIER_SECRET_KEY and SERTIFIER_DESIGN_ID in the environment.
+ * The real flow uses Design + Detail + Campaign; this helper assumes you
+ * already have a Design created in the dashboard and uses the credentials API.
  */
 export class SertifierProvider implements CertificateProvider {
   name = 'sertifier';
 
   private get key(): string {
     const k = process.env.SERTIFIER_SECRET_KEY;
-    if (!k) throw new Error('SERTIFIER_SECRET_KEY no configurada');
+    if (!k) throw new Error('SERTIFIER_SECRET_KEY is not configured');
     return k;
   }
 
   private get designId(): string {
     const d = process.env.SERTIFIER_DESIGN_ID;
-    if (!d) throw new Error('SERTIFIER_DESIGN_ID no configurada');
+    if (!d) throw new Error('SERTIFIER_DESIGN_ID is not configured');
     return d;
   }
 
   async issue(input: IssueCertificateInput): Promise<IssueCertificateResult> {
     const no = certNo();
 
-    // 1) Crear Detail (datos del credential)
+    // 1) Create Detail (credential data)
     const detailRes = await fetch(`${BASE}/CredentialProfile`, {
       method: 'POST',
       headers: {
@@ -59,7 +59,7 @@ export class SertifierProvider implements CertificateProvider {
     }
     const detail = await detailRes.json();
 
-    // 2) Publicar para generar URL verificable
+    // 2) Publish to generate a verifiable URL
     const credId = detail?.content?.id ?? detail?.data?.id ?? null;
     let verificationUrl = '';
     let pdfUrl: string | null = null;

@@ -128,7 +128,7 @@ code {
   }
 }
 
-/* Anti-piratería: deshabilita selección y resaltado de texto en el contenido */
+/* Anti-piracy: disables text selection and highlighting in the course content */
 .no-select {
   -webkit-user-select: none;
   -moz-user-select: none;

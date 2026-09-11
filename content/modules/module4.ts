@@ -2,33 +2,33 @@ import { Module } from "../../types/course";
 
 export const module4: Module = {
   id: "mod-04",
-  slug: "automatizacion-ia",
-  title: "Automatización con IA (AI Agentic)",
-  description: "Integra modelos de lenguaje, agentes autónomos y RAG en tus workflows de N8N.",
+  slug: "ai-automation",
+  title: "AI Automation (Agentic AI)",
+  description: "Integrate language models, autonomous agents and RAG into your N8N workflows.",
   icon: "Brain",
   sortOrder: 4,
   lessons: [
     {
       id: "les-04-01",
-      moduleSlug: "automatizacion-ia",
+      moduleSlug: "ai-automation",
       slug: "openai-integration",
-      title: "Integración con OpenAI: GPT-4 y DALL-E",
-      description: "Conecta N8N con OpenAI para generar texto, imágenes y procesar datos con IA.",
+      title: "OpenAI Integration: GPT-4 and DALL-E",
+      description: "Connect N8N to OpenAI to generate text and images and to process data with AI.",
       estimatedMinutes: 25,
-      content: `## Integración con OpenAI
+      content: `## OpenAI Integration
 
-OpenAI proporciona APIs para GPT-4 (texto), DALL-E (imágenes), Whisper (audio) y más. N8N puede integrarse con todos estos servicios.
+OpenAI provides APIs for GPT-4 (text), DALL-E (images), Whisper (audio) and more. N8N can integrate with all of these services.
 
-### Configuración de Credenciales
+### Credentials Setup
 
-1. Ve a [OpenAI Platform](https://platform.openai.com/api-keys)
-2. Crea una nueva API key
-3. En N8N, crea credenciales **OpenAI API**
-4. Pega tu API key
+1. Go to [OpenAI Platform](https://platform.openai.com/api-keys)
+2. Create a new API key
+3. In N8N, create the **OpenAI API** credentials
+4. Paste your API key
 
-### GPT-4: Generación de Texto
+### GPT-4: Text Generation
 
-#### Chat Completion Simple
+#### Simple Chat Completion
 
 \`\`\`json
 {
@@ -39,11 +39,11 @@ OpenAI proporciona APIs para GPT-4 (texto), DALL-E (imágenes), Whisper (audio) 
     "values": [
       {
         "role": "system",
-        "content": "Eres un asistente útil que responde en español."
+        "content": "You are a helpful assistant that answers in English."
       },
       {
         "role": "user",
-        "content": "={{ $json.pregunta }}"
+        "content": "={{ $json.question }}"
       }
     ]
   },
@@ -54,7 +54,7 @@ OpenAI proporciona APIs para GPT-4 (texto), DALL-E (imágenes), Whisper (audio) 
 }
 \`\`\`
 
-#### Chat con Contexto
+#### Chat with Context
 
 \`\`\`javascript
 const items = $input.all();
@@ -62,13 +62,13 @@ const results = [];
 
 for (const item of items) {
   const conversation = item.json.conversation || [];
-  const userMessage = item.json.mensaje;
+  const userMessage = item.json.message;
 
-  // Construir historial de conversación
+  // Build the conversation history
   const messages = [
     {
       role: 'system',
-      content: 'Eres un asistente de soporte técnico especializado en N8N.'
+      content: 'You are a technical support assistant specialized in N8N.'
     },
     ...conversation.map(msg => ({
       role: msg.role,
@@ -100,7 +100,7 @@ for (const item of items) {
   results.push({
     json: {
       ...item.json,
-      respuesta: assistantMessage,
+      answer: assistantMessage,
       conversation: [
         ...conversation,
         { role: 'user', content: userMessage },
@@ -114,14 +114,14 @@ for (const item of items) {
 return results;
 \`\`\`
 
-#### Generación de Resúmenes
+#### Generating Summaries
 
 \`\`\`javascript
 const items = $input.all();
 const results = [];
 
 for (const item of items) {
-  const texto = item.json.contenido;
+  const text = item.json.content;
 
   const response = await this.helpers.httpRequest({
     method: 'POST',
@@ -135,11 +135,11 @@ for (const item of items) {
       messages: [
         {
           role: 'system',
-          content: 'Genera un resumen conciso del siguiente texto en máximo 3 oraciones.'
+          content: 'Generate a concise summary of the following text in at most 3 sentences.'
         },
         {
           role: 'user',
-          content: texto
+          content: text
         }
       ],
       temperature: 0.3,
@@ -150,8 +150,8 @@ for (const item of items) {
   results.push({
     json: {
       ...item.json,
-      resumen: response.data.choices[0].message.content,
-      originalLength: texto.length,
+      summary: response.data.choices[0].message.content,
+      originalLength: text.length,
       summaryLength: response.data.choices[0].message.content.length
     }
   });
@@ -160,16 +160,16 @@ for (const item of items) {
 return results;
 \`\`\`
 
-#### Clasificación de Texto
+#### Text Classification
 
 \`\`\`javascript
 const items = $input.all();
-const categories = ['soporte', 'ventas', 'facturación', 'general'];
+const categories = ['support', 'sales', 'billing', 'general'];
 
 const results = [];
 
 for (const item of items) {
-  const mensaje = item.json.mensaje;
+  const message = item.json.message;
 
   const response = await this.helpers.httpRequest({
     method: 'POST',
@@ -183,11 +183,11 @@ for (const item of items) {
       messages: [
         {
           role: 'system',
-          content: \`Clasifica el siguiente mensaje en una de estas categorías: \${categories.join(', ')}. Responde solo con el nombre de la categoría.\`
+          content: \`Classify the following message into one of these categories: \${categories.join(', ')}. Reply only with the category name.\`
         },
         {
           role: 'user',
-          content: mensaje
+          content: message
         }
       ],
       temperature: 0,
@@ -195,13 +195,13 @@ for (const item of items) {
     }
   });
 
-  const categoria = response.data.choices[0].message.content.trim().toLowerCase();
+  const category = response.data.choices[0].message.content.trim().toLowerCase();
 
   results.push({
     json: {
       ...item.json,
-      categoria,
-      confianza: response.data.choices[0].finish_reason
+      category,
+      confidence: response.data.choices[0].finish_reason
     }
   });
 }
@@ -209,14 +209,14 @@ for (const item of items) {
 return results;
 \`\`\`
 
-#### Extracción de Datos Estructurados
+#### Extracting Structured Data
 
 \`\`\`javascript
 const items = $input.all();
 const results = [];
 
 for (const item of items) {
-  const texto = item.json.texto;
+  const text = item.json.text;
 
   const response = await this.helpers.httpRequest({
     method: 'POST',
@@ -230,19 +230,19 @@ for (const item of items) {
       messages: [
         {
           role: 'system',
-          content: \`Extrae la siguiente información del texto y devuelve un JSON válido:
+          content: \`Extract the following information from the text and return valid JSON:
 {
-  "nombre": "nombre completo",
+  "name": "full name",
   "email": "email",
-  "telefono": "teléfono",
-  "empresa": "nombre de empresa",
-  "intereses": ["lista", "de", "intereses"]
+  "phone": "phone number",
+  "company": "company name",
+  "interests": ["list", "of", "interests"]
 }
-Si algún campo no está presente, usa null.\`
+If a field is not present, use null.\`
         },
         {
           role: 'user',
-          content: texto
+          content: text
         }
       ],
       temperature: 0,
@@ -256,7 +256,7 @@ Si algún campo no está presente, usa null.\`
   results.push({
     json: {
       ...item.json,
-      datosExtraidos: extractedData
+      extractedData: extractedData
     }
   });
 }
@@ -264,15 +264,15 @@ Si algún campo no está presente, usa null.\`
 return results;
 \`\`\`
 
-### DALL-E: Generación de Imágenes
+### DALL-E: Image Generation
 
-#### Generar Imagen desde Texto
+#### Generating an Image from Text
 
 \`\`\`json
 {
   "resource": "image",
   "operation": "generate",
-  "prompt": "={{ $json.descripcion }}",
+  "prompt": "={{ $json.description }}",
   "options": {
     "size": "1024x1024",
     "quality": "hd",
@@ -281,7 +281,7 @@ return results;
 }
 \`\`\`
 
-#### Generar Múltiples Variaciones
+#### Generating Multiple Variations
 
 \`\`\`javascript
 const items = $input.all();
@@ -325,15 +325,15 @@ for (const item of items) {
 return results;
 \`\`\`
 
-### Whisper: Transcripción de Audio
+### Whisper: Audio Transcription
 
-#### Transcribir Audio
+#### Transcribing Audio
 
 \`\`\`javascript
 const item = $input.first();
 const audioFile = item.binary.audio;
 
-// Convertir base64 a buffer
+// Convert base64 to a buffer
 const audioBuffer = Buffer.from(audioFile.data, 'base64');
 
 const formData = new FormData();
@@ -342,7 +342,7 @@ formData.append('file', audioBuffer, {
   contentType: audioFile.mimeType
 });
 formData.append('model', 'whisper-1');
-formData.append('language', 'es');
+formData.append('language', 'en');
 
 const response = await this.helpers.httpRequest({
   method: 'POST',
@@ -364,9 +364,9 @@ return [{
 }];
 \`\`\`
 
-### Patrones Avanzados
+### Advanced Patterns
 
-#### Patrón: Content Generation Pipeline
+#### Pattern: Content Generation Pipeline
 
 \`\`\`
 [Webhook: Request]
@@ -384,7 +384,7 @@ return [{
 [Return Response]
 \`\`\`
 
-#### Patrón: Customer Support Agent
+#### Pattern: Customer Support Agent
 
 \`\`\`
 [Webhook: Customer Message]
@@ -402,7 +402,7 @@ return [{
                 └─ No → [Escalate to Human]
 \`\`\`
 
-#### Patrón: Data Enrichment with AI
+#### Pattern: Data Enrichment with AI
 
 \`\`\`
 [Schedule: Daily]
@@ -418,14 +418,14 @@ return [{
 [Update Records]
 \`\`\`
 
-### Ejemplo Completo: Blog Post Generator
+### Complete Example: Blog Post Generator
 
 \`\`\`javascript
 const item = $input.first();
 const topic = item.json.topic;
 const keywords = item.json.keywords || [];
 
-// Paso 1: Generar outline
+// Step 1: Generate the outline
 const outlineResponse = await this.helpers.httpRequest({
   method: 'POST',
   url: 'https://api.openai.com/v1/chat/completions',
@@ -438,17 +438,17 @@ const outlineResponse = await this.helpers.httpRequest({
     messages: [
       {
         role: 'system',
-        content: 'Eres un escritor experto en contenido SEO.'
+        content: 'You are an expert SEO content writer.'
       },
       {
         role: 'user',
-        content: \`Genera un outline para un artículo de blog sobre: \${topic}
-Keywords a incluir: \${keywords.join(', ')}
-Devuelve un JSON con esta estructura:
+        content: \`Generate an outline for a blog article about: \${topic}
+Keywords to include: \${keywords.join(', ')}
+Return JSON with this structure:
 {
-  "title": "título atractivo",
+  "title": "engaging title",
   "sections": [
-    {"heading": "H2 heading", "points": ["punto 1", "punto 2"]}
+    {"heading": "H2 heading", "points": ["point 1", "point 2"]}
   ]
 }\`
       }
@@ -460,7 +460,7 @@ Devuelve un JSON con esta estructura:
 
 const outline = JSON.parse(outlineResponse.data.choices[0].message.content);
 
-// Paso 2: Escribir cada sección
+// Step 2: Write each section
 const sections = [];
 for (const section of outline.sections) {
   const sectionResponse = await this.helpers.httpRequest({
@@ -475,13 +475,13 @@ for (const section of outline.sections) {
       messages: [
         {
           role: 'system',
-          content: 'Escribe contenido detallado y atractivo para esta sección.'
+          content: 'Write detailed and engaging content for this section.'
         },
         {
           role: 'user',
-          content: \`Escribe la sección "\${section.heading}" para el artículo "\${outline.title}".
-Puntos a cubrir: \${section.points.join(', ')}
-Extensión: 200-300 palabras.\`
+          content: \`Write the section "\${section.heading}" for the article "\${outline.title}".
+Points to cover: \${section.points.join(', ')}
+Length: 200-300 words.\`
         }
       ],
       temperature: 0.7,
@@ -495,7 +495,7 @@ Extensión: 200-300 palabras.\`
   });
 }
 
-// Paso 3: Generar imagen de portada
+// Step 3: Generate the cover image
 const imageResponse = await this.helpers.httpRequest({
   method: 'POST',
   url: 'https://api.openai.com/v1/images/generations',
@@ -512,7 +512,7 @@ const imageResponse = await this.helpers.httpRequest({
   }
 });
 
-// Ensamblar artículo completo
+// Assemble the full article
 const fullArticle = {
   title: outline.title,
   coverImage: imageResponse.data.data[0].url,
@@ -529,14 +529,14 @@ const fullArticle = {
 return [{ json: fullArticle }];
 \`\`\`
 
-### Optimización de Costos
+### Cost Optimization
 
 #### Token Counting
 
 \`\`\`javascript
-// Estimar tokens antes de enviar
+// Estimate the tokens before sending the request
 function estimateTokens(text) {
-  // Aproximación: 1 token ≈ 4 caracteres en inglés, 2-3 en español
+  // Approximation: 1 token ≈ 4 characters in English, 2-3 in Spanish
   return Math.ceil(text.length / 3);
 }
 
@@ -547,7 +547,7 @@ for (const item of items) {
   const prompt = item.json.prompt;
   const estimatedTokens = estimateTokens(prompt);
   
-  // Verificar si excede el límite
+  // Check whether it exceeds the limit
   if (estimatedTokens > 3000) {
     results.push({
       json: {
@@ -559,7 +559,7 @@ for (const item of items) {
     continue;
   }
 
-  // Usar modelo más económico para tareas simples
+  // Use a cheaper model for simple tasks
   const model = estimatedTokens < 500 ? 'gpt-3.5-turbo' : 'gpt-4';
 
   const response = await this.helpers.httpRequest({
@@ -579,7 +579,7 @@ for (const item of items) {
   results.push({
     json: {
       ...item.json,
-      respuesta: response.data.choices[0].message.content,
+      answer: response.data.choices[0].message.content,
       model: model,
       tokensUsed: response.data.usage.total_tokens,
       estimatedCost: (response.data.usage.total_tokens / 1000) * 
@@ -591,25 +591,25 @@ for (const item of items) {
 return results;
 \`\`\`
 
-### Mejores Prácticas
+### Best Practices
 
-1. **Rate limiting**: Respeta los límites de OpenAI (60 requests/minuto para GPT-4)
-2. **Token management**: Monitorea el uso de tokens
-3. **Error handling**: Maneja errores de rate limit y quota
-4. **Caching**: Cachea respuestas para prompts repetidos
-5. **Model selection**: Usa GPT-3.5 para tareas simples, GPT-4 para complejas
-6. **Prompt engineering**: Diseña prompts claros y específicos
-7. **Temperature**: Usa temperature baja (0-0.3) para tareas determinísticas
-8. **Max tokens**: Limita max_tokens para controlar costos
-9. **Batching**: Procesa múltiples items en paralelo cuando sea posible
-10. **Monitoring**: Log todas las llamadas a la API
+1. **Rate limiting**: Respect the OpenAI limits (60 requests/minute for GPT-4)
+2. **Token management**: Monitor token usage
+3. **Error handling**: Handle rate limit and quota errors
+4. **Caching**: Cache responses for repeated prompts
+5. **Model selection**: Use GPT-3.5 for simple tasks and GPT-4 for complex ones
+6. **Prompt engineering**: Design clear and specific prompts
+7. **Temperature**: Use a low temperature (0-0.3) for deterministic tasks
+8. **Max tokens**: Limit max_tokens to control costs
+9. **Batching**: Process multiple items in parallel whenever possible
+10. **Monitoring**: Log every API call
 
 ### Debugging
 
-#### Verificar Uso de API
+#### Verifying API Usage
 
 \`\`\`javascript
-// Obtener uso de la API
+// Fetch the API usage
 const usage = await this.helpers.httpRequest({
   method: 'GET',
   url: 'https://api.openai.com/v1/usage',
@@ -621,7 +621,7 @@ const usage = await this.helpers.httpRequest({
 console.log('API Usage:', usage.data);
 \`\`\`
 
-### Recursos Adicionales
+### Additional Resources
 
 - [OpenAI API Documentation](https://platform.openai.com/docs)
 - [GPT-4 Best Practices](https://platform.openai.com/docs/guides/gpt-best-practices)
@@ -631,33 +631,33 @@ console.log('API Usage:', usage.data);
     },
     {
       id: "les-04-02",
-      moduleSlug: "automatizacion-ia",
+      moduleSlug: "ai-automation",
       slug: "langchain-n8n",
-      title: "LangChain en N8N: Agentes y Cadenas",
-      description: "Implementa agentes autónomos y cadenas de procesamiento con LangChain en N8N.",
+      title: "LangChain in N8N: Agents and Chains",
+      description: "Implement autonomous agents and processing chains with LangChain in N8N.",
       estimatedMinutes: 30,
-      content: `## LangChain en N8N
+      content: `## LangChain in N8N
 
-LangChain es un framework para construir aplicaciones con LLMs. En N8N, puedes usar LangChain para crear agentes autónomos y cadenas complejas.
+LangChain is a framework for building applications with LLMs. In N8N you can use LangChain to create autonomous agents and complex chains.
 
-### Instalación de LangChain
+### Installing LangChain
 
-LangChain viene preinstalado en N8N. Puedes usarlo directamente en el Code node.
+LangChain is preinstalled with N8N. You can use it directly in the Code node.
 
-### Conceptos Básicos
+### Core Concepts
 
-#### Components de LangChain
+#### LangChain Components
 
 1. **Models**: LLMs (OpenAI, Anthropic, etc.)
-2. **Prompts**: Templates para prompts
-3. **Chains**: Secuencias de operaciones
-4. **Agents**: Agentes autónomos con herramientas
-5. **Memory**: Memoria de conversación
-6. **Tools**: Herramientas que el agente puede usar
+2. **Prompts**: Prompt templates
+3. **Chains**: Sequences of operations
+4. **Agents**: Autonomous agents with tools
+5. **Memory**: Conversation memory
+6. **Tools**: Tools the agent can use
 
-### Cadenas Simples (Chains)
+### Simple Chains
 
-#### Chain Básica con OpenAI
+#### Basic Chain with OpenAI
 
 \`\`\`javascript
 const { OpenAI } = require('langchain/llms/openai');
@@ -674,7 +674,7 @@ const llm = new OpenAI({
 });
 
 const prompt = new PromptTemplate({
-  template: 'Genera un título atractivo para un artículo sobre: {topic}',
+  template: 'Generate an engaging title for an article about: {topic}',
   inputVariables: ['topic']
 });
 
@@ -686,7 +686,7 @@ for (const item of items) {
   results.push({
     json: {
       ...item.json,
-      titulo: response.text
+      title: response.text
     }
   });
 }
@@ -707,16 +707,16 @@ const llm = new OpenAI({
   temperature: 0.7
 });
 
-// Chain 1: Generar outline
+// Chain 1: Generate the outline
 const outlinePrompt = new PromptTemplate({
-  template: 'Genera un outline de 3 puntos para un artículo sobre: {topic}',
+  template: 'Generate a 3-point outline for an article about: {topic}',
   inputVariables: ['topic']
 });
 const outlineChain = new LLMChain({ llm, prompt: outlinePrompt, outputKey: 'outline' });
 
-// Chain 2: Escribir introducción
+// Chain 2: Write the introduction
 const introPrompt = new PromptTemplate({
-  template: 'Escribe una introducción basada en este outline: {outline}',
+  template: 'Write an introduction based on this outline: {outline}',
   inputVariables: ['outline']
 });
 const introChain = new LLMChain({ llm, prompt: introPrompt, outputKey: 'introduction' });
@@ -740,9 +740,9 @@ return [{
 }];
 \`\`\`
 
-### Agentes Autónomos
+### Autonomous Agents
 
-#### Agente con Herramientas
+#### Agent with Tools
 
 \`\`\`javascript
 const { OpenAI } = require('langchain/llms/openai');
@@ -756,7 +756,7 @@ const llm = new OpenAI({
   temperature: 0
 });
 
-// Definir herramientas
+// Define the tools
 const tools = [
   new Calculator(),
   new WebBrowser({ llm, embeddings: null })
@@ -769,20 +769,20 @@ const executor = await initializeAgentExecutorWithOptions(tools, llm, {
 });
 
 const item = $input.first();
-const question = item.json.pregunta;
+const question = item.json.question;
 
 const result = await executor.call({ input: question });
 
 return [{
   json: {
-    pregunta: question,
-    respuesta: result.output,
+    question: question,
+    answer: result.output,
     steps: result.intermediateSteps
   }
 }];
 \`\`\`
 
-#### Agente Personalizado con Herramientas Custom
+#### Custom Agent with Custom Tools
 
 \`\`\`javascript
 const { OpenAI } = require('langchain/llms/openai');
@@ -795,10 +795,10 @@ const llm = new OpenAI({
   temperature: 0
 });
 
-// Herramienta custom: Buscar en base de datos
+// Custom tool: search the database
 const databaseSearch = new DynamicTool({
   name: 'database_search',
-  description: 'Busca información en la base de datos de clientes. Input debe ser un email.',
+  description: 'Search the customer database for information. The input must be an email.',
   func: async (email) => {
     const response = await this.helpers.httpRequest({
       method: 'GET',
@@ -810,18 +810,18 @@ const databaseSearch = new DynamicTool({
     });
     
     if (response.data.length === 0) {
-      return 'Cliente no encontrado';
+      return 'Customer not found';
     }
     
     const customer = response.data[0];
-    return \`Cliente encontrado: \${customer.name}, Plan: \${customer.plan}, Status: \${customer.status}\`;
+    return \`Customer found: \${customer.name}, Plan: \${customer.plan}, Status: \${customer.status}\`;
   }
 });
 
-// Herramienta custom: Calcular métricas
+// Custom tool: calculate metrics
 const metricsCalculator = new DynamicTool({
   name: 'metrics_calculator',
-  description: 'Calcula métricas de uso del cliente. Input debe ser un customer ID.',
+  description: 'Calculate customer usage metrics. The input must be a customer ID.',
   func: async (customerId) => {
     const response = await this.helpers.httpRequest({
       method: 'GET',
@@ -836,7 +836,7 @@ const metricsCalculator = new DynamicTool({
     const totalUsage = metrics.reduce((sum, m) => sum + m.usage, 0);
     const avgUsage = totalUsage / metrics.length;
     
-    return \`Métricas de uso: Total: \${totalUsage}, Promedio: \${avgUsage.toFixed(2)}, Registros: \${metrics.length}\`;
+    return \`Usage metrics: Total: \${totalUsage}, Average: \${avgUsage.toFixed(2)}, Records: \${metrics.length}\`;
   }
 });
 
@@ -849,20 +849,20 @@ const executor = await initializeAgentExecutorWithOptions(tools, llm, {
 });
 
 const item = $input.first();
-const question = item.json.pregunta;
+const question = item.json.question;
 
 const result = await executor.call({ input: question });
 
 return [{
   json: {
-    pregunta: question,
-    respuesta: result.output,
+    question: question,
+    answer: result.output,
     toolsUsed: result.intermediateSteps.map(step => step.action.tool)
   }
 }];
 \`\`\`
 
-### Memoria de Conversación
+### Conversation Memory
 
 #### Conversation Buffer Memory
 
@@ -889,9 +889,9 @@ const results = [];
 
 for (const item of items) {
   const conversationId = item.json.conversationId;
-  const userMessage = item.json.mensaje;
+  const userMessage = item.json.message;
 
-  // Cargar historial si existe
+  // Load the history if it exists
   if (item.json.history) {
     for (const msg of item.json.history) {
       if (msg.role === 'user') {
@@ -904,7 +904,7 @@ for (const item of items) {
 
   const response = await chain.call({ input: userMessage });
 
-  // Obtener historial actualizado
+  // Get the updated history
   const messages = await memory.chatHistory.getMessages();
   const history = messages.map(msg => ({
     role: msg._getType() === 'human' ? 'user' : 'assistant',
@@ -914,7 +914,7 @@ for (const item of items) {
   results.push({
     json: {
       conversationId,
-      respuesta: response.response,
+      answer: response.response,
       history
     }
   });
@@ -945,25 +945,25 @@ const chain = new ConversationChain({ llm, memory });
 
 const item = $input.first();
 
-// Cargar resumen previo si existe
+// Load the previous summary if it exists
 if (item.json.previousSummary) {
   memory.buffer = item.json.previousSummary;
 }
 
-const response = await chain.call({ input: item.json.mensaje });
+const response = await chain.call({ input: item.json.message });
 
 return [{
   json: {
-    respuesta: response.response,
+    answer: response.response,
     summary: memory.buffer,
     conversationId: item.json.conversationId
   }
 }];
 \`\`\`
 
-### Patrones Avanzados
+### Advanced Patterns
 
-#### Patrón: Multi-Agent System
+#### Pattern: Multi-Agent System
 
 \`\`\`javascript
 const { OpenAI } = require('langchain/llms/openai');
@@ -976,14 +976,14 @@ const llm = new OpenAI({
   temperature: 0
 });
 
-// Agente 1: Investigador
+// Agent 1: Researcher
 const researcherTools = [
   new DynamicTool({
     name: 'web_search',
-    description: 'Busca información en la web',
+    description: 'Search the web for information',
     func: async (query) => {
-      // Implementar búsqueda web
-      return \`Resultados de búsqueda para: \${query}\`;
+      // Implement the web search
+      return \`Search results for: \${query}\`;
     }
   })
 ];
@@ -991,18 +991,18 @@ const researcherTools = [
 const researcher = await initializeAgentExecutorWithOptions(researcherTools, llm, {
   agentType: 'zero-shot-react-description',
   agentArgs: {
-    prefix: 'Eres un investigador experto. Tu trabajo es buscar y recopilar información.'
+    prefix: 'You are an expert researcher. Your job is to search for and gather information.'
   }
 });
 
-// Agente 2: Analista
+// Agent 2: Analyst
 const analystTools = [
   new DynamicTool({
     name: 'analyze_data',
-    description: 'Analiza datos y genera insights',
+    description: 'Analyze data and generate insights',
     func: async (data) => {
-      // Implementar análisis
-      return \`Análisis de: \${data}\`;
+      // Implement the analysis
+      return \`Analysis of: \${data}\`;
     }
   })
 ];
@@ -1010,18 +1010,18 @@ const analystTools = [
 const analyst = await initializeAgentExecutorWithOptions(analystTools, llm, {
   agentType: 'zero-shot-react-description',
   agentArgs: {
-    prefix: 'Eres un analista de datos experto. Tu trabajo es analizar información y generar insights.'
+    prefix: 'You are an expert data analyst. Your job is to analyze information and generate insights.'
   }
 });
 
-// Agente 3: Escritor
+// Agent 3: Writer
 const writerTools = [
   new DynamicTool({
     name: 'write_report',
-    description: 'Escribe reportes profesionales',
+    description: 'Write professional reports',
     func: async (content) => {
-      // Implementar escritura
-      return \`Reporte generado: \${content.substring(0, 100)}...\`;
+      // Implement the writing
+      return \`Report generated: \${content.substring(0, 100)}...\`;
     }
   })
 ];
@@ -1029,27 +1029,27 @@ const writerTools = [
 const writer = await initializeAgentExecutorWithOptions(writerTools, llm, {
   agentType: 'zero-shot-react-description',
   agentArgs: {
-    prefix: 'Eres un escritor profesional. Tu trabajo es crear reportes claros y concisos.'
+    prefix: 'You are a professional writer. Your job is to create clear and concise reports.'
   }
 });
 
-// Orquestar agentes
+// Orchestrate the agents
 const item = $input.first();
 const task = item.json.task;
 
-// Paso 1: Investigación
+// Step 1: Research
 const research = await researcher.call({ 
-  input: \`Investiga sobre: \${task}\` 
+  input: \`Research: \${task}\` 
 });
 
-// Paso 2: Análisis
+// Step 2: Analysis
 const analysis = await analyst.call({ 
-  input: \`Analiza esta investigación: \${research.output}\` 
+  input: \`Analyze this research: \${research.output}\` 
 });
 
-// Paso 3: Escritura
+// Step 3: Writing
 const report = await writer.call({ 
-  input: \`Escribe un reporte basado en: \${analysis.output}\` 
+  input: \`Write a report based on: \${analysis.output}\` 
 });
 
 return [{
@@ -1062,7 +1062,7 @@ return [{
 }];
 \`\`\`
 
-#### Patrón: RAG (Retrieval-Augmented Generation)
+#### Pattern: RAG (Retrieval-Augmented Generation)
 
 \`\`\`javascript
 const { OpenAI } = require('langchain/llms/openai');
@@ -1080,24 +1080,24 @@ const embeddings = new OpenAIEmbeddings({
   openAIApiKey: $credentials.apiKey
 });
 
-// Cargar documentos
+// Load the documents
 const items = $input.all();
 const documents = items.map(item => ({
   pageContent: item.json.content,
   metadata: { source: item.json.source, id: item.json.id }
 }));
 
-// Crear vector store
+// Create the vector store
 const vectorStore = await MemoryVectorStore.fromDocuments(documents, embeddings);
 
-// Crear retriever
+// Create the retriever
 const retriever = vectorStore.asRetriever({ k: 3 });
 
-// Crear RAG chain
+// Create the RAG chain
 const chain = RetrievalQAChain.fromLLM(llm, retriever);
 
-// Responder pregunta
-const question = '¿Cuál es la política de devoluciones?';
+// Answer the question
+const question = 'What is the return policy?';
 const response = await chain.call({ query: question });
 
 return [{
@@ -1109,25 +1109,25 @@ return [{
 }];
 \`\`\`
 
-### Mejores Prácticas
+### Best Practices
 
-1. **Agent configuration**: Configura maxIterations para evitar loops infinitos
-2. **Tool descriptions**: Escribe descripciones claras para las herramientas
-3. **Memory management**: Usa el tipo de memoria apropiado para tu caso
-4. **Error handling**: Maneja errores de agentes gracefully
-5. **Logging**: Log intermediate steps para debugging
-6. **Cost control**: Monitorea el uso de tokens en agentes
-7. **Testing**: Prueba agentes con diferentes inputs
-8. **Prompt engineering**: Diseña prompts específicos para cada agente
+1. **Agent configuration**: Set maxIterations to avoid infinite loops
+2. **Tool descriptions**: Write clear descriptions for the tools
+3. **Memory management**: Use the memory type that fits your use case
+4. **Error handling**: Handle agent errors gracefully
+5. **Logging**: Log intermediate steps for debugging
+6. **Cost control**: Monitor token usage in agents
+7. **Testing**: Test agents with different inputs
+8. **Prompt engineering**: Design specific prompts for each agent
 
 ### Debugging
 
-#### Ver Agent Steps
+#### Viewing Agent Steps
 
 \`\`\`javascript
 const executor = await initializeAgentExecutorWithOptions(tools, llm, {
   agentType: 'zero-shot-react-description',
-  verbose: true, // Habilita logging detallado
+  verbose: true, // Enables detailed logging
   maxIterations: 5
 });
 
@@ -1145,7 +1145,7 @@ result.intermediateSteps.forEach((step, i) => {
 });
 \`\`\`
 
-### Recursos Adicionales
+### Additional Resources
 
 - [LangChain Documentation](https://js.langchain.com/docs/)
 - [LangChain Agents](https://js.langchain.com/docs/modules/agents/)
@@ -1155,26 +1155,26 @@ result.intermediateSteps.forEach((step, i) => {
     },
     {
       id: "les-04-03",
-      moduleSlug: "automatizacion-ia",
+      moduleSlug: "ai-automation",
       slug: "rag-vector-databases",
-      title: "RAG y Bases de Datos Vectoriales",
-      description: "Implementa Retrieval-Augmented Generation con Pinecone, Weaviate y embeddings.",
+      title: "RAG and Vector Databases",
+      description: "Implement Retrieval-Augmented Generation with Pinecone, Weaviate and embeddings.",
       estimatedMinutes: 30,
-      content: `## RAG y Bases de Datos Vectoriales
+      content: `## RAG and Vector Databases
 
-RAG (Retrieval-Augmented Generation) combina búsqueda de información con generación de texto para crear respuestas más precisas y contextuales.
+RAG (Retrieval-Augmented Generation) combines information retrieval with text generation to deliver more accurate, contextual answers.
 
-### Conceptos Básicos
+### Core Concepts
 
-#### ¿Qué es RAG?
+#### What is RAG?
 
-RAG funciona en dos fases:
-1. **Retrieval**: Busca documentos relevantes en una base de datos vectorial
-2. **Generation**: Usa los documentos encontrados como contexto para generar una respuesta
+RAG works in two phases:
+1. **Retrieval**: Find relevant documents in a vector database
+2. **Generation**: Use the retrieved documents as context to generate an answer
 
 #### Embeddings
 
-Los embeddings son representaciones vectoriales de texto que capturan significado semántico.
+Embeddings are vector representations of text that capture semantic meaning.
 
 \`\`\`javascript
 const { OpenAIEmbeddings } = require('langchain/embeddings/openai');
@@ -1184,23 +1184,23 @@ const embeddings = new OpenAIEmbeddings({
   modelName: 'text-embedding-ada-002'
 });
 
-const text = 'N8N es una plataforma de automatización de workflows';
+const text = 'N8N is a workflow automation platform';
 const vector = await embeddings.embedQuery(text);
 
-console.log('Vector dimension:', vector.length); // 1536 para ada-002
+console.log('Vector dimension:', vector.length); // 1536 for ada-002
 console.log('First 5 values:', vector.slice(0, 5));
 \`\`\`
 
 ### Pinecone Integration
 
-#### Configuración
+#### Setup
 
-1. Crea una cuenta en [Pinecone](https://www.pinecone.io/)
-2. Crea un nuevo index
-3. Obtén tu API key y environment
-4. En N8N, crea credenciales **Pinecone API**
+1. Create an account at [Pinecone](https://www.pinecone.io/)
+2. Create a new index
+3. Get your API key and environment
+4. In N8N, create the **Pinecone API** credentials
 
-#### Crear Embeddings y Subir a Pinecone
+#### Creating Embeddings and Uploading to Pinecone
 
 \`\`\`javascript
 const { OpenAIEmbeddings } = require('langchain/embeddings/openai');
@@ -1224,7 +1224,7 @@ for (const item of items) {
   const text = item.json.content;
   const id = item.json.id;
   
-  // Generar embedding
+  // Generate the embedding
   const embedding = await embeddings.embedQuery(text);
   
   vectors.push({
@@ -1239,7 +1239,7 @@ for (const item of items) {
   });
 }
 
-// Subir en batches de 100
+// Upload in batches of 100
 const batchSize = 100;
 for (let i = 0; i < vectors.length; i += batchSize) {
   const batch = vectors.slice(i, i + batchSize);
@@ -1254,7 +1254,7 @@ return [{
 }];
 \`\`\`
 
-#### Búsqueda Semántica en Pinecone
+#### Semantic Search in Pinecone
 
 \`\`\`javascript
 const { OpenAIEmbeddings } = require('langchain/embeddings/openai');
@@ -1272,12 +1272,12 @@ const pinecone = new Pinecone({
 const index = pinecone.Index($credentials.pineconeIndex);
 
 const item = $input.first();
-const query = item.json.pregunta;
+const query = item.json.question;
 
-// Generar embedding de la pregunta
+// Generate the embedding of the question
 const queryEmbedding = await embeddings.embedQuery(query);
 
-// Buscar documentos similares
+// Search for similar documents
 const results = await index.query({
   vector: queryEmbedding,
   topK: 5,
@@ -1296,14 +1296,14 @@ const relevantDocs = results.matches.map(match => ({
 
 return [{
   json: {
-    pregunta: query,
-    documentosRelevantes: relevantDocs,
+    question: query,
+    relevantDocuments: relevantDocs,
     topScore: relevantDocs[0]?.score || 0
   }
 }];
 \`\`\`
 
-#### RAG Completo con Pinecone
+#### Complete RAG with Pinecone
 
 \`\`\`javascript
 const { OpenAIEmbeddings } = require('langchain/embeddings/openai');
@@ -1328,9 +1328,9 @@ const pinecone = new Pinecone({
 const index = pinecone.Index($credentials.pineconeIndex);
 
 const item = $input.first();
-const question = item.json.pregunta;
+const question = item.json.question;
 
-// Paso 1: Retrieval
+// Step 1: Retrieval
 const queryEmbedding = await embeddings.embedQuery(question);
 const results = await index.query({
   vector: queryEmbedding,
@@ -1342,43 +1342,43 @@ const context = results.matches
   .map(match => match.metadata.text)
   .join('\\n\\n');
 
-// Paso 2: Generation
-const prompt = \`Responde la siguiente pregunta usando solo la información proporcionada en el contexto. Si la respuesta no está en el contexto, di "No tengo suficiente información para responder".
+// Step 2: Generation
+const prompt = \`Answer the following question using only the information provided in the context. If the answer is not in the context, say "I do not have enough information to answer".
 
-Contexto:
+Context:
 \${context}
 
-Pregunta: \${question}
+Question: \${question}
 
-Respuesta:\`;
+Answer:\`;
 
 const response = await llm.call(prompt);
 
 return [{
   json: {
-    pregunta: question,
-    respuesta: response,
-    fuentesUsadas: results.matches.map(m => m.metadata.source),
-    confianza: results.matches[0]?.score || 0
+    question: question,
+    answer: response,
+    sourcesUsed: results.matches.map(m => m.metadata.source),
+    confidence: results.matches[0]?.score || 0
   }
 }];
 \`\`\`
 
 ### Weaviate Integration
 
-#### Configuración
+#### Setup
 
-1. Despliega Weaviate (cloud o self-hosted)
-2. Obtén tu API key y URL
-3. En N8N, configura las credenciales
+1. Deploy Weaviate (cloud or self-hosted)
+2. Get your API key and URL
+3. In N8N, configure the credentials
 
-#### Crear Schema y Subir Datos
+#### Creating a Schema and Uploading Data
 
 \`\`\`javascript
 const weaviateUrl = $credentials.weaviateUrl;
 const apiKey = $credentials.weaviateKey;
 
-// Crear schema
+// Create the schema
 const schema = {
   class: 'Document',
   vectorizer: 'text2vec-openai',
@@ -1415,7 +1415,7 @@ await this.helpers.httpRequest({
   body: schema
 });
 
-// Subir documentos
+// Upload the documents
 const items = $input.all();
 const batch = items.map(item => ({
   class: 'Document',
@@ -1444,14 +1444,14 @@ return [{
 }];
 \`\`\`
 
-#### Búsqueda Semántica en Weaviate
+#### Semantic Search in Weaviate
 
 \`\`\`javascript
 const weaviateUrl = $credentials.weaviateUrl;
 const apiKey = $credentials.weaviateKey;
 
 const item = $input.first();
-const question = item.json.pregunta;
+const question = item.json.question;
 
 const query = \`
 {
@@ -1494,16 +1494,16 @@ const documents = response.data.data.Get.Document.map(doc => ({
 
 return [{
   json: {
-    pregunta: question,
-    documentos: documents,
+    question: question,
+    documents: documents,
     topCertainty: documents[0]?.certainty || 0
   }
 }];
 \`\`\`
 
-### Patrones Avanzados
+### Advanced Patterns
 
-#### Patrón: Multi-Source RAG
+#### Pattern: Multi-Source RAG
 
 \`\`\`javascript
 const { OpenAIEmbeddings } = require('langchain/embeddings/openai');
@@ -1520,65 +1520,65 @@ const llm = new OpenAI({
 });
 
 const item = $input.first();
-const question = item.json.pregunta;
+const question = item.json.question;
 
-// Buscar en múltiples fuentes
+// Search across multiple sources
 const queryEmbedding = await embeddings.embedQuery(question);
 
-// Fuente 1: Pinecone (documentación técnica)
+// Source 1: Pinecone (technical documentation)
 const pineconeResults = await searchPinecone(queryEmbedding, 3);
 
-// Fuente 2: Weaviate (FAQs)
+// Source 2: Weaviate (FAQs)
 const weaviateResults = await searchWeaviate(question, 3);
 
-// Fuente 3: Base de datos SQL (datos estructurados)
+// Source 3: SQL database (structured data)
 const sqlResults = await searchSQL(question);
 
-// Combinar resultados
+// Combine the results
 const allContext = [
-  ...pineconeResults.map(r => \`[Documentación]: \${r.text}\`),
+  ...pineconeResults.map(r => \`[Documentation]: \${r.text}\`),
   ...weaviateResults.map(r => \`[FAQ]: \${r.content}\`),
-  ...sqlResults.map(r => \`[Datos]: \${r.answer}\`)
+  ...sqlResults.map(r => \`[Data]: \${r.answer}\`)
 ].join('\\n\\n');
 
-// Generar respuesta
-const prompt = \`Responde la pregunta usando la información de múltiples fuentes. Cita la fuente cuando sea relevante.
+// Generate the answer
+const prompt = \`Answer the question using information from multiple sources. Cite the source when relevant.
 
-Fuentes:
+Sources:
 \${allContext}
 
-Pregunta: \${question}
+Question: \${question}
 
-Respuesta:\`;
+Answer:\`;
 
 const response = await llm.call(prompt);
 
 return [{
   json: {
-    pregunta: question,
-    respuesta: response,
-    fuentes: {
-      documentacion: pineconeResults.length,
+    question: question,
+    answer: response,
+    sources: {
+      documentation: pineconeResults.length,
       faqs: weaviateResults.length,
-      datos: sqlResults.length
+      data: sqlResults.length
     }
   }
 }];
 
 async function searchPinecone(embedding, k) {
-  // Implementación de búsqueda en Pinecone
+  // Implementation of the Pinecone search
 }
 
 async function searchWeaviate(query, k) {
-  // Implementación de búsqueda en Weaviate
+  // Implementation of the Weaviate search
 }
 
 async function searchSQL(query) {
-  // Implementación de búsqueda en SQL
+  // Implementation of the SQL search
 }
 \`\`\`
 
-#### Patrón: Conversational RAG
+#### Pattern: Conversational RAG
 
 \`\`\`javascript
 const { OpenAIEmbeddings } = require('langchain/embeddings/openai');
@@ -1603,22 +1603,22 @@ const pinecone = new Pinecone({
 const index = pinecone.Index($credentials.pineconeIndex);
 
 const item = $input.first();
-const question = item.json.pregunta;
+const question = item.json.question;
 const conversationHistory = item.json.history || [];
 
-// Reformular pregunta con contexto de conversación
-const reformulatePrompt = \`Dada la siguiente conversación y una pregunta de seguimiento, reformula la pregunta de seguimiento para que sea una pregunta independiente.
+// Reformulate the question using the conversation context
+const reformulatePrompt = \`Given the following conversation and a follow-up question, reformulate the follow-up question so that it stands alone.
 
-Conversación:
+Conversation:
 \${conversationHistory.map(h => \`\${h.role}: \${h.content}\`).join('\\n')}
 
-Pregunta de seguimiento: \${question}
+Follow-up question: \${question}
 
-Pregunta independiente:\`;
+Standalone question:\`;
 
 const standaloneQuestion = await llm.call(reformulatePrompt);
 
-// Buscar con la pregunta reformulada
+// Search using the reformulated question
 const queryEmbedding = await embeddings.embedQuery(standaloneQuestion);
 const results = await index.query({
   vector: queryEmbedding,
@@ -1628,19 +1628,19 @@ const results = await index.query({
 
 const context = results.matches.map(m => m.metadata.text).join('\\n\\n');
 
-// Generar respuesta
-const responsePrompt = \`Responde la pregunta usando el contexto proporcionado.
+// Generate the answer
+const responsePrompt = \`Answer the question using the provided context.
 
-Contexto:
+Context:
 \${context}
 
-Pregunta: \${standaloneQuestion}
+Question: \${standaloneQuestion}
 
-Respuesta:\`;
+Answer:\`;
 
 const response = await llm.call(responsePrompt);
 
-// Actualizar historial
+// Update the history
 const newHistory = [
   ...conversationHistory,
   { role: 'user', content: question },
@@ -1649,18 +1649,18 @@ const newHistory = [
 
 return [{
   json: {
-    pregunta: question,
-    preguntaReformulada: standaloneQuestion,
-    respuesta: response,
+    question: question,
+    reformulatedQuestion: standaloneQuestion,
+    answer: response,
     history: newHistory,
-    fuentes: results.matches.map(m => m.metadata.source)
+    sources: results.matches.map(m => m.metadata.source)
   }
 }];
 \`\`\`
 
-### Optimización de Performance
+### Performance Optimization
 
-#### Chunking de Documentos
+#### Document Chunking
 
 \`\`\`javascript
 function chunkText(text, chunkSize = 1000, overlap = 200) {
@@ -1698,30 +1698,30 @@ for (const item of items) {
 return allChunks;
 \`\`\`
 
-### Mejores Prácticas
+### Best Practices
 
-1. **Chunk size**: Usa chunks de 500-1500 tokens con overlap
-2. **Metadata**: Incluye metadata rica para filtrado
-3. **Hybrid search**: Combina búsqueda vectorial con keyword search
-4. **Reranking**: Usa un modelo para reordenar resultados
-5. **Caching**: Cachea embeddings para documentos estáticos
-6. **Evaluation**: Evalúa la calidad de las respuestas
-7. **Cost control**: Monitorea el uso de embeddings y LLM
-8. **Versioning**: Versiona tus índices para cambios de schema
+1. **Chunk size**: Use chunks of 500-1500 tokens with overlap
+2. **Metadata**: Include rich metadata for filtering
+3. **Hybrid search**: Combine vector search with keyword search
+4. **Reranking**: Use a model to rerank the results
+5. **Caching**: Cache embeddings for static documents
+6. **Evaluation**: Evaluate the quality of the answers
+7. **Cost control**: Monitor embedding and LLM usage
+8. **Versioning**: Version your indexes for schema changes
 
 ### Debugging
 
-#### Evaluar Calidad de RAG
+#### Evaluating RAG Quality
 
 \`\`\`javascript
 const testQuestions = [
   {
-    question: '¿Cuál es la política de devoluciones?',
-    expectedAnswer: '30 días'
+    question: 'What is the return policy?',
+    expectedAnswer: '30 days'
   },
   {
-    question: '¿Qué métodos de pago aceptan?',
-    expectedAnswer: 'tarjeta, PayPal'
+    question: 'Which payment methods do you accept?',
+    expectedAnswer: 'card, PayPal'
   }
 ];
 
@@ -1744,7 +1744,7 @@ for (const test of testQuestions) {
 return results;
 \`\`\`
 
-### Recursos Adicionales
+### Additional Resources
 
 - [Pinecone Documentation](https://docs.pinecone.io/)
 - [Weaviate Documentation](https://weaviate.io/developers/weaviate)
@@ -1754,16 +1754,16 @@ return results;
     },
     {
       id: "les-04-04",
-      moduleSlug: "automatizacion-ia",
-      slug: "ai-agents-avanzados",
-      title: "Agentes de IA Avanzados",
-      description: "Construye agentes autónomos complejos con planificación, reflexión y múltiples herramientas.",
+      moduleSlug: "ai-automation",
+      slug: "advanced-ai-agents",
+      title: "Advanced AI Agents",
+      description: "Build complex autonomous agents with planning, reflection and multiple tools.",
       estimatedMinutes: 35,
-      content: `## Agentes de IA Avanzados
+      content: `## Advanced AI Agents
 
-Los agentes avanzados pueden planificar, reflexionar sobre sus acciones y usar múltiples herramientas de forma autónoma.
+Advanced agents can plan, reflect on their actions and use multiple tools autonomously.
 
-### Planificación con Agentes
+### Planning with Agents
 
 #### Plan-and-Execute Pattern
 
@@ -1778,37 +1778,37 @@ const llm = new OpenAI({
   temperature: 0
 });
 
-// Paso 1: Crear plan
-const planningPrompt = \`Dada la siguiente tarea, crea un plan detallado con pasos específicos.
+// Step 1: Create the plan
+const planningPrompt = \`Given the following task, create a detailed plan with specific steps.
 
-Tarea: \${$input.first().json.task}
+Task: \${$input.first().json.task}
 
-Devuelve un JSON con esta estructura:
+Return JSON with this structure:
 {
-  "goal": "objetivo principal",
+  "goal": "main objective",
   "steps": [
-    {"step": 1, "action": "descripción de la acción", "tool": "nombre de la herramienta"},
-    {"step": 2, "action": "descripción de la acción", "tool": "nombre de la herramienta"}
+    {"step": 1, "action": "action description", "tool": "tool name"},
+    {"step": 2, "action": "action description", "tool": "tool name"}
   ]
 }\`;
 
 const planResponse = await llm.call(planningPrompt);
 const plan = JSON.parse(planResponse);
 
-// Paso 2: Ejecutar cada paso
+// Step 2: Execute each step
 const results = [];
 const context = { plan, completedSteps: [] };
 
 for (const step of plan.steps) {
-  const executionPrompt = \`Ejecuta el siguiente paso del plan:
+  const executionPrompt = \`Execute the following step of the plan:
 
-Paso \${step.step}: \${step.action}
-Herramienta a usar: \${step.tool}
+Step \${step.step}: \${step.action}
+Tool to use: \${step.tool}
 
-Contexto previo:
+Previous context:
 \${JSON.stringify(context.completedSteps, null, 2)}
 
-Devuelve el resultado de ejecutar este paso.\`;
+Return the result of executing this step.\`;
 
   const stepResult = await llm.call(executionPrompt);
   
@@ -1825,15 +1825,15 @@ Devuelve el resultado de ejecutar este paso.\`;
   });
 }
 
-// Paso 3: Generar resumen final
-const summaryPrompt = \`Dado el plan original y los resultados de cada paso, genera un resumen final.
+// Step 3: Generate the final summary
+const summaryPrompt = \`Given the original plan and the results of each step, generate a final summary.
 
 Plan: \${JSON.stringify(plan, null, 2)}
 
-Resultados:
+Results:
 \${JSON.stringify(results, null, 2)}
 
-Genera un resumen conciso de lo que se logró.\`;
+Generate a concise summary of what was accomplished.\`;
 
 const summary = await llm.call(summaryPrompt);
 
@@ -1847,7 +1847,7 @@ return [{
 }];
 \`\`\`
 
-### Reflexión y Auto-Corrección
+### Reflection and Self-Correction
 
 #### Reflexion Agent
 
@@ -1871,43 +1871,43 @@ let iteration = 0;
 while (iteration < maxIterations) {
   iteration++;
   
-  // Generar solución
+  // Generate a solution
   const solutionPrompt = reflection 
-    ? \`Tarea: \${task}
+    ? \`Task: \${task}
 
-Intento anterior:
+Previous attempt:
 \${currentAttempt}
 
-Reflexión sobre el intento anterior:
+Reflection on the previous attempt:
 \${reflection}
 
-Genera una nueva solución mejorada basada en la reflexión.\`
-    : \`Tarea: \${task}
+Generate a new, improved solution based on the reflection.\`
+    : \`Task: \${task}
 
-Genera una solución detallada para esta tarea.\`;
+Generate a detailed solution for this task.\`;
 
   currentAttempt = await llm.call(solutionPrompt);
   
-  // Reflexionar sobre la solución
-  const reflectionPrompt = \`Analiza críticamente la siguiente solución:
+  // Reflect on the solution
+  const reflectionPrompt = \`Critically analyze the following solution:
 
-Tarea: \${task}
+Task: \${task}
 
-Solución propuesta:
+Proposed solution:
 \${currentAttempt}
 
-Evalúa:
-1. ¿La solución aborda completamente la tarea?
-2. ¿Hay errores o inconsistencias?
-3. ¿Se puede mejorar?
-4. ¿Falta algo importante?
+Evaluate:
+1. Does the solution fully address the task?
+2. Are there errors or inconsistencies?
+3. Can it be improved?
+4. Is anything important missing?
 
-Si la solución es satisfactoria, responde: "SOLUCIÓN ACEPTABLE"
-Si necesita mejoras, proporciona feedback específico.\`;
+If the solution is satisfactory, answer: "SOLUTION ACCEPTABLE"
+If it needs improvement, provide specific feedback.\`;
 
   reflection = await llm.call(reflectionPrompt);
   
-  if (reflection.includes('SOLUCIÓN ACEPTABLE')) {
+  if (reflection.includes('SOLUTION ACCEPTABLE')) {
     break;
   }
 }
@@ -1918,14 +1918,14 @@ return [{
     finalSolution: currentAttempt,
     iterations: iteration,
     lastReflection: reflection,
-    accepted: reflection.includes('SOLUCIÓN ACEPTABLE')
+    accepted: reflection.includes('SOLUTION ACCEPTABLE')
   }
 }];
 \`\`\`
 
 ### Multi-Tool Agents
 
-#### Agente con Múltiples Herramientas Especializadas
+#### Agent with Multiple Specialized Tools
 
 \`\`\`javascript
 const { OpenAI } = require('langchain/llms/openai');
@@ -1938,10 +1938,10 @@ const llm = new OpenAI({
   temperature: 0
 });
 
-// Herramienta 1: Búsqueda web
+// Tool 1: Web search
 const webSearch = new DynamicTool({
   name: 'web_search',
-  description: 'Busca información actualizada en la web. Input: query de búsqueda.',
+  description: 'Search the web for up-to-date information. Input: search query.',
   func: async (query) => {
     const response = await this.helpers.httpRequest({
       method: 'GET',
@@ -1951,29 +1951,29 @@ const webSearch = new DynamicTool({
     });
     
     return response.data.results.map(r => 
-      \`Título: \${r.title}\\nURL: \${r.url}\\nResumen: \${r.snippet}\`
+      \`Title: \${r.title}\\nURL: \${r.url}\\nSnippet: \${r.snippet}\`
     ).join('\\n\\n');
   }
 });
 
-// Herramienta 2: Calculadora avanzada
+// Tool 2: Advanced calculator
 const calculator = new DynamicTool({
   name: 'calculator',
-  description: 'Realiza cálculos matemáticos complejos. Input: expresión matemática.',
+  description: 'Perform complex mathematical calculations. Input: a math expression.',
   func: async (expression) => {
     try {
       const result = eval(expression);
-      return \`Resultado: \${result}\`;
+      return \`Result: \${result}\`;
     } catch (error) {
-      return \`Error en el cálculo: \${error.message}\`;
+      return \`Calculation error: \${error.message}\`;
     }
   }
 });
 
-// Herramienta 3: Base de datos interna
+// Tool 3: Internal database
 const databaseQuery = new DynamicTool({
   name: 'database_query',
-  description: 'Consulta la base de datos interna de la empresa. Input: descripción de lo que buscas.',
+  description: 'Query the company internal database. Input: description of what you are looking for.',
   func: async (query) => {
     const response = await this.helpers.httpRequest({
       method: 'POST',
@@ -1987,15 +1987,15 @@ const databaseQuery = new DynamicTool({
     });
     
     return response.data.map(r => 
-      \`ID: \${r.id}\\nTipo: \${r.type}\\nContenido: \${r.content}\`
+      \`ID: \${r.id}\\nType: \${r.type}\\nContent: \${r.content}\`
     ).join('\\n\\n');
   }
 });
 
-// Herramienta 4: Generador de código
+// Tool 4: Code generator
 const codeGenerator = new DynamicTool({
   name: 'code_generator',
-  description: 'Genera código basado en una descripción. Input: descripción del código necesario.',
+  description: 'Generate code from a description. Input: description of the code you need.',
   func: async (description) => {
     const response = await this.helpers.httpRequest({
       method: 'POST',
@@ -2007,7 +2007,7 @@ const codeGenerator = new DynamicTool({
       body: {
         model: 'gpt-4',
         messages: [
-          { role: 'system', content: 'Eres un experto programador. Genera código limpio y funcional.' },
+          { role: 'system', content: 'You are an expert programmer. Generate clean, working code.' },
           { role: 'user', content: description }
         ],
         temperature: 0.2
@@ -2025,13 +2025,13 @@ const executor = await initializeAgentExecutorWithOptions(tools, llm, {
   verbose: true,
   maxIterations: 10,
   agentArgs: {
-    prefix: \`Eres un asistente experto con acceso a múltiples herramientas. Tu objetivo es resolver tareas complejas usando las herramientas disponibles de forma estratégica.
+    prefix: \`You are an expert assistant with access to multiple tools. Your goal is to solve complex tasks by using the available tools strategically.
 
-Pautas:
-1. Analiza la tarea antes de actuar
-2. Usa las herramientas en el orden más lógico
-3. Verifica tus resultados
-4. Si una herramienta falla, intenta un enfoque alternativo\`
+Guidelines:
+1. Analyze the task before acting
+2. Use the tools in the most logical order
+3. Verify your results
+4. If a tool fails, try an alternative approach\`
   }
 });
 
@@ -2053,7 +2053,7 @@ return [{
 }];
 \`\`\`
 
-### Agentes Especializados
+### Specialized Agents
 
 #### Research Agent
 
@@ -2071,26 +2071,26 @@ const llm = new OpenAI({
 const tools = [
   new DynamicTool({
     name: 'academic_search',
-    description: 'Busca papers académicos y artículos científicos.',
+    description: 'Search academic papers and scientific articles.',
     func: async (query) => {
-      // Implementar búsqueda en Google Scholar, arXiv, etc.
-      return \`Resultados académicos para: \${query}\`;
+      // Implement a search on Google Scholar, arXiv, etc.
+      return \`Academic results for: \${query}\`;
     }
   }),
   new DynamicTool({
     name: 'news_search',
-    description: 'Busca noticias recientes y artículos de prensa.',
+    description: 'Search recent news and press articles.',
     func: async (query) => {
-      // Implementar búsqueda en News API
-      return \`Noticias recientes sobre: \${query}\`;
+      // Implement a search with the News API
+      return \`Recent news about: \${query}\`;
     }
   }),
   new DynamicTool({
     name: 'statistical_data',
-    description: 'Obtiene datos estadísticos y métricas.',
+    description: 'Fetch statistical data and metrics.',
     func: async (query) => {
-      // Implementar búsqueda en APIs de datos
-      return \`Datos estadísticos sobre: \${query}\`;
+      // Implement a search across data APIs
+      return \`Statistical data about: \${query}\`;
     }
   })
 ];
@@ -2098,12 +2098,12 @@ const tools = [
 const executor = await initializeAgentExecutorWithOptions(tools, llm, {
   agentType: 'zero-shot-react-description',
   agentArgs: {
-    prefix: \`Eres un investigador experto. Tu trabajo es:
-1. Buscar información de múltiples fuentes
-2. Verificar la credibilidad de las fuentes
-3. Sintetizar información contradictoria
-4. Proporcionar citas y referencias
-5. Identificar gaps en la información\`
+    prefix: \`You are an expert researcher. Your job is:
+1. Search for information from multiple sources
+2. Verify the credibility of the sources
+3. Synthesize contradictory information
+4. Provide citations and references
+5. Identify gaps in the information\`
   }
 });
 
@@ -2111,7 +2111,7 @@ const item = $input.first();
 const researchQuestion = item.json.researchQuestion;
 
 const result = await executor.call({ 
-  input: \`Investiga: \${researchQuestion}\\n\\nProporciona un reporte completo con fuentes.\` 
+  input: \`Research: \${researchQuestion}\\n\\nProvide a complete report with sources.\` 
 });
 
 return [{
@@ -2139,7 +2139,7 @@ const llm = new OpenAI({
 const tools = [
   new DynamicTool({
     name: 'load_dataset',
-    description: 'Carga un dataset para análisis. Input: nombre del dataset.',
+    description: 'Load a dataset for analysis. Input: dataset name.',
     func: async (datasetName) => {
       const response = await this.helpers.httpRequest({
         method: 'GET',
@@ -2150,12 +2150,12 @@ const tools = [
         }
       });
       
-      return JSON.stringify(response.data.slice(0, 100)); // Primeros 100 registros
+      return JSON.stringify(response.data.slice(0, 100)); // First 100 records
     }
   }),
   new DynamicTool({
     name: 'calculate_statistics',
-    description: 'Calcula estadísticas de un campo. Input: "dataset.field".',
+    description: 'Calculate statistics for a field. Input: "dataset.field".',
     func: async (input) => {
       const [dataset, field] = input.split('.');
       
@@ -2174,7 +2174,7 @@ const tools = [
       const sorted = [...values].sort((a, b) => a - b);
       const median = sorted[Math.floor(sorted.length / 2)];
       
-      return \`Estadísticas de \${field}:
+      return \`Statistics for \${field}:
 - Count: \${values.length}
 - Mean: \${mean.toFixed(2)}
 - Median: \${median}
@@ -2184,7 +2184,7 @@ const tools = [
   }),
   new DynamicTool({
     name: 'generate_chart',
-    description: 'Genera código para visualización. Input: descripción del chart.',
+    description: 'Generate visualization code. Input: chart description.',
     func: async (description) => {
       const response = await this.helpers.httpRequest({
         method: 'POST',
@@ -2196,7 +2196,7 @@ const tools = [
         body: {
           model: 'gpt-4',
           messages: [
-            { role: 'system', content: 'Genera código Python con matplotlib para visualización de datos.' },
+            { role: 'system', content: 'Generate Python code with matplotlib for data visualization.' },
             { role: 'user', content: description }
           ]
         }
@@ -2210,12 +2210,12 @@ const tools = [
 const executor = await initializeAgentExecutorWithOptions(tools, llm, {
   agentType: 'zero-shot-react-description',
   agentArgs: {
-    prefix: \`Eres un analista de datos experto. Tu trabajo es:
-1. Explorar datasets
-2. Calcular estadísticas relevantes
-3. Identificar patrones y anomalías
-4. Generar visualizaciones
-5. Proporcionar insights accionables\`
+    prefix: \`You are an expert data analyst. Your job is:
+1. Explore datasets
+2. Calculate relevant statistics
+3. Identify patterns and anomalies
+4. Generate visualizations
+5. Provide actionable insights\`
   }
 });
 
@@ -2233,7 +2233,7 @@ return [{
 }];
 \`\`\`
 
-### Patrones de Coordinación
+### Coordination Patterns
 
 #### Supervisor Pattern
 
@@ -2246,49 +2246,49 @@ const llm = new OpenAI({
   temperature: 0
 });
 
-// Definir agentes especializados
+// Define the specialized agents
 const agents = {
   researcher: {
-    description: 'Investigador experto en búsqueda de información',
+    description: 'Expert researcher specialized in information retrieval',
     func: async (task) => {
-      // Implementar agente de investigación
-      return \`Investigación completada: \${task}\`;
+      // Implement the research agent
+      return \`Research completed: \${task}\`;
     }
   },
   analyst: {
-    description: 'Analista de datos y estadísticas',
+    description: 'Data and statistics analyst',
     func: async (task) => {
-      // Implementar agente de análisis
-      return \`Análisis completado: \${task}\`;
+      // Implement the analysis agent
+      return \`Analysis completed: \${task}\`;
     }
   },
   writer: {
-    description: 'Escritor profesional de reportes',
+    description: 'Professional report writer',
     func: async (task) => {
-      // Implementar agente de escritura
-      return \`Reporte escrito: \${task}\`;
+      // Implement the writing agent
+      return \`Report written: \${task}\`;
     }
   }
 };
 
-// Supervisor decide qué agente usar
-const supervisorPrompt = \`Dada la siguiente tarea, decide qué agente especializado debe ejecutarla.
+// The supervisor decides which agent to use
+const supervisorPrompt = \`Given the following task, decide which specialized agent should execute it.
 
-Agentes disponibles:
+Available agents:
 \${Object.entries(agents).map(([name, agent]) => 
   \`- \${name}: \${agent.description}\`
 ).join('\\n')}
 
-Tarea: \${$input.first().json.task}
+Task: \${$input.first().json.task}
 
-Responde solo con el nombre del agente más apropiado.\`;
+Reply only with the name of the most appropriate agent.\`;
 
 const selectedAgent = (await llm.call(supervisorPrompt)).trim().toLowerCase();
 
-// Ejecutar con el agente seleccionado
+// Execute with the selected agent
 const agent = agents[selectedAgent];
 if (!agent) {
-  throw new Error(\`Agente no encontrado: \${selectedAgent}\`);
+  throw new Error(\`Agent not found: \${selectedAgent}\`);
 }
 
 const result = await agent.func($input.first().json.task);
@@ -2302,20 +2302,20 @@ return [{
 }];
 \`\`\`
 
-### Mejores Prácticas
+### Best Practices
 
-1. **Clear instructions**: Proporciona instrucciones claras y específicas
-2. **Tool descriptions**: Escribe descripciones detalladas de herramientas
-3. **Error handling**: Maneja errores gracefully en agentes
-4. **Iteration limits**: Establece límites de iteraciones
-5. **Logging**: Log todas las acciones del agente
-6. **Testing**: Prueba agentes con casos edge
-7. **Cost monitoring**: Monitorea el uso de tokens
-8. **Human-in-the-loop**: Incluye validación humana para decisiones críticas
+1. **Clear instructions**: Provide clear, specific instructions
+2. **Tool descriptions**: Write detailed tool descriptions
+3. **Error handling**: Handle agent errors gracefully
+4. **Iteration limits**: Set iteration limits
+5. **Logging**: Log every agent action
+6. **Testing**: Test agents with edge cases
+7. **Cost monitoring**: Monitor token usage
+8. **Human-in-the-loop**: Include human validation for critical decisions
 
 ### Debugging
 
-#### Trace Agent Execution
+#### Tracing Agent Execution
 
 \`\`\`javascript
 const executor = await initializeAgentExecutorWithOptions(tools, llm, {
@@ -2340,7 +2340,7 @@ result.intermediateSteps.forEach((step, i) => {
 console.log('\\nFinal Output:', result.output);
 \`\`\`
 
-### Recursos Adicionales
+### Additional Resources
 
 - [LangChain Agents Guide](https://js.langchain.com/docs/modules/agents/)
 - [Agent Architectures](https://lilianweng.github.io/posts/2023-06-23-agent/)

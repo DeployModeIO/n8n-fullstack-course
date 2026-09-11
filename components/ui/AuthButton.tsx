@@ -44,7 +44,7 @@ export default function AuthButton() {
           )}
         >
           <LogOut size={16} />
-          <span className="hidden sm:inline">Cerrar Sesión</span>
+          <span className="hidden sm:inline">Log out</span>
         </button>
       </div>
     );
@@ -64,7 +64,7 @@ export default function AuthButton() {
       )}
     >
       <LogIn size={18} className="text-[#FF6D5A]" />
-      Iniciar Sesión
+      Log in
     </Link>
   );
 }
