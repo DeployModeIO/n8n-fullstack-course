@@ -8,8 +8,8 @@ RUN npm ci
 
 COPY . .
 
-# Variables públicas de Supabase (se inlinean en el bundle en build time).
-# Si build falla por falta de vars, crea un .env.local y reconstruye.
+# Supabase public variables (inlined into the bundle at build time).
+# If the build fails because of missing variables, create a .env.local and rebuild.
 RUN npm run build
 
 ENV NODE_ENV=production \

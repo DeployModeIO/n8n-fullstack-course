@@ -282,7 +282,7 @@ export default function InvitationsPage() {
                 </div>
                 <div>
                   <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Rol
+                    Role
                   </label>
                   <select
                     value={formData.role}
